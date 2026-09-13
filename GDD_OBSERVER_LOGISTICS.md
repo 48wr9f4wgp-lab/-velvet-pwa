@@ -84,7 +84,7 @@ Rapier is limited to visible overflow parcels / incidental physical chaos when i
 
 ## 6. Tech Decision
 - Rendering: Three.js
-- Camera: OrbitControls
+- Camera: lightweight custom touch orbit / pinch zoom controller
 - Physics: Rapier WASM, capped decorative overflow bodies only
 - Simulation: deterministic JavaScript domain state separated from rendering
 - Persistence: localStorage, versioned snapshot
