@@ -1,0 +1,70 @@
+// Velvet Feed Sync v1.1.0
+// Scriptable bridge: canonical Velvet v0.9.3 candidate logic -> velvet-content.json.
+// PWA taste/history never leaves the device; this file publishes candidate metadata only.
+
+(async () => {
+  const VERSION = "1.1.0";
+  const CANONICAL_BASELINE = "Velvet v0.9.3";
+  const OWNER = "48wr9f4wgp-lab";
+  const REPO = "eros-hub";
+  const TARGET_BRANCH = "velvet-pages";
+  const TARGET_PATH = "velvet-content.json";
+  const TOKEN_KEY = "velvet_feed_sync_github_token_v1";
+  const MAX_ITEMS = 240;
+  const MIN_PUBLISH_ITEMS = 20;
+
+  const SOURCE_URLS = Object.freeze({
+    TGUra: { name: "TGUra", label: "TG裏垢", sourceClass: "personal", site: "https://twiigle.com", url: "https://twiigle.com/hot.html" },
+    TGAma: { name: "TGAma", label: "TG素人", sourceClass: "personal", site: "https://twiigle.com", url: "https://twiigle.com/ama.html" },
+    TGAV1: { name: "TGAV1", label: "TGAV1", sourceClass: "pro", site: "https://twiigle.com", url: "https://twiigle.com/popular.html" },
+    TGAV2: { name: "TGAV2", label: "TGAV2", sourceClass: "pro", site: "https://twiigle.com", url: "https://twiigle.com/trend.html" }
+  });
+
+  // Canonical source composition from main/eros-hub.js v0.9.3.
+  const PROFILES = Object.freeze({
+    mix: {
+      stimulusMax: false,
+      sources: {
+        TGUra: { adultTrust: true, jpTrust: true, femaleBias: 0.20, preference: 0.96, exposureBias: 0.14, runCap: 4, maxRank: 40 },
+        TGAma: { adultTrust: true, jpTrust: true, femaleBias: 0.16, preference: 0.94, exposureBias: 0.10, runCap: 3, maxRank: 40 },
+        TGAV1: { adultTrust: true, jpTrust: true, femaleBias: 0.08, preference: 0.82, exposureBias: 0.18, runCap: 2, maxRank: 30 },
+        TGAV2: { adultTrust: true, jpTrust: true, femaleBias: 0.08, preference: 0.86, exposureBias: 0.22, runCap: 1, maxRank: 30 }
+      }
+    },
+    personal: {
+      stimulusMax: false,
+      sources: {
+        TGUra: { adultTrust: true, jpTrust: true, femaleBias: 0.20, preference: 1.00, exposureBias: 0.18, runCap: 6, maxRank: 100 },
+        TGAma: { adultTrust: true, jpTrust: true, femaleBias: 0.16, preference: 0.96, exposureBias: 0.14, runCap: 4, maxRank: 100 }
+      }
+    },
+    pro: {
+      stimulusMax: false,
+      sources: {
+        TGAV1: { adultTrust: true, jpTrust: true, femaleBias: 0.08, preference: 1.04, exposureBias: 0.30, runCap: 7, maxRank: 30 },
+        TGAV2: { adultTrust: true, jpTrust: true, femaleBias: 0.08, preference: 1.00, exposureBias: 0.22, runCap: 3, maxRank: 30 }
+      }
+    },
+    max: {
+      stimulusMax: true,
+      sources: {
+        TGAV1: { adultTrust: true, jpTrust: true, femaleBias: 0.08, preference: 1.10, exposureBias: 0.46, runCap: 5, maxRank: 100 },
+        TGUra: { adultTrust: true, jpTrust: true, femaleBias: 0.20, preference: 1.02, exposureBias: 0.36, runCap: 3, maxRank: 100 },
+        TGAma: { adultTrust: true, jpTrust: true, femaleBias: 0.16, preference: 0.98, exposureBias: 0.30, runCap: 2, maxRank: 100 }
+      }
+    }
+  });
+
+  const HARD_AGE_RISK = [
+    "child", "children", "kid", "kids", "minor", "underage", "preteen", "pre-teen",
+    "schoolgirl", "school girl", "schoolboy", "school boy", "high school", "middle school", "elementary school",
+    "loli", "lolita", "lolicon", "shota", "shotacon", "young girl", "young boy", "little girl", "little boy", "childlike", "child-like",
+    "未成年", "児童", "女子高生", "高校生", "中学生", "小学生", "ロリ", "ショタ"
+  ];
+  const ADULT_CUES = [
+    "adult", "18+", "21+", "18禁", "r18", "r-18", "nsfw", "🔞", "porn", "porno", "xxx", "sex", "sexy", "nude", "nudes",
+    "ero", "エロ", "えろ", "エッチ", "エロ動画", "おかず", "無修正", "裏垢", "裏アカ", "uraaka", "adult only", "gravure", "グラビア",
+    "素人", "露出", "脱ぎ", "巨乳", "美乳", "爆乳", "おっぱい"
+  ];
+  const FEMALE_CUES = [
+    "woman", "women", "female", "lady", "ladies", "girlfriend", "wife", "babe", "gravure", "cosplayer", "cosplay woman",
