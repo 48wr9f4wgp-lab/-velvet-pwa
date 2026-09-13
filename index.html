@@ -8,8 +8,12 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Velvet" />
-  <link rel="manifest" href="./manifest.webmanifest" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png?v=42" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png?v=42" />
+  <link rel="manifest" href="./manifest.webmanifest?v=42" />
   <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./touch-polish.css?v=42" />
   <title>Velvet</title>
 </head>
 <body>
@@ -33,7 +37,6 @@
         <div>
           <p class="brand">VELVET</p>
           <p id="modeLabel" class="mode-label">FLOW</p>
-          <span id="fxLiveBadge" class="pill pill--muted">FX HIGH</span>
         </div>
         <div class="topbar__actions">
           <button id="quickHideButton" class="icon-button" type="button" aria-label="Quick hide">◌</button>
@@ -51,8 +54,8 @@
               <span id="sourceLabel" class="pill">Velvet</span>
               <span id="intensityLabel" class="pill pill--muted">—</span>
             </div>
-            <div id="dragLike" class="drag-cue drag-cue--like">LIKE</div>
-            <div id="dragSkip" class="drag-cue drag-cue--skip">SKIP</div>
+            <div id="dragLike" class="drag-cue drag-cue--like">戻る</div>
+            <div id="dragSkip" class="drag-cue drag-cue--skip">進む</div>
           </article>
 
           <div id="emptyState" class="empty-state is-hidden">
@@ -203,13 +206,13 @@
     </dialog>
   </main>
 
-  <script type="module" src="./src/privacy-guard.js"></script>
-  <script type="module" src="./src/flow-presets.js"></script>
-  <script type="module" src="./src/loading-guard.js"></script>
-  <script type="module" src="./src/session-ux.js"></script>
-  <script type="module" src="./src/fx-settings.js?v=39"></script>
-  <script type="module" src="./src/effects-force.js?v=39"></script>
-  <script type="module" src="./src/input-guard.js?v=39"></script>
-  <script type="module" src="./src/app.js"></script>
+  <script type="module" src="./src/privacy-guard.js?v=42"></script>
+  <script type="module" src="./src/flow-presets.js?v=42"></script>
+  <script type="module" src="./src/loading-guard.js?v=42"></script>
+  <script type="module" src="./src/session-ux.js?v=42"></script>
+  <script type="module" src="./src/fx-settings.js?v=42"></script>
+  <script type="module" src="./src/effects-force.js?v=42"></script>
+  <script type="module" src="./src/input-guard.js?v=42"></script>
+  <script type="module" src="./src/app.js?v=42"></script>
 </body>
 </html>
