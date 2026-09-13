@@ -1,12 +1,10 @@
-const SCRIPTABLE_SYNC_URL = "scriptable:///run/Velvet%20Feed%20Sync";
-const PENDING_KEY = "velvet_feed_sync_pending_v1";
 const LIVE_FEED_URL = "./velvet-content.json";
 const MIN_LIVE_ITEMS = 3;
-const MAX_PROBE_ATTEMPTS = 5;
+const AUTO_PROBE_DELAYS = [1200, 4000, 10000, 20000];
 
 let feedInfo = window.__velvetFeedInfo || null;
 let probeTimer = null;
-let probeAttempt = 0;
+let probeIndex = 0;
 let probing = false;
 
 function emitStatus(message, timeout = 2600) {
@@ -17,27 +15,6 @@ function emitStatus(message, timeout = 2600) {
 
 function isDemoFeed() {
   return feedInfo?.demo === true;
-}
-
-function rememberPending() {
-  try {
-    sessionStorage.setItem(PENDING_KEY, JSON.stringify({ startedAt: Date.now() }));
-  } catch (_) {}
-}
-
-function hasPendingSync() {
-  try {
-    return !!sessionStorage.getItem(PENDING_KEY);
-  } catch (_) {
-    return false;
-  }
-}
-
-function clearPending() {
-  try {
-    sessionStorage.removeItem(PENDING_KEY);
-  } catch (_) {}
-  probeAttempt = 0;
 }
 
 async function liveFeedAvailable() {
@@ -60,64 +37,59 @@ async function liveFeedAvailable() {
   }
 }
 
-async function probeAfterReturn() {
-  if (!hasPendingSync() || probing || document.hidden) return;
+function clearProbe() {
+  clearTimeout(probeTimer);
+  probeTimer = null;
+  probeIndex = 0;
+}
+
+async function probeLiveFeed({ userRequested = false } = {}) {
+  if (!isDemoFeed() || probing || document.hidden) return;
   probing = true;
+  if (userRequested) emitStatus("最新フィードを確認しています", 1600);
   const live = await liveFeedAvailable();
   probing = false;
 
   if (live) {
-    clearPending();
-    emitStatus("フィード更新を確認しました", 1400);
-    setTimeout(() => location.reload(), 180);
+    clearProbe();
+    emitStatus("最新フィードを取得しました", 1200);
+    setTimeout(() => location.reload(), 120);
     return;
   }
 
-  probeAttempt += 1;
-  if (probeAttempt >= MAX_PROBE_ATTEMPTS) {
-    emitStatus("同期を確認できません。デモカードをタップして再試行", 4200);
-    return;
+  if (userRequested) {
+    emitStatus("フィード準備中です。自動で再確認します", 2800);
   }
 
+  if (probeIndex >= AUTO_PROBE_DELAYS.length) return;
+  const delay = AUTO_PROBE_DELAYS[probeIndex++];
   clearTimeout(probeTimer);
-  probeTimer = setTimeout(probeAfterReturn, 700 * probeAttempt);
-}
-
-function requestScriptableSync() {
-  if (!isDemoFeed()) return false;
-  rememberPending();
-  emitStatus("Scriptableでフィードを更新します", 2200);
-  window.location.href = SCRIPTABLE_SYNC_URL;
-  clearTimeout(probeTimer);
-  probeTimer = setTimeout(probeAfterReturn, 1800);
-  return true;
+  probeTimer = setTimeout(() => probeLiveFeed(), delay);
 }
 
 window.addEventListener("velvet:feed-info", event => {
   feedInfo = event.detail || null;
   if (isDemoFeed()) {
-    emitStatus("デモ表示中・カードをタップで同期", 5200);
+    emitStatus("フィード準備中・自動で更新を確認します", 4200);
+    clearProbe();
+    probeTimer = setTimeout(() => probeLiveFeed(), 500);
   } else {
-    clearPending();
+    clearProbe();
   }
 });
 
 window.addEventListener("velvet:media-tap", event => {
   if (!isDemoFeed()) return;
   event.stopImmediatePropagation();
-  requestScriptableSync();
+  probeLiveFeed({ userRequested: true });
 }, { capture: true });
 
 window.addEventListener("velvet:feed-sync-request", () => {
-  requestScriptableSync();
+  probeLiveFeed({ userRequested: true });
 });
 
-window.addEventListener("focus", probeAfterReturn);
-window.addEventListener("pageshow", probeAfterReturn);
+window.addEventListener("focus", () => probeLiveFeed());
+window.addEventListener("pageshow", () => probeLiveFeed());
 document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) probeAfterReturn();
+  if (!document.hidden) probeLiveFeed();
 });
-
-if (hasPendingSync()) {
-  probeTimer = setTimeout(probeAfterReturn, 500);
-}
