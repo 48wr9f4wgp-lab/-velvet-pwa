@@ -1,6 +1,6 @@
 import { createSimulation } from './sim.js';
 import { createSceneView } from './scene-observer-v2.js';
-import { bindUi } from './ui.js';
+import { bindUi } from './ui-observer-v2.js';
 
 const SAVE_KEY = 'observer_logistics_save';
 const fatal = document.getElementById('fatal');
