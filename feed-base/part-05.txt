@@ -1,0 +1,69 @@
+    });
+  }
+  function rankMarkers(src) {
+    return [...String(src || "").matchAll(/No\.\s*(\d{1,3})/gi)].map(m => ({ index: m.index || 0, rank: Number(m[1]) }));
+  }
+  function buildRankCards(html) {
+    const src = String(html || "");
+    const markers = rankMarkers(src);
+    if (markers.length < 4) return [];
+    return markers.map((cur, i) => {
+      const prevPos = i > 0 ? markers[i - 1].index : 0;
+      const nextPos = i + 1 < markers.length ? markers[i + 1].index : src.length;
+      const start = i > 0 ? Math.floor((prevPos + cur.index) / 2) : Math.max(0, cur.index - 2200);
+      const end = i + 1 < markers.length ? Math.floor((cur.index + nextPos) / 2) : Math.min(src.length, cur.index + 2600);
+      return { rank: cur.rank || i + 1, html: src.slice(start, end) };
+    });
+  }
+  function buildFallbackCards(html) {
+    const src = String(html || "");
+    const media = extractMediaMatches(src).slice(0, 120);
+    return media.map((row, i) => {
+      const prev = i > 0 ? media[i - 1].index : 0;
+      const next = i + 1 < media.length ? media[i + 1].index : src.length;
+      return { rank: i + 1, html: src.slice(Math.max(prev, row.index - 1800), Math.min(next, row.index + 2400)) };
+    });
+  }
+  function statusAndHandle(block) {
+    const normalized = decodeEscaped(block);
+    const status = normalized.match(/https?:\/\/(?:x|twitter)\.com\/([A-Za-z0-9_]{1,15})\/status\/(\d+)/i);
+    if (status) return { statusURL: `https://x.com/${status[1]}/status/${status[2]}`, handle: status[1], statusId: status[2] };
+    const handle = normalized.match(/(?:\/user\/|@|twitter\.com\/|x\.com\/)([A-Za-z0-9_]{1,15})/i);
+    return { statusURL: null, handle: handle ? handle[1] : null, statusId: null };
+  }
+  function mediaIdFrom(url, statusId) {
+    if (statusId) return `status:${statusId}:${String(url).slice(-36)}`;
+    return (String(url).match(/\/(\d{8,})\//) || [])[1] || String(url).replace(/[^a-z0-9]/gi, "").slice(-80);
+  }
+  function intensityFromTier(tier) {
+    if (tier === "high") return 5;
+    if (tier === "medium") return 3.8;
+    if (tier === "low") return 1.3;
+    return 3;
+  }
+  function itemTags(meta, source, baselineProfiles) {
+    const t = textOf(meta);
+    const tiers = Object.values(baselineProfiles).map(row => row.exposure_tier);
+    const strongest = tiers.includes("high") ? 5 : tiers.includes("medium") ? 3.8 : tiers.includes("low") ? 1.3 : 3;
+    const out = new Set([source.sourceClass, source.name.toLowerCase(), strongest >= 4.5 ? "intense" : strongest <= 2 ? "soft" : "mid"]);
+    const map = {
+      portrait: ["portrait", "ポートレート"], casual: ["casual", "日常", "自撮り"], studio: ["studio", "撮影", "スタジオ"],
+      cosplay: ["cosplay", "コスプレ"], gravure: ["gravure", "グラビア"], lingerie: ["lingerie", "ランジェリー", "下着"],
+      swimwear: ["bikini", "swimsuit", "水着", "ビキニ"], close: ["close up", "close-up", "アップ"], outdoor: ["outdoor", "beach", "海", "屋外"]
+    };
+    for (const [tag, words] of Object.entries(map)) if (words.some(word => t.includes(word))) out.add(tag);
+    return [...out];
+  }
+
+  const SAFETY_REASONS = new Set(["hard-age-risk", "numeric-under18", "teen-exposure-risk", "nonconsensual-metadata"]);
+  function emptyCounts() { return { total: 0, by_reason: {}, by_source: {} }; }
+  function noteCount(bucket, reason, sourceName) {
+    bucket.total += 1;
+    bucket.by_reason[reason] = (bucket.by_reason[reason] || 0) + 1;
+    bucket.by_source[sourceName] = (bucket.by_source[sourceName] || 0) + 1;
+  }
+  function mergeCounts(target, source) {
+    target.total += Number(source?.total || 0);
+    for (const [key, count] of Object.entries(source?.by_reason || {})) target.by_reason[key] = (target.by_reason[key] || 0) + Number(count || 0);
+    for (const [key, count] of Object.entries(source?.by_source || {})) target.by_source[key] = (target.by_source[key] || 0) + Number(count || 0);
+  }
