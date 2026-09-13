@@ -1,3 +1,6 @@
+import "./image-guard.js?v=43";
+import "./session-cues.js?v=43";
+
 const KEY = "velvet_fx_mode_v1";
 const VALID = new Set(["off", "standard", "high"]);
 
@@ -41,11 +44,31 @@ function stateLabel(mode = readMode()) {
   return "演出：標準";
 }
 
+function localizeControls() {
+  const select = document.querySelector("#fxModeSetting");
+  const label = select?.closest("label");
+  if (label) {
+    const title = label.querySelector("b");
+    const note = label.querySelector("small");
+    if (title) title.textContent = "演出";
+    if (note) note.textContent = "スワイプやボタンの演出強度を選びます。";
+  }
+  if (select) {
+    const labels = { off: "オフ", standard: "標準", high: "強" };
+    [...select.options].forEach(option => {
+      if (labels[option.value]) option.textContent = labels[option.value];
+    });
+  }
+  const test = document.querySelector("#fxTestButton");
+  if (test) test.textContent = "演出テスト";
+}
+
 function updateUi() {
   const mode = readMode();
   document.documentElement.dataset.velvetFx = mode;
   const select = document.querySelector("#fxModeSetting");
   const status = document.querySelector("#fxDiagnosticStatus");
+  localizeControls();
   if (select) select.value = mode;
   if (status) {
     status.textContent = `${stateLabel(mode)} · 端末の視差軽減 ${systemReduceMotion() ? "ON" : "OFF"}`;
