@@ -1,5 +1,5 @@
 import { createSimulation } from './sim.js';
-import { createSceneView } from './scene.js';
+import { createSceneView } from './scene-growth.js';
 import { bindUi } from './ui.js';
 
 const SAVE_KEY = 'observer_logistics_save';
