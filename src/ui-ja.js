@@ -24,8 +24,9 @@ function localizeStaticUi() {
     setText("#retryFeedButton", "再読み込み");
   }
 
-  setText("#dragLike", "保存");
-  setText("#dragSkip", "スキップ");
+  // Swipe gestures are navigation, not reactions.
+  setText("#dragLike", "戻る");
+  setText("#dragSkip", "進む");
 
   setText("#sessionSetupView h2", "Sessionを選ぶ");
   setText("#sessionSetupView .panel .muted", "時間とムードを選んで、集中して見る。");
