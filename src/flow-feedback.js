@@ -38,16 +38,18 @@ function dismissFeedback() {
   const bar = document.querySelector("#flowFeedback");
   if (!bar) return;
   bar.classList.remove("is-visible", "is-like");
+  bar.querySelector(".flow-feedback__message").textContent = "";
+  bar.querySelector(".flow-feedback__undo").hidden = true;
 }
 
 function syncFavoriteButton() {
   if (!likeButton) return;
   likeButton.classList.toggle("is-saved", currentFavorite);
   likeButton.setAttribute("aria-pressed", currentFavorite ? "true" : "false");
-  likeButton.setAttribute("aria-label", currentFavorite ? "お気に入りから外す" : "お気に入りに保存");
-  likeButton.dataset.label = currentFavorite
-    ? (currentMode === "favorites" ? "解除" : "保存済み")
-    : "お気に入り";
+  likeButton.setAttribute("aria-label", currentFavorite ? "お気に入りから外す" : "お気に入りに追加");
+  // Returning through navigation must never look like a save action.
+  // The heart's visual state communicates whether this item is already a favorite.
+  likeButton.dataset.label = currentMode === "favorites" && currentFavorite ? "解除" : "お気に入り";
 }
 
 function show(message, { undo = false, liked = false, timeout = 4600 } = {}) {
@@ -79,7 +81,7 @@ window.addEventListener("velvet:flow-feedback", event => {
   const reaction = event.detail?.reaction;
   if (reaction === "like") {
     const saved = event.detail?.saved !== false;
-    show(saved ? "お気に入りに保存" : "好みに反映しました", { undo: true, liked: saved });
+    show(saved ? "お気に入りに追加" : "好みに反映しました", { undo: true, liked: saved });
   } else if (reaction === "unfavorite") {
     show("お気に入りから外しました", { undo: true });
   } else if (reaction === "skip") {
