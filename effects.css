@@ -1,0 +1,206 @@
+/* Velvet v37 motion / impact pass */
+
+.velvet-fx-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  pointer-events: none;
+  overflow: hidden;
+  contain: strict;
+}
+
+.velvet-fx-edge,
+.velvet-fx-flash {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.velvet-fx-edge::before,
+.velvet-fx-edge::after {
+  content: "";
+  position: absolute;
+  top: 8%;
+  bottom: 8%;
+  width: 38%;
+  filter: blur(20px);
+  opacity: 0;
+  transform: scaleX(.65);
+  transition: opacity .08s linear, transform .08s linear;
+}
+
+.velvet-fx-edge::before {
+  left: -18%;
+  background: radial-gradient(ellipse at left center, rgba(110,231,255,.88), rgba(110,231,255,.26) 34%, transparent 72%);
+  transform-origin: left center;
+}
+
+.velvet-fx-edge::after {
+  right: -18%;
+  background: radial-gradient(ellipse at right center, rgba(244,114,255,.88), rgba(244,114,255,.26) 34%, transparent 72%);
+  transform-origin: right center;
+}
+
+.velvet-fx-layer[data-gesture="next"] .velvet-fx-edge,
+.velvet-fx-layer[data-gesture="back"] .velvet-fx-edge {
+  opacity: 1;
+}
+
+.velvet-fx-layer[data-gesture="next"] .velvet-fx-edge::before {
+  opacity: var(--velvet-fx-strength, .55);
+  transform: scaleX(1.15);
+}
+
+.velvet-fx-layer[data-gesture="back"] .velvet-fx-edge::after {
+  opacity: var(--velvet-fx-strength, .55);
+  transform: scaleX(1.15);
+}
+
+.velvet-fx-flash.is-next,
+.velvet-fx-flash.is-back,
+.velvet-fx-flash.is-like,
+.velvet-fx-flash.is-skip {
+  animation: velvet-screen-flash .42s cubic-bezier(.2,.9,.2,1) both;
+}
+
+.velvet-fx-flash.is-next {
+  background: linear-gradient(90deg, rgba(96,226,255,.26), transparent 38%);
+}
+
+.velvet-fx-flash.is-back {
+  background: linear-gradient(270deg, rgba(244,114,255,.26), transparent 38%);
+}
+
+.velvet-fx-flash.is-like {
+  background: radial-gradient(circle at 78% 78%, rgba(229,180,255,.34), transparent 42%);
+}
+
+.velvet-fx-flash.is-skip {
+  background: radial-gradient(circle at 22% 78%, rgba(255,127,160,.22), transparent 44%);
+}
+
+.velvet-fx-particle {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 18px currentColor;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.3);
+  animation: velvet-particle-burst var(--dur) cubic-bezier(.14,.8,.2,1) forwards;
+}
+
+.velvet-fx-particle.is-streak {
+  width: 18px;
+  height: 3px;
+  border-radius: 999px;
+  transform-origin: center;
+  filter: blur(.15px);
+}
+
+.velvet-fx-particle.is-heart {
+  width: auto;
+  height: auto;
+  background: none;
+  box-shadow: none;
+  font-size: var(--size);
+  line-height: 1;
+  border-radius: 0;
+}
+
+.media-card.fx-nav-pull-next {
+  box-shadow: -18px 0 46px rgba(90,220,255,.18), 0 18px 50px rgba(0,0,0,.38);
+}
+
+.media-card.fx-nav-pull-back {
+  box-shadow: 18px 0 46px rgba(232,110,255,.18), 0 18px 50px rgba(0,0,0,.38);
+}
+
+.media-card.fx-enter-next {
+  animation: velvet-card-enter-next .34s cubic-bezier(.12,.9,.22,1.05) both;
+}
+
+.media-card.fx-enter-back {
+  animation: velvet-card-enter-back .34s cubic-bezier(.12,.9,.22,1.05) both;
+}
+
+#likeButton.fx-impact,
+#sessionLikeButton.fx-impact {
+  animation: velvet-like-impact .46s cubic-bezier(.2,1.25,.2,1) both;
+}
+
+#skipButton.fx-impact,
+#sessionSkipButton.fx-impact {
+  animation: velvet-skip-impact .34s cubic-bezier(.2,1.15,.2,1) both;
+}
+
+.drag-cue {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 10px 34px rgba(0,0,0,.34);
+  text-shadow: 0 0 16px currentColor;
+}
+
+.drag-cue--like {
+  color: #f4a5ff;
+  border-color: #f4a5ff;
+}
+
+.drag-cue--skip {
+  color: #75e9ff;
+  border-color: #75e9ff;
+}
+
+@keyframes velvet-screen-flash {
+  0% { opacity: 0; }
+  22% { opacity: .96; }
+  100% { opacity: 0; }
+}
+
+@keyframes velvet-particle-burst {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.25) rotate(0deg);
+  }
+  12% { opacity: 1; }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(var(--scale, 1)) rotate(var(--rot, 110deg));
+  }
+}
+
+@keyframes velvet-card-enter-next {
+  0% { opacity: .15; transform: translateX(18%) scale(.965) rotate(1.8deg); filter: blur(8px) saturate(1.3); }
+  58% { opacity: 1; transform: translateX(-1.5%) scale(1.012) rotate(-.35deg); filter: blur(0) saturate(1.08); }
+  100% { opacity: 1; transform: translateX(0) scale(1) rotate(0); filter: none; }
+}
+
+@keyframes velvet-card-enter-back {
+  0% { opacity: .15; transform: translateX(-18%) scale(.965) rotate(-1.8deg); filter: blur(8px) saturate(1.3); }
+  58% { opacity: 1; transform: translateX(1.5%) scale(1.012) rotate(.35deg); filter: blur(0) saturate(1.08); }
+  100% { opacity: 1; transform: translateX(0) scale(1) rotate(0); filter: none; }
+}
+
+@keyframes velvet-like-impact {
+  0% { transform: scale(1); filter: brightness(1); }
+  34% { transform: scale(1.16) rotate(-5deg); filter: brightness(1.65); box-shadow: 0 0 0 8px rgba(233,213,255,.12), 0 0 42px rgba(192,132,252,.45); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+@keyframes velvet-skip-impact {
+  0% { transform: scale(1); }
+  35% { transform: scale(.86) rotate(8deg); filter: brightness(1.35); box-shadow: 0 0 0 7px rgba(251,113,133,.10), 0 0 34px rgba(251,113,133,.25); }
+  100% { transform: scale(1); }
+}
+
+.reduced-motion .velvet-fx-layer {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .velvet-fx-layer { display: none !important; }
+}

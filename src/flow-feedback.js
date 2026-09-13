@@ -32,6 +32,14 @@ function ensureBar() {
   return bar;
 }
 
+function dismissFeedback() {
+  clearTimeout(hideTimer);
+  hideTimer = null;
+  const bar = document.querySelector("#flowFeedback");
+  if (!bar) return;
+  bar.classList.remove("is-visible", "is-like");
+}
+
 function syncFavoriteButton() {
   if (!likeButton) return;
   likeButton.classList.toggle("is-saved", currentFavorite);
@@ -78,6 +86,15 @@ window.addEventListener("velvet:flow-feedback", event => {
     show("スキップしました", { undo: true });
   }
 });
+
+for (const eventName of [
+  "velvet:flow-next",
+  "velvet:flow-back",
+  "velvet:session-next",
+  "velvet:session-back"
+]) {
+  window.addEventListener(eventName, dismissFeedback);
+}
 
 window.addEventListener("velvet:flow-undone", () => {
   show("ひとつ前に戻しました", { undo: false, timeout: 1800 });
