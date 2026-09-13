@@ -9,17 +9,18 @@ const ui = {
   movePad: $('movePad'), moveKnob: $('moveKnob'), lookPad: $('lookPad'),
 };
 
-const SAVE_KEY = 'workshop_sandbox_v2';
+const SAVE_KEY = 'workshop_sandbox_v3';
 const BOX_PRICE = 40;
 const BASE_SALE = 80;
 const MAX_BOXES = 40;
 const GOAL = 10;
-const MOVE_SPEED = 5.6;
-const GRAB_RANGE = 5.5;
-const THROW_SPEED = 11.5;
+const MOVE_SPEED = 5.8;
+const GRAB_RANGE = 5.8;
+const THROW_SPEED = 12.2;
 const SELL_CENTER = new THREE.Vector3(5.4, 0, -5.4);
-const SELL_RADIUS = 1.95;
+const SELL_RADIUS = 2.15;
 const FIXED_STEP = 1 / 60;
+const HOLD_SCALE = 0.58;
 
 function showFatal(error) {
   ui.fatal.hidden = false;
@@ -36,7 +37,7 @@ function loadSave() {
     const raw = localStorage.getItem(SAVE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
-    if (parsed?.version !== 2 || !Array.isArray(parsed.boxes)) return null;
+    if (parsed?.version !== 3 || !Array.isArray(parsed.boxes)) return null;
     return parsed;
   } catch {
     return null;
@@ -46,7 +47,11 @@ function loadSave() {
 try {
   await RAPIER.init();
 
-  const renderer = new THREE.WebGLRenderer({ canvas: ui.canvas, antialias: true, powerPreference: 'high-performance' });
+  const renderer = new THREE.WebGLRenderer({
+    canvas: ui.canvas,
+    antialias: true,
+    powerPreference: 'high-performance',
+  });
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.45));
   renderer.setSize(innerWidth, innerHeight, false);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -121,20 +126,25 @@ try {
 
   const sellLabel = document.createElement('div');
   sellLabel.textContent = 'THROW HERE';
-  sellLabel.style.cssText = 'position:absolute;z-index:20;left:50%;top:12%;transform:translateX(-50%);padding:7px 12px;border-radius:999px;background:rgba(22,180,91,.82);box-shadow:0 0 24px rgba(52,210,122,.35);font:800 12px -apple-system;color:white;pointer-events:none;display:none';
+  sellLabel.style.cssText = 'position:absolute;z-index:30;left:50%;top:12%;transform:translateX(-50%);padding:7px 12px;border-radius:999px;background:rgba(22,180,91,.82);box-shadow:0 0 24px rgba(52,210,122,.35);font:800 12px -apple-system;color:white;pointer-events:none;display:none';
   document.body.appendChild(sellLabel);
 
   const feedback = document.createElement('div');
-  feedback.style.cssText = 'position:absolute;z-index:30;left:50%;top:34%;transform:translate(-50%,-50%);font:900 30px -apple-system;color:#fff;text-shadow:0 3px 16px rgba(0,0,0,.8);pointer-events:none;opacity:0;transition:opacity .14s,transform .22s;white-space:nowrap';
+  feedback.style.cssText = 'position:absolute;z-index:40;left:50%;top:34%;transform:translate(-50%,-50%);font:900 30px -apple-system;color:#fff;text-shadow:0 3px 16px rgba(0,0,0,.8);pointer-events:none;opacity:0;transition:opacity .14s,transform .22s;white-space:nowrap';
   document.body.appendChild(feedback);
 
   const comboBadge = document.createElement('div');
-  comboBadge.style.cssText = 'position:absolute;z-index:30;right:18px;top:20%;font:900 20px -apple-system;color:#ffe27a;text-shadow:0 2px 12px rgba(0,0,0,.75);pointer-events:none;opacity:0;transition:opacity .15s,transform .15s';
+  comboBadge.style.cssText = 'position:absolute;z-index:40;right:18px;top:20%;font:900 20px -apple-system;color:#ffe27a;text-shadow:0 2px 12px rgba(0,0,0,.75);pointer-events:none;opacity:0;transition:opacity .15s,transform .15s';
   document.body.appendChild(comboBadge);
 
   const flash = document.createElement('div');
-  flash.style.cssText = 'position:absolute;z-index:25;inset:0;background:rgba(84,255,151,.18);pointer-events:none;opacity:0;transition:opacity .16s';
+  flash.style.cssText = 'position:absolute;z-index:35;inset:0;background:rgba(84,255,151,.18);pointer-events:none;opacity:0;transition:opacity .16s';
   document.body.appendChild(flash);
+
+  const holdHint = document.createElement('div');
+  holdHint.textContent = 'HELD';
+  holdHint.style.cssText = 'position:absolute;z-index:40;right:18px;bottom:31%;padding:5px 9px;border-radius:999px;background:rgba(41,200,255,.18);border:1px solid rgba(76,219,255,.38);color:#a8edff;font:800 11px -apple-system;letter-spacing:.08em;pointer-events:none;opacity:0;transition:opacity .12s';
+  document.body.appendChild(holdHint);
 
   let feedbackTimer = 0;
   let comboTimer = 0;
@@ -157,9 +167,26 @@ try {
     });
   }
 
+  const trajectoryMaterial = new THREE.LineBasicMaterial({
+    color: 0x65e7ff,
+    transparent: true,
+    opacity: 0.82,
+    depthTest: false,
+  });
+  const trajectoryGeometry = new THREE.BufferGeometry();
+  const trajectoryLine = new THREE.Line(trajectoryGeometry, trajectoryMaterial);
+  trajectoryLine.visible = false;
+  trajectoryLine.renderOrder = 20;
+  scene.add(trajectoryLine);
+
   const boxes = [];
   const boxGeometry = new THREE.BoxGeometry(0.74, 0.6, 0.74);
-  const baseBoxMaterial = new THREE.MeshStandardMaterial({ color: 0xd39a59, roughness: 0.74, emissive: 0x000000, emissiveIntensity: 0 });
+  const baseBoxMaterial = new THREE.MeshStandardMaterial({
+    color: 0xd39a59,
+    roughness: 0.74,
+    emissive: 0x000000,
+    emissiveIntensity: 0,
+  });
   let nextBoxId = 1;
   let held = null;
   let targeted = null;
@@ -167,6 +194,32 @@ try {
   let combo = 0;
   let lastSaleAt = 0;
   let cameraPunch = 0;
+
+  function setHeldVisual(box, enabled) {
+    if (!box) return;
+    const material = box.mesh.material;
+    if (enabled) {
+      box.mesh.scale.setScalar(HOLD_SCALE);
+      material.transparent = true;
+      material.opacity = 0.58;
+      material.depthWrite = false;
+      material.emissive.setHex(0x25c9ff);
+      material.emissiveIntensity = 0.95;
+      box.mesh.renderOrder = 10;
+      holdHint.style.opacity = '1';
+      trajectoryLine.visible = true;
+    } else {
+      box.mesh.scale.setScalar(1);
+      material.opacity = 1;
+      material.transparent = false;
+      material.depthWrite = true;
+      material.emissive.setHex(0x000000);
+      material.emissiveIntensity = 0;
+      box.mesh.renderOrder = 0;
+      holdHint.style.opacity = '0';
+      trajectoryLine.visible = false;
+    }
+  }
 
   function spawnBox(position, rotation = null) {
     if (boxes.length >= MAX_BOXES) return null;
@@ -182,7 +235,12 @@ try {
       .setCanSleep(true);
     if (rotation) desc.setRotation(rotation);
     const body = world.createRigidBody(desc);
-    world.createCollider(RAPIER.ColliderDesc.cuboid(0.37, 0.30, 0.37).setFriction(0.72).setRestitution(0.08), body);
+    world.createCollider(
+      RAPIER.ColliderDesc.cuboid(0.37, 0.30, 0.37)
+        .setFriction(0.72)
+        .setRestitution(0.08),
+      body
+    );
 
     const box = { id: nextBoxId++, mesh, body };
     mesh.userData.box = box;
@@ -192,7 +250,10 @@ try {
 
   function removeBox(box) {
     if (!box) return;
-    if (held === box) held = null;
+    if (held === box) {
+      setHeldVisual(box, false);
+      held = null;
+    }
     if (targeted === box) targeted = null;
     if (previousTarget === box) previousTarget = null;
     scene.remove(box.mesh);
@@ -200,6 +261,13 @@ try {
     world.removeRigidBody(box.body);
     const index = boxes.indexOf(box);
     if (index >= 0) boxes.splice(index, 1);
+  }
+
+  function spawnReplacement() {
+    if (boxes.length >= MAX_BOXES) return;
+    const x = THREE.MathUtils.randFloat(-2.8, 2.8);
+    const z = THREE.MathUtils.randFloat(1.0, 4.0);
+    spawnBox(new THREE.Vector3(x, 1.2, z));
   }
 
   const initialPositions = [];
@@ -237,7 +305,7 @@ try {
     ui.buy.disabled = money < BOX_PRICE || boxes.length >= MAX_BOXES;
     if (message) ui.status.textContent = message;
     else if (sold >= GOAL) ui.status.textContent = '目標達成！ コンボを伸ばせ';
-    else if (held) ui.status.textContent = '緑ゾーンへ投げ込め';
+    else if (held) ui.status.textContent = '照準は見える。緑ゾーンへ投げ込め';
     else if (targeted) ui.status.textContent = '吸着できる';
     else ui.status.textContent = '箱を狙って吸着 → 投げる';
   }
@@ -255,19 +323,28 @@ try {
     return new THREE.Quaternion().setFromEuler(euler);
   }
 
+  function dropHeld() {
+    if (!held) return;
+    const box = held;
+    const dir = viewVector();
+    const right = new THREE.Vector3().crossVectors(dir, camera.up).normalize();
+    const dropPos = camera.position.clone()
+      .add(dir.multiplyScalar(1.1))
+      .add(right.multiplyScalar(0.45));
+    dropPos.y = Math.max(0.52, dropPos.y - 0.25);
+    setHeldVisual(box, false);
+    box.body.setTranslation({ x: dropPos.x, y: dropPos.y, z: dropPos.z }, true);
+    box.body.setLinvel({ x: 0, y: 0, z: 0 }, true);
+    box.body.setAngvel({ x: 0, y: 0, z: 0 }, true);
+    box.body.setEnabled(true);
+    held = null;
+    haptic(10);
+    updateHud('離した');
+  }
+
   function toggleGrab() {
     if (held) {
-      const dir = viewVector();
-      const dropPos = camera.position.clone().add(dir.multiplyScalar(1.45));
-      dropPos.y = Math.max(0.52, dropPos.y);
-      held.body.setTranslation({ x: dropPos.x, y: dropPos.y, z: dropPos.z }, true);
-      held.body.setLinvel({ x: 0, y: 0, z: 0 }, true);
-      held.body.setAngvel({ x: 0, y: 0, z: 0 }, true);
-      held.body.setEnabled(true);
-      held.mesh.material.emissiveIntensity = 0;
-      held = null;
-      haptic(10);
-      updateHud('離した');
+      dropHeld();
       return;
     }
     if (!targeted) {
@@ -277,71 +354,72 @@ try {
     }
     held = targeted;
     held.body.setEnabled(false);
-    held.mesh.material.emissive.setHex(0x34d9ff);
-    held.mesh.material.emissiveIntensity = 0.9;
+    setHeldVisual(held, true);
     cameraPunch = Math.max(cameraPunch, 0.055);
     haptic(12);
-    updateHud('吸着！ 投げろ');
+    updateHud('吸着！ 照準を合わせて投げろ');
   }
 
   function throwHeld() {
     if (!held) return updateHud('まず箱を吸着');
     const box = held;
     const dir = viewVector();
-    const start = camera.position.clone().add(dir.clone().multiplyScalar(1.25));
+    const right = new THREE.Vector3().crossVectors(dir, camera.up).normalize();
+    const start = camera.position.clone()
+      .add(dir.clone().multiplyScalar(0.95))
+      .add(right.multiplyScalar(0.28));
+
+    setHeldVisual(box, false);
     box.mesh.position.copy(start);
     box.body.setTranslation({ x: start.x, y: start.y, z: start.z }, true);
     box.body.setRotation(cameraQuaternion(), true);
     box.body.setEnabled(true);
-    box.body.setLinvel({ x: dir.x * THROW_SPEED, y: dir.y * THROW_SPEED + 1.25, z: dir.z * THROW_SPEED }, true);
+    box.body.setLinvel({
+      x: dir.x * THROW_SPEED,
+      y: dir.y * THROW_SPEED + 1.25,
+      z: dir.z * THROW_SPEED,
+    }, true);
     box.body.setAngvel({ x: 4.5, y: 7.5, z: 3.5 }, true);
-    box.mesh.material.emissiveIntensity = 0;
     held = null;
-    cameraPunch = Math.max(cameraPunch, 0.11);
-    haptic(16);
-    updateHud('ズドン！');
-  }
-
-  function sellBox(box) {
-    const now = performance.now();
-    combo = now - lastSaleAt < 2400 ? combo + 1 : 1;
-    lastSaleAt = now;
-    const multiplier = 1 + Math.min(combo - 1, 4) * 0.25;
-    const reward = Math.round(BASE_SALE * multiplier);
-    removeBox(box);
-    money += reward;
-    sold += 1;
-    cameraPunch = Math.max(cameraPunch, 0.16);
-    showFeedback(`+¥${reward}`, combo >= 3);
-    pulseFlash();
-    haptic(combo >= 3 ? 28 : 18);
-
-    clearTimeout(comboTimer);
-    if (combo >= 2) {
-      comboBadge.textContent = `COMBO ×${combo}`;
-      comboBadge.style.opacity = '1';
-      comboBadge.style.transform = 'scale(1.16)';
-      requestAnimationFrame(() => { comboBadge.style.transform = 'scale(1)'; });
-      comboTimer = setTimeout(() => { comboBadge.style.opacity = '0'; }, 2100);
-    }
-
-    updateHud(combo >= 2 ? `COMBO ×${combo}  +¥${reward}` : `ナイス！ +¥${reward}`);
-    saveNow();
-
-    setTimeout(() => {
-      if (boxes.length < MAX_BOXES) {
-        spawnBox(new THREE.Vector3(-2.6 + Math.random() * 5.2, 1.05, 4.7 + Math.random() * 1.2));
-      }
-    }, 650);
+    cameraPunch = Math.max(cameraPunch, 0.18);
+    haptic(22);
+    updateHud('投げた！');
   }
 
   function buyBox() {
-    if (money < BOX_PRICE) return updateHud('資金不足');
-    if (boxes.length >= MAX_BOXES) return updateHud('箱が多すぎる');
+    if (money < BOX_PRICE) return updateHud('資金が足りません');
+    if (boxes.length >= MAX_BOXES) return updateHud('箱の上限です');
     money -= BOX_PRICE;
-    spawnBox(new THREE.Vector3(-2.4 + Math.random() * 4.8, 1.1, 5.1));
-    updateHud(`補充 -¥${BOX_PRICE}`);
-    haptic(8);
+    spawnBox(new THREE.Vector3(5.8, 1.2, 5.8));
+    showFeedback(`-¥${BOX_PRICE}`);
+    updateHud('箱を補充');
+    saveNow();
+  }
+
+  function awardSale(box) {
+    const now = performance.now();
+    combo = (now - lastSaleAt <= 4200) ? combo + 1 : 1;
+    lastSaleAt = now;
+    const bonus = Math.min(5, Math.max(0, combo - 1)) * 20;
+    const reward = BASE_SALE + bonus;
+    money += reward;
+    sold += 1;
+    removeBox(box);
+    showFeedback(`+¥${reward}`, combo >= 3);
+    pulseFlash();
+    comboBadge.textContent = combo > 1 ? `COMBO ×${combo}` : '';
+    comboBadge.style.opacity = combo > 1 ? '1' : '0';
+    comboBadge.style.transform = 'scale(1.2)';
+    requestAnimationFrame(() => { comboBadge.style.transform = 'scale(1)'; });
+    clearTimeout(comboTimer);
+    comboTimer = setTimeout(() => {
+      comboBadge.style.opacity = '0';
+      combo = 0;
+    }, 4200);
+    cameraPunch = Math.max(cameraPunch, 0.24);
+    haptic(combo >= 3 ? 35 : 22);
+    updateHud(combo > 1 ? `ナイス！ COMBO ×${combo}` : `売却 +¥${reward}`);
+    setTimeout(spawnReplacement, 420);
     saveNow();
   }
 
@@ -349,13 +427,16 @@ try {
     try {
       const snapshot = boxes.map((box) => {
         if (held === box) {
-          return { p: [box.mesh.position.x, box.mesh.position.y, box.mesh.position.z], r: [box.mesh.quaternion.x, box.mesh.quaternion.y, box.mesh.quaternion.z, box.mesh.quaternion.w] };
+          return {
+            p: [box.mesh.position.x, box.mesh.position.y, box.mesh.position.z],
+            r: [box.mesh.quaternion.x, box.mesh.quaternion.y, box.mesh.quaternion.z, box.mesh.quaternion.w],
+          };
         }
         const p = box.body.translation();
         const r = box.body.rotation();
         return { p: [p.x, p.y, p.z], r: [r.x, r.y, r.z, r.w] };
       });
-      localStorage.setItem(SAVE_KEY, JSON.stringify({ version: 2, money, sold, boxes: snapshot }));
+      localStorage.setItem(SAVE_KEY, JSON.stringify({ version: 3, money, sold, boxes: snapshot }));
     } catch {
       updateHud('保存できませんでした');
     }
@@ -370,6 +451,7 @@ try {
       location.reload();
     }
   });
+
   addEventListener('keydown', (event) => {
     if (event.repeat) return;
     if (event.code === 'KeyE') toggleGrab();
@@ -377,13 +459,88 @@ try {
     if (event.code === 'KeyB') buyBox();
   });
   addEventListener('pagehide', saveNow);
-  setInterval(saveNow, 8000);
+  setInterval(saveNow, 5000);
 
   const clock = new THREE.Clock();
   let accumulator = 0;
   const tmpDirection = new THREE.Vector3();
   const tmpRight = new THREE.Vector3();
+  const tmpUp = new THREE.Vector3();
   let hudTimer = 0;
+
+  function updateHeldTransform() {
+    if (!held) return;
+    const forward = viewVector();
+    const right = new THREE.Vector3().crossVectors(forward, camera.up).normalize();
+    tmpUp.set(0, 1, 0).applyQuaternion(camera.quaternion).normalize();
+    const holdPos = camera.position.clone()
+      .add(forward.multiplyScalar(1.05))
+      .add(right.multiplyScalar(0.58))
+      .add(tmpUp.clone().multiplyScalar(-0.42));
+    held.mesh.position.lerp(holdPos, 0.5);
+    held.mesh.quaternion.slerp(camera.quaternion, 0.22);
+  }
+
+  function updateTrajectory() {
+    if (!held) {
+      trajectoryLine.visible = false;
+      return;
+    }
+    trajectoryLine.visible = true;
+    const forward = viewVector();
+    const right = new THREE.Vector3().crossVectors(forward, camera.up).normalize();
+    const start = camera.position.clone()
+      .add(forward.clone().multiplyScalar(0.95))
+      .add(right.multiplyScalar(0.28));
+    const velocity = forward.multiplyScalar(THROW_SPEED);
+    velocity.y += 1.25;
+    const points = [];
+    for (let i = 0; i <= 18; i += 1) {
+      const t = i * 0.06;
+      points.push(new THREE.Vector3(
+        start.x + velocity.x * t,
+        start.y + velocity.y * t - 4.905 * t * t,
+        start.z + velocity.z * t
+      ));
+    }
+    trajectoryGeometry.setFromPoints(points);
+  }
+
+  function updateTargeting() {
+    if (previousTarget && previousTarget !== held) {
+      previousTarget.mesh.material.emissive.setHex(0x000000);
+      previousTarget.mesh.material.emissiveIntensity = 0;
+    }
+
+    if (held) {
+      targeted = null;
+      previousTarget = null;
+      return;
+    }
+
+    raycaster.setFromCamera({ x: 0, y: 0 }, camera);
+    const candidates = boxes.map((box) => box.mesh);
+    const hit = raycaster.intersectObjects(candidates, false)[0];
+    targeted = hit?.object?.userData?.box || null;
+
+    if (targeted) {
+      targeted.mesh.material.emissive.setHex(0x53ddff);
+      targeted.mesh.material.emissiveIntensity = 0.48;
+    }
+    previousTarget = targeted;
+  }
+
+  function checkAutoSales() {
+    const soldNow = [];
+    for (const box of boxes) {
+      if (box === held) continue;
+      const p = box.body.translation();
+      const dx = p.x - SELL_CENTER.x;
+      const dz = p.z - SELL_CENTER.z;
+      if (Math.hypot(dx, dz) <= SELL_RADIUS && p.y >= -0.2 && p.y <= 2.3) soldNow.push(box);
+    }
+    for (const box of soldNow) awardSale(box);
+  }
 
   function frame() {
     requestAnimationFrame(frame);
@@ -391,82 +548,50 @@ try {
     accumulator = Math.min(accumulator + dt, FIXED_STEP * 3);
 
     const look = input.consumeLook();
-    player.yaw -= look.x * 0.0061;
-    player.pitch -= look.y * 0.0049;
-    player.pitch = THREE.MathUtils.clamp(player.pitch, -1.2, 1.2);
+    player.yaw -= look.x * 0.0062;
+    player.pitch -= look.y * 0.0052;
+    player.pitch = THREE.MathUtils.clamp(player.pitch, -1.18, 1.18);
 
     const move = input.movement();
     tmpDirection.copy(forwardVector());
     tmpRight.set(Math.cos(player.yaw), 0, -Math.sin(player.yaw));
     player.position.addScaledVector(tmpDirection, move.y * MOVE_SPEED * dt);
     player.position.addScaledVector(tmpRight, move.x * MOVE_SPEED * dt);
-    player.position.x = THREE.MathUtils.clamp(player.position.x, -8.45, 8.45);
-    player.position.z = THREE.MathUtils.clamp(player.position.z, -8.45, 8.45);
+    player.position.x = THREE.MathUtils.clamp(player.position.x, -8.55, 8.55);
+    player.position.z = THREE.MathUtils.clamp(player.position.z, -8.55, 8.55);
 
-    camera.quaternion.copy(cameraQuaternion());
     camera.position.copy(player.position);
+    camera.quaternion.copy(cameraQuaternion());
+
+    if (cameraPunch > 0.001) {
+      camera.fov = BASE_FOV + cameraPunch * 14;
+      cameraPunch *= Math.pow(0.08, dt);
+    } else {
+      cameraPunch = 0;
+      camera.fov += (BASE_FOV - camera.fov) * Math.min(1, dt * 14);
+    }
+    camera.updateProjectionMatrix();
 
     while (accumulator >= FIXED_STEP) {
       world.step();
       accumulator -= FIXED_STEP;
     }
 
-    const sellCandidates = [];
     for (const box of boxes) {
       if (box === held) continue;
       const p = box.body.translation();
       const r = box.body.rotation();
       box.mesh.position.set(p.x, p.y, p.z);
       box.mesh.quaternion.set(r.x, r.y, r.z, r.w);
-
-      if (p.y < -3) {
-        box.body.setTranslation({ x: -2.4 + Math.random() * 4.8, y: 1.2, z: 4.8 }, true);
-        box.body.setLinvel({ x: 0, y: 0, z: 0 }, true);
-      }
-
-      const dx = p.x - SELL_CENTER.x;
-      const dz = p.z - SELL_CENTER.z;
-      if (Math.hypot(dx, dz) <= SELL_RADIUS && p.y < 2.4) sellCandidates.push(box);
     }
 
-    for (const box of sellCandidates) {
-      if (boxes.includes(box)) sellBox(box);
-    }
+    updateHeldTransform();
+    updateTrajectory();
+    updateTargeting();
+    checkAutoSales();
 
-    if (held) {
-      const holdPos = camera.position.clone().add(viewVector().multiplyScalar(1.18));
-      held.mesh.position.lerp(holdPos, 0.58);
-      held.mesh.quaternion.slerp(camera.quaternion, 0.25);
-      held.mesh.material.emissiveIntensity = 0.9;
-    }
-
-    raycaster.setFromCamera({ x: 0, y: 0 }, camera);
-    const candidates = boxes.filter((box) => box !== held).map((box) => box.mesh);
-    const hit = raycaster.intersectObjects(candidates, false)[0];
-    targeted = hit?.object?.userData?.box || null;
-
-    if (previousTarget && previousTarget !== targeted && previousTarget !== held) {
-      previousTarget.mesh.material.emissiveIntensity = 0;
-    }
-    if (targeted && targeted !== held) {
-      targeted.mesh.material.emissive.setHex(0x68e8ff);
-      targeted.mesh.material.emissiveIntensity = 0.72;
-    }
-    previousTarget = targeted;
-
-    const dx = camera.position.x - SELL_CENTER.x;
-    const dz = camera.position.z - SELL_CENTER.z;
-    sellLabel.style.display = Math.hypot(dx, dz) < 7.2 ? 'block' : 'none';
-
-    if (performance.now() - lastSaleAt > 2600 && combo > 0) combo = 0;
-
-    cameraPunch = THREE.MathUtils.lerp(cameraPunch, 0, Math.min(1, dt * 8));
-    camera.fov = BASE_FOV + cameraPunch * 26;
-    camera.updateProjectionMatrix();
-    if (cameraPunch > 0.01) {
-      camera.position.x += (Math.random() - 0.5) * cameraPunch * 0.16;
-      camera.position.y += (Math.random() - 0.5) * cameraPunch * 0.12;
-    }
+    const distToSell = Math.hypot(camera.position.x - SELL_CENTER.x, camera.position.z - SELL_CENTER.z);
+    sellLabel.style.display = distToSell < 7.4 || held ? 'block' : 'none';
 
     hudTimer += dt;
     if (hudTimer > 0.25) {
@@ -487,10 +612,7 @@ try {
   }
   addEventListener('resize', resize, { passive: true });
 
-  ui.sell.textContent = '投げる';
-  ui.buy.textContent = `補充 ¥${BOX_PRICE}`;
-  updateHud('箱を狙って吸着 → 緑へ投げ込め');
-  showFeedback('READY', false);
+  updateHud('箱を狙って吸着 → 緑へ投げろ');
   frame();
 } catch (error) {
   console.error(error);
