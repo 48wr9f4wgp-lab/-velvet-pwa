@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+  <meta name="theme-color" content="#09090b" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Velvet" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="stylesheet" href="./styles.css" />
+  <title>Velvet</title>
+</head>
+<body>
+  <main id="app" class="app-shell" aria-live="polite">
+    <section id="privacyGate" class="privacy-gate" aria-label="Privacy gate">
+      <div class="privacy-gate__mark">V</div>
+      <p class="eyebrow">PRIVATE</p>
+      <h1>Velvet</h1>
+      <p class="privacy-gate__copy">Tap to reveal</p>
+      <button id="unlockButton" class="button button--primary button--wide" type="button">Open</button>
+    </section>
+
+    <section id="safeScreen" class="safe-screen is-hidden" aria-label="Hidden screen">
+      <div class="safe-screen__time" id="safeTime">--:--</div>
+      <p>Focus</p>
+      <button id="returnButton" class="button button--ghost" type="button">Return</button>
+    </section>
+
+    <section id="mainExperience" class="experience is-hidden">
+      <header class="topbar">
+        <div>
+          <p class="brand">VELVET</p>
+          <p id="modeLabel" class="mode-label">FLOW</p>
+        </div>
+        <div class="topbar__actions">
+          <button id="quickHideButton" class="icon-button" type="button" aria-label="Quick hide">◌</button>
+          <button id="settingsButton" class="icon-button" type="button" aria-label="Settings">⋯</button>
+        </div>
+      </header>
+
+      <section id="flowView" class="view view--active" aria-label="Velvet Flow">
+        <div id="cardStage" class="card-stage">
+          <article id="mediaCard" class="media-card" tabindex="0">
+            <div class="media-card__skeleton"></div>
+            <img id="mediaImage" alt="" draggable="false" />
+            <div class="media-card__shade"></div>
+            <div class="media-card__meta">
+              <span id="sourceLabel" class="pill">Velvet</span>
+              <span id="intensityLabel" class="pill pill--muted">—</span>
+            </div>
+            <div id="dragLike" class="drag-cue drag-cue--like">LIKE</div>
+            <div id="dragSkip" class="drag-cue drag-cue--skip">SKIP</div>
+          </article>
+
+          <div id="emptyState" class="empty-state is-hidden">
+            <h2>No feed yet</h2>
+            <p>The private UI is ready. Connect the same-origin feed adapter or use the built-in demo catalog.</p>
+            <button id="retryFeedButton" class="button button--primary" type="button">Retry</button>
+          </div>
+        </div>
+
+        <div class="flow-controls">
+          <button id="skipButton" class="action-button action-button--skip" type="button" aria-label="Skip">×</button>
+          <button id="sessionsButton" class="action-button action-button--session" type="button">Session</button>
+          <button id="likeButton" class="action-button action-button--like" type="button" aria-label="Like">♥</button>
+        </div>
+      </section>
+
+      <section id="sessionSetupView" class="view" aria-label="Session setup">
+        <div class="panel panel--top">
+          <button class="back-button" data-back-flow type="button">← Flow</button>
+          <p class="eyebrow">VELVET SESSIONS</p>
+          <h2>Choose a session</h2>
+          <p class="muted">Finite, mood-directed, and locally personalized.</p>
+        </div>
+
+        <form id="sessionForm" class="session-form">
+          <fieldset>
+            <legend>Duration</legend>
+            <div class="segmented" id="durationOptions">
+              <label><input type="radio" name="duration" value="3" checked><span>3 min</span></label>
+              <label><input type="radio" name="duration" value="5"><span>5 min</span></label>
+              <label><input type="radio" name="duration" value="10"><span>10 min</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Mood</legend>
+            <div class="mood-grid">
+              <label><input type="radio" name="mood" value="soft"><span><b>Soft</b><small>low-key</small></span></label>
+              <label><input type="radio" name="mood" value="personal" checked><span><b>Personal</b><small>taste-led</small></span></label>
+              <label><input type="radio" name="mood" value="pro"><span><b>Pro</b><small>polished</small></span></label>
+              <label><input type="radio" name="mood" value="intense"><span><b>Intense</b><small>ramped</small></span></label>
+            </div>
+          </fieldset>
+
+          <button class="button button--primary button--wide" type="submit">Start session</button>
+        </form>
+      </section>
+
+      <section id="sessionPlayerView" class="view" aria-label="Session player">
+        <div class="session-head">
+          <button id="endSessionButton" class="back-button" type="button">End</button>
+          <div class="session-progress-wrap">
+            <div class="session-progress"><span id="sessionProgressBar"></span></div>
+            <p id="sessionProgressText" class="muted">0 / 0</p>
+          </div>
+        </div>
+        <div class="card-stage card-stage--session">
+          <article id="sessionMediaCard" class="media-card" tabindex="0">
+            <div class="media-card__skeleton"></div>
+            <img id="sessionMediaImage" alt="" draggable="false" />
+            <div class="media-card__shade"></div>
+            <div class="media-card__meta">
+              <span id="sessionPhaseLabel" class="pill">START</span>
+              <span id="sessionIntensityLabel" class="pill pill--muted">—</span>
+            </div>
+          </article>
+        </div>
+        <div class="flow-controls">
+          <button id="sessionSkipButton" class="action-button action-button--skip" type="button" aria-label="Skip session item">×</button>
+          <button id="sessionLikeButton" class="action-button action-button--like" type="button" aria-label="Like session item">♥</button>
+        </div>
+      </section>
+
+      <section id="sessionSummaryView" class="view" aria-label="Session summary">
+        <div class="summary-card">
+          <p class="eyebrow">SESSION COMPLETE</p>
+          <h2>Done.</h2>
+          <div class="summary-stats">
+            <div><span id="summaryLikes">0</span><small>Likes</small></div>
+            <div><span id="summarySkips">0</span><small>Skips</small></div>
+            <div><span id="summaryCompletion">0%</span><small>Complete</small></div>
+          </div>
+          <div class="summary-tags">
+            <p class="muted">Strongest signals</p>
+            <div id="summaryTagList" class="tag-list"></div>
+          </div>
+          <p id="summaryRecommendation" class="summary-recommendation"></p>
+          <button id="summaryFlowButton" class="button button--primary button--wide" type="button">Back to Flow</button>
+          <button id="summaryAgainButton" class="button button--ghost button--wide" type="button">Another session</button>
+        </div>
+      </section>
+    </section>
+
+    <dialog id="settingsDialog" class="settings-dialog">
+      <form method="dialog" class="settings-sheet">
+        <div class="settings-sheet__head">
+          <div>
+            <p class="eyebrow">PRIVATE CONTROLS</p>
+            <h2>Settings</h2>
+          </div>
+          <button class="icon-button" value="close" aria-label="Close settings">×</button>
+        </div>
+
+        <label class="setting-row">
+          <span><b>Privacy Blur</b><small>Conceal content on every launch.</small></span>
+          <input id="privacyBlurSetting" type="checkbox" />
+        </label>
+
+        <label class="setting-row">
+          <span><b>Resume last item</b><small>Default is off.</small></span>
+          <input id="resumeSetting" type="checkbox" />
+        </label>
+
+        <label class="setting-row">
+          <span><b>Reduced Motion</b><small>Reduce swipe and transition animation.</small></span>
+          <input id="reducedMotionSetting" type="checkbox" />
+        </label>
+
+        <label class="setting-column">
+          <span><b>History Mode</b><small>Preference weights always remain local.</small></span>
+          <select id="historyModeSetting">
+            <option value="off">Off — no item-level history</option>
+            <option value="likes">Likes only</option>
+            <option value="full">Full local history</option>
+          </select>
+        </label>
+
+        <div class="settings-actions">
+          <button id="resetTasteButton" class="button button--ghost" type="button">Reset taste</button>
+          <button id="clearHistoryButton" class="button button--ghost" type="button">Clear history</button>
+          <button id="clearAllButton" class="button button--danger" type="button">Clear all local data</button>
+        </div>
+        <p id="settingsStatus" class="muted settings-status"></p>
+      </form>
+    </dialog>
+  </main>
+
+  <script type="module" src="./src/privacy-guard.js"></script>
+  <script type="module" src="./src/flow-presets.js"></script>
+  <script type="module" src="./src/loading-guard.js"></script>
+  <script type="module" src="./src/session-ux.js"></script>
+  <script type="module" src="./src/input-guard.js"></script>
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>
