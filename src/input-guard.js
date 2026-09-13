@@ -3,6 +3,7 @@ import "./flow-feedback.js?v=38";
 import "./feed-bridge.js?v=38";
 import "./media-viewer.js?v=38";
 import "./effects.js?v=38";
+import "./effects-force.js?v=39";
 
 const UX_STYLESHEET = "./flow-ux.css";
 if (!document.querySelector('link[data-velvet-flow-ux]')) {
