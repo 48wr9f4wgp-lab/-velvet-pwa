@@ -1,4 +1,3 @@
-// Velvet FX control + diagnostic surface v39
 const KEY = "velvet_fx_mode_v1";
 const VALID = new Set(["off", "standard", "high"]);
 
@@ -28,10 +27,18 @@ function appReduceMotion() {
 }
 
 function effectiveState(mode = readMode()) {
-  if (mode === "off") return "OFF";
-  if (mode === "high") return "HIGH / FORCE";
-  if (appReduceMotion() || systemReduceMotion()) return "STANDARD / REDUCED";
-  return "STANDARD / READY";
+  if (mode === "off") return "off";
+  if (mode === "high") return "high";
+  if (appReduceMotion() || systemReduceMotion()) return "standard-reduced";
+  return "standard";
+}
+
+function stateLabel(mode = readMode()) {
+  const state = effectiveState(mode);
+  if (state === "off") return "演出：オフ";
+  if (state === "high") return "演出：強";
+  if (state === "standard-reduced") return "演出：標準（動きを抑制中）";
+  return "演出：標準";
 }
 
 function updateUi() {
@@ -39,13 +46,9 @@ function updateUi() {
   document.documentElement.dataset.velvetFx = mode;
   const select = document.querySelector("#fxModeSetting");
   const status = document.querySelector("#fxDiagnosticStatus");
-  const badge = document.querySelector("#fxLiveBadge");
   if (select) select.value = mode;
-  const text = `FX ${effectiveState(mode)} · iOS視差 ${systemReduceMotion() ? "ON" : "OFF"} · Velvet低モーション ${appReduceMotion() ? "ON" : "OFF"}`;
-  if (status) status.textContent = text;
-  if (badge) {
-    badge.textContent = mode === "off" ? "FX OFF" : mode === "high" ? "FX HIGH" : "FX STD";
-    badge.dataset.mode = mode;
+  if (status) {
+    status.textContent = `${stateLabel(mode)} · 端末の視差軽減 ${systemReduceMotion() ? "ON" : "OFF"}`;
   }
 }
 
@@ -77,10 +80,10 @@ window.addEventListener("velvet:fx-mode-change", updateUi);
 window.addEventListener("velvet:fx-fired", event => {
   const status = document.querySelector("#fxDiagnosticStatus");
   if (!status) return;
-  const kind = event.detail?.kind || "event";
-  status.textContent = `FX FIRED: ${kind.toUpperCase()} · ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}`;
+  const kind = String(event.detail?.kind || "event").toUpperCase();
+  status.textContent = `演出テストOK · ${kind}`;
   clearTimeout(window.__velvetFxStatusTimer);
-  window.__velvetFxStatusTimer = setTimeout(updateUi, 1600);
+  window.__velvetFxStatusTimer = setTimeout(updateUi, 1400);
 });
 
 new MutationObserver(updateUi).observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
