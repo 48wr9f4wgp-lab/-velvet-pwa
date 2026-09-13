@@ -1,9 +1,9 @@
-import "./ui-ja.js?v=39";
-import "./flow-feedback.js?v=39";
-import "./feed-bridge.js?v=39";
-import "./media-viewer.js?v=39";
+import "./ui-ja.js?v=44";
+import "./flow-feedback.js?v=44";
+import "./feed-bridge.js?v=44";
+import "./media-viewer.js?v=44";
 
-const UX_STYLESHEET = "./flow-ux.css";
+const UX_STYLESHEET = "./flow-ux.css?v=44";
 if (!document.querySelector('link[data-velvet-flow-ux]')) {
   const link = document.createElement("link");
   link.rel = "stylesheet";

@@ -9,11 +9,11 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Velvet" />
   <meta name="mobile-web-app-capable" content="yes" />
-  <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png?v=42" />
-  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png?v=42" />
-  <link rel="manifest" href="./manifest.webmanifest?v=42" />
-  <link rel="stylesheet" href="./styles.css" />
-  <link rel="stylesheet" href="./touch-polish.css?v=42" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png?v=44" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png?v=44" />
+  <link rel="manifest" href="./manifest.webmanifest?v=44" />
+  <link rel="stylesheet" href="./styles.css?v=44" />
+  <link rel="stylesheet" href="./touch-polish.css?v=44" />
   <title>Velvet</title>
 </head>
 <body>
@@ -121,6 +121,8 @@
               <span id="sessionPhaseLabel" class="pill">START</span>
               <span id="sessionIntensityLabel" class="pill pill--muted">—</span>
             </div>
+            <div id="sessionDragBack" class="drag-cue drag-cue--like">戻る</div>
+            <div id="sessionDragNext" class="drag-cue drag-cue--skip">進む</div>
           </article>
         </div>
         <div class="flow-controls">
@@ -175,7 +177,7 @@
         </label>
 
         <label class="setting-column">
-          <span><b>Effects</b><small>HIGH forces Velvet feedback even when iOS Reduce Motion is enabled.</small></span>
+          <span><b>Effects</b><small>Choose visual feedback intensity.</small></span>
           <select id="fxModeSetting">
             <option value="off">OFF</option>
             <option value="standard">STANDARD</option>
@@ -185,7 +187,7 @@
         <div class="settings-actions">
           <button id="fxTestButton" class="button button--primary" type="button">FX TEST</button>
         </div>
-        <p id="fxDiagnosticStatus" class="muted settings-status">FX CHECKING…</p>
+        <p id="fxDiagnosticStatus" class="muted settings-status"></p>
 
         <label class="setting-column">
           <span><b>History Mode</b><small>Preference weights always remain local.</small></span>
@@ -206,13 +208,15 @@
     </dialog>
   </main>
 
-  <script type="module" src="./src/privacy-guard.js?v=42"></script>
-  <script type="module" src="./src/flow-presets.js?v=42"></script>
-  <script type="module" src="./src/loading-guard.js?v=42"></script>
-  <script type="module" src="./src/session-ux.js?v=42"></script>
-  <script type="module" src="./src/fx-settings.js?v=42"></script>
-  <script type="module" src="./src/effects-force.js?v=42"></script>
-  <script type="module" src="./src/input-guard.js?v=42"></script>
-  <script type="module" src="./src/app.js?v=42"></script>
+  <script type="module" src="./src/privacy-guard.js?v=44"></script>
+  <script type="module" src="./src/flow-presets.js?v=44"></script>
+  <script type="module" src="./src/loading-guard.js?v=44"></script>
+  <script type="module" src="./src/session-ux.js?v=44"></script>
+  <script type="module" src="./src/fx-settings.js?v=44"></script>
+  <script type="module" src="./src/effects-force.js?v=44"></script>
+  <script type="module" src="./src/image-guard.js?v=44"></script>
+  <script type="module" src="./src/session-cues.js?v=44"></script>
+  <script type="module" src="./src/input-guard.js?v=44"></script>
+  <script type="module" src="./src/app.js?v=44"></script>
 </body>
 </html>
