@@ -1,0 +1,55 @@
+
+  function decodeGitHubContent(meta) {
+    try {
+      const base64 = String(meta?.content || "").replace(/\s+/g, "");
+      if (!base64) return null;
+      return JSON.parse(Data.fromBase64String(base64).toRawString());
+    } catch (_) {
+      return null;
+    }
+  }
+
+  async function publishFeed(token, feed) {
+    const meta = await currentGitHubFile(token);
+    const current = decodeGitHubContent(meta);
+    if (current && stableSignature(current) === stableSignature(feed)) return { changed: false, sha: meta.sha };
+    const body = {
+      message: `Velvet feed sync ${new Date().toISOString().slice(0, 16).replace("T", " ")}Z`,
+      content: Data.fromString(`${JSON.stringify(feed, null, 2)}\n`).toBase64String(),
+      branch: TARGET_BRANCH,
+      sha: meta.sha
+    };
+    const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${encodeURIComponent(TARGET_PATH)}`;
+    const result = await githubJson(url, token, "PUT", body);
+    return { changed: true, sha: result?.content?.sha || null };
+  }
+
+  async function showResult(title, message) {
+    const alert = new Alert();
+    alert.title = title;
+    alert.message = message;
+    alert.addAction("OK");
+    await alert.presentAlert();
+  }
+
+  try {
+    const feed = await buildFeed();
+    if (feed.items.length < MIN_PUBLISH_ITEMS) {
+      throw new Error(`候補が少なすぎるため更新停止: ${feed.items.length}/${MIN_PUBLISH_ITEMS}。前回Feedは維持されます。`);
+    }
+    const token = await promptToken();
+    if (!token) { Script.complete(); return; }
+    const result = await publishFeed(token, feed);
+    const q = Number(feed.diagnostics?.quarantine?.total || 0);
+    const rejected = Number(feed.diagnostics?.baseline_rejections?.total || 0);
+    const status = result.changed ? "更新完了" : "変更なし";
+    await showResult(
+      `Velvet Feed ${status}`,
+      `基準: ${CANONICAL_BASELINE}\n候補: ${feed.items.length}\nsource失敗: ${feed.failures.length}\n本家基準除外: ${rejected}\nquarantine: ${q}\nbranch: ${TARGET_BRANCH}\n\n${result.changed ? "Pages用JSONを更新しました。" : "実質変更なし。GitHub commitを節約しました。"}`
+    );
+  } catch (error) {
+    await showResult("Velvet Feed Sync失敗", String(error?.message || error));
+  }
+
+  Script.complete();
+})();
