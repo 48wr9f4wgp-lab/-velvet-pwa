@@ -1,0 +1,39 @@
+name: Velvet feed sync
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */3 * * *"
+  push:
+    branches:
+      - main
+    paths:
+      - "scripts/run-feed-sync.mjs"
+      - "velvet-feed-sync.js"
+      - "feed-base/**"
+      - ".github/workflows/feed-sync.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: velvet-feed-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Build and publish Velvet feed
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/run-feed-sync.mjs
