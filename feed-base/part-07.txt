@@ -1,0 +1,70 @@
+        id: `xrank:${source.name}:${idCore}`,
+        image_url: chosen.url,
+        thumb_url: null,
+        title: "",
+        source: source.name,
+        source_label: source.label,
+        source_class: source.sourceClass,
+        tags: itemTags(meta, source, profiles),
+        intensity: Number(bestProfile?.intensity || 3),
+        page_url: link.statusURL || (link.handle ? `https://x.com/${link.handle}` : source.url),
+        handle: link.handle,
+        rank,
+        rights_status: "external-public-source",
+        active: true,
+        baseline: {
+          canonical: CANONICAL_BASELINE,
+          profiles
+        }
+      });
+    }
+    return { items, diagnostics };
+  }
+
+  async function buildFeed() {
+    const failures = [];
+    const diagnostics = { quarantine: emptyCounts(), baseline_rejections: emptyCounts() };
+    const byId = new Map();
+
+    for (const source of Object.values(SOURCE_URLS)) {
+      try {
+        const result = await fetchSource(source);
+        for (const item of result.items) {
+          const existing = byId.get(item.id);
+          const currentBest = Math.max(...Object.values(item.baseline.profiles).map(row => Number(row.score || 0)));
+          const existingBest = existing ? Math.max(...Object.values(existing.baseline.profiles).map(row => Number(row.score || 0))) : -Infinity;
+          if (!existing || currentBest > existingBest) byId.set(item.id, item);
+        }
+        mergeCounts(diagnostics.quarantine, result.diagnostics.quarantine);
+        mergeCounts(diagnostics.baseline_rejections, result.diagnostics.baseline_rejections);
+      } catch (error) {
+        failures.push(`${source.name}: ${String(error?.message || error).slice(0, 160)}`);
+      }
+    }
+
+    const seenContent = new Set();
+    const items = [...byId.values()]
+      .map(item => ({
+        item,
+        best: Math.max(...Object.values(item.baseline.profiles).map(row => Number(row.score || 0)))
+      }))
+      .sort((a, b) => b.best - a.best || a.item.rank - b.item.rank)
+      .map(row => row.item)
+      .filter(item => {
+        const key = item.page_url?.includes("/status/") ? item.page_url : item.image_url;
+        if (seenContent.has(key)) return false;
+        seenContent.add(key);
+        return true;
+      })
+      .slice(0, MAX_ITEMS);
+
+    return {
+      schema_version: 2,
+      generated_at: new Date().toISOString(),
+      generated_by: `Velvet Feed Sync/${VERSION}`,
+      canonical_baseline: CANONICAL_BASELINE,
+      items,
+      failures,
+      diagnostics
+    };
+  }
