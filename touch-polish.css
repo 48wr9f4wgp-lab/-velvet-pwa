@@ -1,0 +1,53 @@
+.action-button,
+.icon-button,
+.button,
+.back-button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transform: translateZ(0);
+  transition: transform 110ms cubic-bezier(.2,.8,.2,1), border-color 160ms ease, background 160ms ease, box-shadow 180ms ease, opacity 160ms ease;
+}
+
+.action-button:active,
+.icon-button:active,
+.button:active,
+.back-button:active {
+  transform: scale(.91);
+}
+
+.action-button--like:active,
+.action-button--like.is-confirmed,
+.action-button--like.is-saved {
+  border-color: rgba(216,180,254,.62);
+  background: rgba(168,85,247,.17);
+  box-shadow: 0 0 0 1px rgba(216,180,254,.12), 0 0 28px rgba(168,85,247,.24);
+}
+
+.action-button--skip:active {
+  border-color: rgba(251,113,133,.50);
+  background: rgba(244,63,94,.11);
+  box-shadow: 0 0 24px rgba(244,63,94,.16);
+}
+
+.action-button--session:active {
+  border-color: rgba(255,255,255,.28);
+  background: rgba(255,255,255,.10);
+}
+
+.media-card {
+  will-change: transform, opacity;
+}
+
+.media-card img {
+  transition: opacity 160ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .action-button,
+  .icon-button,
+  .button,
+  .back-button,
+  .media-card img {
+    transition-duration: .001ms !important;
+  }
+}
