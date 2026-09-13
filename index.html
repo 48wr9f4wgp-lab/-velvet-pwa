@@ -33,6 +33,7 @@
         <div>
           <p class="brand">VELVET</p>
           <p id="modeLabel" class="mode-label">FLOW</p>
+          <span id="fxLiveBadge" class="pill pill--muted">FX HIGH</span>
         </div>
         <div class="topbar__actions">
           <button id="quickHideButton" class="icon-button" type="button" aria-label="Quick hide">◌</button>
@@ -171,6 +172,19 @@
         </label>
 
         <label class="setting-column">
+          <span><b>Effects</b><small>HIGH forces Velvet feedback even when iOS Reduce Motion is enabled.</small></span>
+          <select id="fxModeSetting">
+            <option value="off">OFF</option>
+            <option value="standard">STANDARD</option>
+            <option value="high" selected>HIGH</option>
+          </select>
+        </label>
+        <div class="settings-actions">
+          <button id="fxTestButton" class="button button--primary" type="button">FX TEST</button>
+        </div>
+        <p id="fxDiagnosticStatus" class="muted settings-status">FX CHECKING…</p>
+
+        <label class="setting-column">
           <span><b>History Mode</b><small>Preference weights always remain local.</small></span>
           <select id="historyModeSetting">
             <option value="off">Off — no item-level history</option>
@@ -193,7 +207,9 @@
   <script type="module" src="./src/flow-presets.js"></script>
   <script type="module" src="./src/loading-guard.js"></script>
   <script type="module" src="./src/session-ux.js"></script>
-  <script type="module" src="./src/input-guard.js"></script>
+  <script type="module" src="./src/fx-settings.js?v=39"></script>
+  <script type="module" src="./src/effects-force.js?v=39"></script>
+  <script type="module" src="./src/input-guard.js?v=39"></script>
   <script type="module" src="./src/app.js"></script>
 </body>
 </html>
