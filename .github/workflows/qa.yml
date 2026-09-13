@@ -1,0 +1,61 @@
+name: Velvet static QA
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: JavaScript syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in src/*.js sw.js velvet-feed-sync.js; do
+            node --check "$file"
+          done
+          cat feed-base/part-*.txt > /tmp/velvet-feed-base.js
+          node --check /tmp/velvet-feed-base.js
+
+      - name: JSON parse
+        run: node -e "for (const f of ['manifest.webmanifest','velvet-content.json','package.json']) JSON.parse(require('fs').readFileSync(f,'utf8')); console.log('JSON OK')"
+
+      - name: Required PWA files
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f index.html
+          test -f styles.css
+          test -f flow-ux.css
+          test -f manifest.webmanifest
+          test -f sw.js
+          test -f velvet-content.json
+          test -f src/app.js
+          test -f src/content.js
+          test -f src/input-guard.js
+          test -f src/recommender.js
+          echo "PWA files OK"
+
+      - name: Public feed target contract
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const sync = fs.readFileSync('velvet-feed-sync.js','utf8');
+          for (const token of ['const REPO = "-velvet-pwa"','const BRANCH = "main"','velvet_feed_sync_github_token_public_v1','targetShare: 0.40','targetShare: 0.35','targetShare: 0.15','targetShare: 0.10']) {
+            if (!sync.includes(token)) throw new Error(`sync contract missing: ${token}`);
+          }
+          const content = fs.readFileSync('src/content.js','utf8');
+          if (!content.includes('hostname.endsWith("github.io")')) throw new Error('GitHub Pages feed mode missing');
+          console.log('Feed target contract OK');
+          NODE
