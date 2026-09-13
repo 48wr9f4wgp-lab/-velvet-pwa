@@ -1,7 +1,8 @@
-import "./ui-ja.js?v=36";
-import "./flow-feedback.js?v=36";
-import "./feed-bridge.js?v=36";
-import "./media-viewer.js?v=36";
+import "./ui-ja.js?v=37";
+import "./flow-feedback.js?v=37";
+import "./feed-bridge.js?v=37";
+import "./media-viewer.js?v=37";
+import "./effects.js?v=37";
 
 const UX_STYLESHEET = "./flow-ux.css";
 if (!document.querySelector('link[data-velvet-flow-ux]')) {
@@ -72,11 +73,14 @@ function bindFastNavigationGesture({ cardSelector, showCues = false, scope = "fl
     if (!gesture.vertical) {
       event.preventDefault();
       const pct = Math.max(-1, Math.min(1, dx / NAV_DISTANCE));
-      card.style.transform = "translateX(" + (dx * 0.78) + "px) rotate(" + (pct * 4.5) + "deg)";
+      card.style.transform = "translateX(" + (dx * 0.78) + "px) rotate(" + (pct * 4.5) + "deg) scale(" + (1 - Math.min(.035, Math.abs(pct) * .025)) + ")";
       if (showCues) {
         document.querySelector("#dragLike")?.style.setProperty("opacity", String(Math.max(0, Math.min(1, pct * 1.15))));
         document.querySelector("#dragSkip")?.style.setProperty("opacity", String(Math.max(0, Math.min(1, -pct * 1.15))));
       }
+      window.dispatchEvent(new CustomEvent("velvet:gesture-progress", {
+        detail: { scope, dx, dy, pct }
+      }));
     }
     event.stopImmediatePropagation();
   }, { capture: true });
@@ -96,6 +100,7 @@ function bindFastNavigationGesture({ cardSelector, showCues = false, scope = "fl
     event.preventDefault();
     event.stopImmediatePropagation();
     resetNavigationCard(card);
+    window.dispatchEvent(new CustomEvent("velvet:gesture-end", { detail: { scope } }));
     if (navigated) {
       const direction = gesture.x > 0 ? "back" : "next";
       window.dispatchEvent(new CustomEvent("velvet:" + scope + "-" + direction));
@@ -108,6 +113,7 @@ function bindFastNavigationGesture({ cardSelector, showCues = false, scope = "fl
   card.addEventListener("pointercancel", event => {
     gestures.delete(event.pointerId);
     resetNavigationCard(card);
+    window.dispatchEvent(new CustomEvent("velvet:gesture-end", { detail: { scope } }));
     event.stopImmediatePropagation();
   }, { capture: true });
 }
