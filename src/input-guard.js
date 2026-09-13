@@ -1,8 +1,8 @@
-import "./ui-ja.js?v=37";
-import "./flow-feedback.js?v=37";
-import "./feed-bridge.js?v=37";
-import "./media-viewer.js?v=37";
-import "./effects.js?v=37";
+import "./ui-ja.js?v=38";
+import "./flow-feedback.js?v=38";
+import "./feed-bridge.js?v=38";
+import "./media-viewer.js?v=38";
+import "./effects.js?v=38";
 
 const UX_STYLESHEET = "./flow-ux.css";
 if (!document.querySelector('link[data-velvet-flow-ux]')) {
