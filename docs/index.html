@@ -10,11 +10,11 @@
 <body>
   <main id="app">
     <canvas id="game" aria-label="3D物流管理シミュレーター"></canvas>
-
     <div id="loading">施設を起動中…</div>
 
     <header id="topHud" aria-live="polite">
       <div class="metric primary"><span>資金</span><strong id="money">¥0</strong></div>
+      <div class="metric research"><span>研究</span><strong id="research">0 RP</strong></div>
       <div class="metric"><span>出荷</span><strong id="shipped">0</strong></div>
       <div class="metric"><span>注文</span><strong id="orders">0</strong></div>
       <div class="metric"><span>搬入口</span><strong id="inbound">0</strong></div>
@@ -23,15 +23,26 @@
       <div class="metric"><span>スタッフ</span><strong id="workers">0人</strong></div>
     </header>
 
+    <section id="insightPanel" aria-live="polite">
+      <div class="insightHead">
+        <div><small>BOTTLENECK DIRECTOR</small><strong id="directorLabel">分析中</strong></div>
+        <span id="severityBadge">OK</span>
+      </div>
+      <div id="directorDetail">施設の流れを解析しています</div>
+      <div id="directorRecommendation">—</div>
+      <div class="contractArea">
+        <div class="contractHead"><small>CONTRACT</small><strong id="contractTitle">契約を選択</strong></div>
+        <div id="contractBody"></div>
+        <div id="contractChoices"></div>
+      </div>
+    </section>
+
     <div id="statusBar"><span id="status">起動中</span></div>
     <div id="toast" role="status"></div>
 
     <section id="commandDock" aria-label="経営指示">
       <div class="dockHead">
-        <div>
-          <small>DIRECTIVE</small>
-          <strong>作業方針</strong>
-        </div>
+        <div><small>DIRECTIVE</small><strong>作業方針</strong></div>
         <div class="utilityButtons">
           <button id="cameraBtn" type="button">視点リセット</button>
           <button id="resetBtn" type="button">初期化</button>
@@ -44,6 +55,18 @@
         <button type="button" data-policy="ship">出庫優先</button>
       </div>
 
+      <div class="priorityStrip" aria-label="細かい優先度">
+        <div class="priorityControl" data-priority="store">
+          <span>入庫</span><button type="button" data-priority-kind="store" data-delta="-1">−</button><strong data-priority-value>3</strong><button type="button" data-priority-kind="store" data-delta="1">＋</button>
+        </div>
+        <div class="priorityControl" data-priority="pick">
+          <span>梱包</span><button type="button" data-priority-kind="pick" data-delta="-1">−</button><strong data-priority-value>3</strong><button type="button" data-priority-kind="pick" data-delta="1">＋</button>
+        </div>
+        <div class="priorityControl" data-priority="ship">
+          <span>出荷</span><button type="button" data-priority-kind="ship" data-delta="-1">−</button><strong data-priority-value>4</strong><button type="button" data-priority-kind="ship" data-delta="1">＋</button>
+        </div>
+      </div>
+
       <div class="speedRow" aria-label="時間速度">
         <span>時間</span>
         <button type="button" data-speed="0">Ⅱ</button>
@@ -53,28 +76,25 @@
         <span class="cameraHelp">1本指: 回転 / 2本指: ズーム</span>
       </div>
 
+      <div class="sectionLabel">設備</div>
       <div class="upgradeStrip" aria-label="設備強化">
-        <button class="upgrade" type="button" data-upgrade="worker">
-          <span class="upgradeName">スタッフ追加</span><span data-level>Lv.0/5</span><strong data-cost>¥0</strong>
-        </button>
-        <button class="upgrade" type="button" data-upgrade="speed">
-          <span class="upgradeName">歩行速度</span><span data-level>Lv.0/5</span><strong data-cost>¥0</strong>
-        </button>
-        <button class="upgrade" type="button" data-upgrade="rack">
-          <span class="upgradeName">棚拡張</span><span data-level>Lv.0/4</span><strong data-cost>¥0</strong>
-        </button>
-        <button class="upgrade" type="button" data-upgrade="pack">
-          <span class="upgradeName">梱包設備</span><span data-level>Lv.0/5</span><strong data-cost>¥0</strong>
-        </button>
-        <button class="upgrade" type="button" data-upgrade="conveyor">
-          <span class="upgradeName">自動搬送</span><span data-level>Lv.0/4</span><strong data-cost>¥0</strong>
-        </button>
+        <button class="upgrade" type="button" data-upgrade="worker"><span class="upgradeName">スタッフ追加</span><span data-level>Lv.0/5</span><strong data-cost>¥0</strong></button>
+        <button class="upgrade" type="button" data-upgrade="speed"><span class="upgradeName">歩行速度</span><span data-level>Lv.0/5</span><strong data-cost>¥0</strong></button>
+        <button class="upgrade" type="button" data-upgrade="rack"><span class="upgradeName">棚拡張</span><span data-level>Lv.0/4</span><strong data-cost>¥0</strong></button>
+        <button class="upgrade" type="button" data-upgrade="pack"><span class="upgradeName">梱包設備</span><span data-level>Lv.0/5</span><strong data-cost>¥0</strong></button>
+        <button class="upgrade" type="button" data-upgrade="conveyor"><span class="upgradeName">自動搬送</span><span data-level>Lv.0/4</span><strong data-cost>¥0</strong></button>
+      </div>
+
+      <div class="sectionLabel">研究</div>
+      <div class="upgradeStrip researchStrip" aria-label="研究強化">
+        <button class="upgrade perk" type="button" data-perk="smartDispatch"><span class="upgradeName">スマート配車</span><span data-level>Lv.0/3</span><strong data-cost>2 RP</strong></button>
+        <button class="upgrade perk" type="button" data-perk="bulkPack"><span class="upgradeName">標準化梱包</span><span data-level>Lv.0/3</span><strong data-cost>2 RP</strong></button>
+        <button class="upgrade perk" type="button" data-perk="contractBonus"><span class="upgradeName">高単価契約</span><span data-level>Lv.0/2</span><strong data-cost>3 RP</strong></button>
       </div>
     </section>
 
     <div id="fatal" role="alert" hidden></div>
   </main>
-
   <script type="module" src="./src/main.js"></script>
 </body>
 </html>
