@@ -1,7 +1,7 @@
-import "./ui-ja.js?v=34";
-import "./flow-feedback.js?v=34";
-import "./feed-bridge.js?v=34";
-import "./media-viewer.js?v=34";
+import "./ui-ja.js?v=35";
+import "./flow-feedback.js?v=35";
+import "./feed-bridge.js?v=35";
+import "./media-viewer.js?v=35";
 
 const UX_STYLESHEET = "./flow-ux.css";
 if (!document.querySelector('link[data-velvet-flow-ux]')) {
@@ -36,17 +36,6 @@ function resetDecisionCard(card) {
   card.style.opacity = "";
   document.querySelector("#dragLike")?.style.setProperty("opacity", "0");
   document.querySelector("#dragSkip")?.style.setProperty("opacity", "0");
-}
-
-function isDemoFlow() {
-  return window.__velvetFeedInfo?.demo === true || String(document.querySelector("#sourceLabel")?.textContent || "").trim().toLowerCase() === "demo";
-}
-
-function launchFeedSyncFromDemo() {
-  window.dispatchEvent(new CustomEvent("velvet:feed-sync-status", {
-    detail: { message: "Scriptableでフィードを更新します", timeout: 2200 }
-  }));
-  window.location.href = "scriptable:///run/Velvet%20Feed%20Sync";
 }
 
 function guardButton(selector, group, label) {
@@ -132,10 +121,6 @@ function bindFastDecisionGesture({ cardSelector, likeSelector, skipSelector, sho
     }
 
     if (tapped) {
-      if (scope === "flow" && isDemoFlow()) {
-        launchFeedSyncFromDemo();
-        return;
-      }
       window.dispatchEvent(new CustomEvent("velvet:media-tap", { detail: { scope } }));
     }
   };
