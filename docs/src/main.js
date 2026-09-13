@@ -9,18 +9,32 @@ const ui = {
   movePad: $('movePad'), moveKnob: $('moveKnob'), lookPad: $('lookPad'),
 };
 
-const SAVE_KEY = 'workshop_sandbox_v3';
+const SAVE_KEY = 'workshop_sandbox_v4';
 const BOX_PRICE = 40;
-const BASE_SALE = 80;
 const MAX_BOXES = 40;
-const GOAL = 10;
-const MOVE_SPEED = 5.8;
-const GRAB_RANGE = 5.8;
-const THROW_SPEED = 12.2;
-const SELL_CENTER = new THREE.Vector3(5.4, 0, -5.4);
-const SELL_RADIUS = 2.15;
 const FIXED_STEP = 1 / 60;
 const HOLD_SCALE = 0.58;
+const SELL_CENTER = new THREE.Vector3(5.4, 0, -5.4);
+
+const BASE = {
+  moveSpeed: 5.8,
+  grabRange: 5.8,
+  throwSpeed: 12.2,
+  sellRadius: 2.15,
+  saleValue: 80,
+};
+
+const UPGRADE_DEFS = {
+  magnet: { label: '磁力', max: 5, baseCost: 140, desc: '吸着距離 +0.9m' },
+  power: { label: '投擲', max: 5, baseCost: 160, desc: '投げ速度 +2.1' },
+  zone: { label: '売却床', max: 4, baseCost: 190, desc: '判定半径 +0.35m' },
+  value: { label: '単価', max: 5, baseCost: 220, desc: '基本売価 +¥30' },
+  feeder: { label: 'コンベア', max: 4, baseCost: 520, desc: '箱を自動供給' },
+};
+
+function emptyUpgrades() {
+  return { magnet: 0, power: 0, zone: 0, value: 0, feeder: 0 };
+}
 
 function showFatal(error) {
   ui.fatal.hidden = false;
@@ -37,7 +51,7 @@ function loadSave() {
     const raw = localStorage.getItem(SAVE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
-    if (parsed?.version !== 3 || !Array.isArray(parsed.boxes)) return null;
+    if (parsed?.version !== 4 || !Array.isArray(parsed.boxes)) return null;
     return parsed;
   } catch {
     return null;
@@ -46,6 +60,20 @@ function loadSave() {
 
 try {
   await RAPIER.init();
+
+  const saved = loadSave();
+  let money = Math.max(0, Number(saved?.money ?? 120));
+  let sold = Math.max(0, Number(saved?.sold ?? 0));
+  const upgrades = { ...emptyUpgrades(), ...(saved?.upgrades || {}) };
+
+  const moveSpeed = () => BASE.moveSpeed + upgrades.magnet * 0.12;
+  const grabRange = () => BASE.grabRange + upgrades.magnet * 0.9;
+  const throwSpeed = () => BASE.throwSpeed + upgrades.power * 2.1;
+  const sellRadius = () => BASE.sellRadius + upgrades.zone * 0.35;
+  const saleValue = () => BASE.saleValue + upgrades.value * 30;
+  const nextMilestone = () => (Math.floor(sold / 10) + 1) * 10;
+  const feederInterval = () => upgrades.feeder <= 0 ? Infinity : [0, 4.2, 3.3, 2.6, 2.0][upgrades.feeder] * 1000;
+  const upgradeCost = (key) => Math.round(UPGRADE_DEFS[key].baseCost * Math.pow(1.62, upgrades[key]));
 
   const renderer = new THREE.WebGLRenderer({
     canvas: ui.canvas,
@@ -109,15 +137,28 @@ try {
     addStaticBox(new THREE.Vector3(4.6, 0.12, 1.3), new THREE.Vector3(shelfX, y, shelfZ), 0x936d43);
   }
 
+  const conveyor = addStaticBox(new THREE.Vector3(5.8, 0.22, 1.4), new THREE.Vector3(0, 0.11, 5.45), 0x27323c);
+  conveyor.visible = upgrades.feeder > 0;
+  const conveyorStripeMat = new THREE.MeshBasicMaterial({ color: 0x5f7486, transparent: true, opacity: 0.8 });
+  const conveyorStripes = [];
+  for (let i = 0; i < 7; i += 1) {
+    const stripe = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.02, 1.15), conveyorStripeMat);
+    stripe.position.set(-2.4 + i * 0.8, 0.24, 5.45);
+    stripe.visible = upgrades.feeder > 0;
+    scene.add(stripe);
+    conveyorStripes.push(stripe);
+  }
+
   const sellZone = new THREE.Mesh(
-    new THREE.CircleGeometry(SELL_RADIUS, 32),
+    new THREE.CircleGeometry(BASE.sellRadius, 32),
     new THREE.MeshBasicMaterial({ color: 0x34d27a, transparent: true, opacity: 0.52, side: THREE.DoubleSide })
   );
   sellZone.rotation.x = -Math.PI / 2;
   sellZone.position.set(SELL_CENTER.x, 0.014, SELL_CENTER.z);
   scene.add(sellZone);
+
   const ring = new THREE.Mesh(
-    new THREE.RingGeometry(SELL_RADIUS - 0.12, SELL_RADIUS + 0.08, 32),
+    new THREE.RingGeometry(BASE.sellRadius - 0.12, BASE.sellRadius + 0.08, 32),
     new THREE.MeshBasicMaterial({ color: 0x82ffb2, transparent: true, opacity: 0.92, side: THREE.DoubleSide })
   );
   ring.rotation.x = -Math.PI / 2;
@@ -146,6 +187,42 @@ try {
   holdHint.style.cssText = 'position:absolute;z-index:40;right:18px;bottom:31%;padding:5px 9px;border-radius:999px;background:rgba(41,200,255,.18);border:1px solid rgba(76,219,255,.38);color:#a8edff;font:800 11px -apple-system;letter-spacing:.08em;pointer-events:none;opacity:0;transition:opacity .12s';
   document.body.appendChild(holdHint);
 
+  const upgradeToggle = document.createElement('button');
+  upgradeToggle.textContent = '強化';
+  upgradeToggle.style.cssText = 'position:absolute;z-index:70;right:10px;top:max(102px,calc(env(safe-area-inset-top) + 92px));min-height:38px;padding:0 13px;border-radius:14px;border:1px solid rgba(255,255,255,.18);background:rgba(20,24,30,.91);color:#fff;font:800 13px -apple-system;box-shadow:0 3px 12px rgba(0,0,0,.3)';
+  document.body.appendChild(upgradeToggle);
+
+  const upgradePanel = document.createElement('section');
+  upgradePanel.style.cssText = 'position:absolute;z-index:80;right:10px;top:max(146px,calc(env(safe-area-inset-top) + 136px));width:min(290px,calc(100vw - 20px));padding:12px;border-radius:16px;background:rgba(12,15,19,.94);border:1px solid rgba(255,255,255,.14);box-shadow:0 10px 30px rgba(0,0,0,.38);backdrop-filter:blur(12px);display:none;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';
+  document.body.appendChild(upgradePanel);
+
+  const upgradeTitle = document.createElement('div');
+  upgradeTitle.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:13px;font-weight:800';
+  upgradeTitle.innerHTML = '<span>WORKSHOP UPGRADES</span><span id="upgradeCash"></span>';
+  upgradePanel.appendChild(upgradeTitle);
+
+  const upgradeList = document.createElement('div');
+  upgradeList.style.cssText = 'display:grid;gap:8px';
+  upgradePanel.appendChild(upgradeList);
+
+  const upgradeButtons = new Map();
+  for (const [key, def] of Object.entries(UPGRADE_DEFS)) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.dataset.upgrade = key;
+    button.style.cssText = 'width:100%;display:grid;grid-template-columns:1fr auto;gap:8px;text-align:left;align-items:center;padding:10px 11px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;font:700 13px -apple-system';
+    upgradeList.appendChild(button);
+    upgradeButtons.set(key, button);
+  }
+
+  let panelOpen = false;
+  upgradeToggle.addEventListener('click', () => {
+    panelOpen = !panelOpen;
+    upgradePanel.style.display = panelOpen ? 'block' : 'none';
+    upgradeToggle.textContent = panelOpen ? '閉じる' : '強化';
+    haptic(7);
+  });
+
   let feedbackTimer = 0;
   let comboTimer = 0;
   function showFeedback(text, strong = false) {
@@ -167,12 +244,7 @@ try {
     });
   }
 
-  const trajectoryMaterial = new THREE.LineBasicMaterial({
-    color: 0x65e7ff,
-    transparent: true,
-    opacity: 0.82,
-    depthTest: false,
-  });
+  const trajectoryMaterial = new THREE.LineBasicMaterial({ color: 0x65e7ff, transparent: true, opacity: 0.82, depthTest: false });
   const trajectoryGeometry = new THREE.BufferGeometry();
   const trajectoryLine = new THREE.Line(trajectoryGeometry, trajectoryMaterial);
   trajectoryLine.visible = false;
@@ -181,12 +253,7 @@ try {
 
   const boxes = [];
   const boxGeometry = new THREE.BoxGeometry(0.74, 0.6, 0.74);
-  const baseBoxMaterial = new THREE.MeshStandardMaterial({
-    color: 0xd39a59,
-    roughness: 0.74,
-    emissive: 0x000000,
-    emissiveIntensity: 0,
-  });
+  const baseBoxMaterial = new THREE.MeshStandardMaterial({ color: 0xd39a59, roughness: 0.74, emissive: 0x000000, emissiveIntensity: 0 });
   let nextBoxId = 1;
   let held = null;
   let targeted = null;
@@ -194,6 +261,7 @@ try {
   let combo = 0;
   let lastSaleAt = 0;
   let cameraPunch = 0;
+  let lastFeederAt = performance.now();
 
   function setHeldVisual(box, enabled) {
     if (!box) return;
@@ -236,9 +304,7 @@ try {
     if (rotation) desc.setRotation(rotation);
     const body = world.createRigidBody(desc);
     world.createCollider(
-      RAPIER.ColliderDesc.cuboid(0.37, 0.30, 0.37)
-        .setFriction(0.72)
-        .setRestitution(0.08),
+      RAPIER.ColliderDesc.cuboid(0.37, 0.30, 0.37).setFriction(0.72).setRestitution(0.08),
       body
     );
 
@@ -266,7 +332,7 @@ try {
   function spawnReplacement() {
     if (boxes.length >= MAX_BOXES) return;
     const x = THREE.MathUtils.randFloat(-2.8, 2.8);
-    const z = THREE.MathUtils.randFloat(1.0, 4.0);
+    const z = upgrades.feeder > 0 ? 5.45 : THREE.MathUtils.randFloat(1.0, 4.0);
     spawnBox(new THREE.Vector3(x, 1.2, z));
   }
 
@@ -276,10 +342,6 @@ try {
       initialPositions.push([-2.3 + col * 1.5, 0.72 + row * 0.04, 2.3 - row * 1.35]);
     }
   }
-
-  const saved = loadSave();
-  let money = Math.max(0, Number(saved?.money ?? 120));
-  let sold = Math.max(0, Number(saved?.sold ?? 0));
 
   if (saved?.boxes?.length) {
     for (const b of saved.boxes.slice(0, MAX_BOXES)) {
@@ -293,21 +355,70 @@ try {
 
   const input = createInput({ movePad: ui.movePad, moveKnob: ui.moveKnob, lookPad: ui.lookPad, canvas: ui.canvas });
   const raycaster = new THREE.Raycaster();
-  raycaster.far = GRAB_RANGE;
+
+  function syncUpgradeVisuals() {
+    const zoneScale = sellRadius() / BASE.sellRadius;
+    sellZone.scale.setScalar(zoneScale);
+    ring.scale.setScalar(zoneScale);
+    conveyor.visible = upgrades.feeder > 0;
+    for (const stripe of conveyorStripes) stripe.visible = upgrades.feeder > 0;
+    raycaster.far = grabRange();
+  }
+
+  function refreshUpgradePanel() {
+    const cash = upgradePanel.querySelector('#upgradeCash');
+    if (cash) cash.textContent = `¥${money.toLocaleString('ja-JP')}`;
+    for (const [key, button] of upgradeButtons.entries()) {
+      const def = UPGRADE_DEFS[key];
+      const level = upgrades[key];
+      const maxed = level >= def.max;
+      const cost = maxed ? 0 : upgradeCost(key);
+      button.innerHTML = `<span><strong>${def.label} Lv.${level}</strong><br><small style="opacity:.68">${def.desc}</small></span><span>${maxed ? 'MAX' : `¥${cost}`}</span>`;
+      button.disabled = maxed || money < cost;
+      button.style.opacity = button.disabled && !maxed ? '.5' : '1';
+    }
+  }
+
+  function buyUpgrade(key) {
+    const def = UPGRADE_DEFS[key];
+    if (!def) return;
+    if (upgrades[key] >= def.max) return;
+    const cost = upgradeCost(key);
+    if (money < cost) {
+      showFeedback('資金不足');
+      haptic(10);
+      return;
+    }
+    money -= cost;
+    upgrades[key] += 1;
+    syncUpgradeVisuals();
+    refreshUpgradePanel();
+    if (key === 'feeder') lastFeederAt = performance.now();
+    showFeedback(`${def.label} Lv.${upgrades[key]}`, true);
+    pulseFlash();
+    haptic(24);
+    updateHud(`${def.label} 強化！`);
+    saveNow();
+  }
+
+  for (const [key, button] of upgradeButtons.entries()) {
+    button.addEventListener('click', () => buyUpgrade(key));
+  }
 
   function updateHud(message = '') {
     ui.money.textContent = `¥${money.toLocaleString('ja-JP')}`;
-    ui.sold.textContent = `${sold} / ${GOAL}`;
+    ui.sold.textContent = `${sold} / ${nextMilestone()}`;
     ui.grab.textContent = held ? '離す' : '吸着';
     ui.sell.textContent = '投げる';
     ui.sell.disabled = !held;
     ui.buy.textContent = `補充 ¥${BOX_PRICE}`;
     ui.buy.disabled = money < BOX_PRICE || boxes.length >= MAX_BOXES;
     if (message) ui.status.textContent = message;
-    else if (sold >= GOAL) ui.status.textContent = '目標達成！ コンボを伸ばせ';
-    else if (held) ui.status.textContent = '照準は見える。緑ゾーンへ投げ込め';
+    else if (held) ui.status.textContent = '照準を合わせて投げ込め';
     else if (targeted) ui.status.textContent = '吸着できる';
-    else ui.status.textContent = '箱を狙って吸着 → 投げる';
+    else if (upgrades.feeder > 0) ui.status.textContent = `自動供給 Lv.${upgrades.feeder} 稼働中`;
+    else ui.status.textContent = '箱を売って強化しろ';
+    if (panelOpen) refreshUpgradePanel();
   }
 
   function forwardVector() {
@@ -328,9 +439,7 @@ try {
     const box = held;
     const dir = viewVector();
     const right = new THREE.Vector3().crossVectors(dir, camera.up).normalize();
-    const dropPos = camera.position.clone()
-      .add(dir.multiplyScalar(1.1))
-      .add(right.multiplyScalar(0.45));
+    const dropPos = camera.position.clone().add(dir.multiplyScalar(1.1)).add(right.multiplyScalar(0.45));
     dropPos.y = Math.max(0.52, dropPos.y - 0.25);
     setHeldVisual(box, false);
     box.body.setTranslation({ x: dropPos.x, y: dropPos.y, z: dropPos.z }, true);
@@ -343,10 +452,7 @@ try {
   }
 
   function toggleGrab() {
-    if (held) {
-      dropHeld();
-      return;
-    }
+    if (held) return dropHeld();
     if (!targeted) {
       cameraPunch = Math.max(cameraPunch, 0.025);
       updateHud('中央に箱を合わせろ');
@@ -357,7 +463,7 @@ try {
     setHeldVisual(held, true);
     cameraPunch = Math.max(cameraPunch, 0.055);
     haptic(12);
-    updateHud('吸着！ 照準を合わせて投げろ');
+    updateHud('吸着！ 狙って投げろ');
   }
 
   function throwHeld() {
@@ -365,20 +471,15 @@ try {
     const box = held;
     const dir = viewVector();
     const right = new THREE.Vector3().crossVectors(dir, camera.up).normalize();
-    const start = camera.position.clone()
-      .add(dir.clone().multiplyScalar(0.95))
-      .add(right.multiplyScalar(0.28));
+    const start = camera.position.clone().add(dir.clone().multiplyScalar(0.95)).add(right.multiplyScalar(0.28));
 
     setHeldVisual(box, false);
     box.mesh.position.copy(start);
     box.body.setTranslation({ x: start.x, y: start.y, z: start.z }, true);
     box.body.setRotation(cameraQuaternion(), true);
     box.body.setEnabled(true);
-    box.body.setLinvel({
-      x: dir.x * THROW_SPEED,
-      y: dir.y * THROW_SPEED + 1.25,
-      z: dir.z * THROW_SPEED,
-    }, true);
+    const speed = throwSpeed();
+    box.body.setLinvel({ x: dir.x * speed, y: dir.y * speed + 1.25, z: dir.z * speed }, true);
     box.body.setAngvel({ x: 4.5, y: 7.5, z: 3.5 }, true);
     held = null;
     cameraPunch = Math.max(cameraPunch, 0.18);
@@ -390,7 +491,7 @@ try {
     if (money < BOX_PRICE) return updateHud('資金が足りません');
     if (boxes.length >= MAX_BOXES) return updateHud('箱の上限です');
     money -= BOX_PRICE;
-    spawnBox(new THREE.Vector3(5.8, 1.2, 5.8));
+    spawnReplacement();
     showFeedback(`-¥${BOX_PRICE}`);
     updateHud('箱を補充');
     saveNow();
@@ -401,7 +502,7 @@ try {
     combo = (now - lastSaleAt <= 4200) ? combo + 1 : 1;
     lastSaleAt = now;
     const bonus = Math.min(5, Math.max(0, combo - 1)) * 20;
-    const reward = BASE_SALE + bonus;
+    const reward = saleValue() + bonus;
     money += reward;
     sold += 1;
     removeBox(box);
@@ -418,8 +519,13 @@ try {
     }, 4200);
     cameraPunch = Math.max(cameraPunch, 0.24);
     haptic(combo >= 3 ? 35 : 22);
-    updateHud(combo > 1 ? `ナイス！ COMBO ×${combo}` : `売却 +¥${reward}`);
-    setTimeout(spawnReplacement, 420);
+    updateHud(combo > 1 ? `COMBO ×${combo} +¥${reward}` : `売却 +¥${reward}`);
+    if (sold % 10 === 0) {
+      showFeedback(`MILESTONE ${sold}`, true);
+      money += 120;
+    }
+    if (upgrades.feeder <= 0) setTimeout(spawnReplacement, 420);
+    refreshUpgradePanel();
     saveNow();
   }
 
@@ -436,7 +542,7 @@ try {
         const r = box.body.rotation();
         return { p: [p.x, p.y, p.z], r: [r.x, r.y, r.z, r.w] };
       });
-      localStorage.setItem(SAVE_KEY, JSON.stringify({ version: 3, money, sold, boxes: snapshot }));
+      localStorage.setItem(SAVE_KEY, JSON.stringify({ version: 4, money, sold, upgrades, boxes: snapshot }));
     } catch {
       updateHud('保存できませんでした');
     }
@@ -446,7 +552,7 @@ try {
   ui.sell.addEventListener('click', throwHeld);
   ui.buy.addEventListener('click', buyBox);
   ui.reset.addEventListener('click', () => {
-    if (confirm('資金・売却数・箱配置を初期化しますか？')) {
+    if (confirm('資金・強化・売却数・箱配置を初期化しますか？')) {
       localStorage.removeItem(SAVE_KEY);
       location.reload();
     }
@@ -459,7 +565,7 @@ try {
     if (event.code === 'KeyB') buyBox();
   });
   addEventListener('pagehide', saveNow);
-  setInterval(saveNow, 5000);
+  setInterval(saveNow, 6000);
 
   const clock = new THREE.Clock();
   let accumulator = 0;
@@ -489,10 +595,9 @@ try {
     trajectoryLine.visible = true;
     const forward = viewVector();
     const right = new THREE.Vector3().crossVectors(forward, camera.up).normalize();
-    const start = camera.position.clone()
-      .add(forward.clone().multiplyScalar(0.95))
-      .add(right.multiplyScalar(0.28));
-    const velocity = forward.multiplyScalar(THROW_SPEED);
+    const start = camera.position.clone().add(forward.clone().multiplyScalar(0.95)).add(right.multiplyScalar(0.28));
+    const speed = throwSpeed();
+    const velocity = forward.multiplyScalar(speed);
     velocity.y += 1.25;
     const points = [];
     for (let i = 0; i <= 18; i += 1) {
@@ -532,14 +637,33 @@ try {
 
   function checkAutoSales() {
     const soldNow = [];
+    const radius = sellRadius();
     for (const box of boxes) {
       if (box === held) continue;
       const p = box.body.translation();
       const dx = p.x - SELL_CENTER.x;
       const dz = p.z - SELL_CENTER.z;
-      if (Math.hypot(dx, dz) <= SELL_RADIUS && p.y >= -0.2 && p.y <= 2.3) soldNow.push(box);
+      if (Math.hypot(dx, dz) <= radius && p.y >= -0.2 && p.y <= 2.3) soldNow.push(box);
     }
     for (const box of soldNow) awardSale(box);
+  }
+
+  function updateFeeder(now) {
+    if (upgrades.feeder <= 0) return;
+    if (boxes.length >= Math.min(MAX_BOXES, 10 + upgrades.feeder * 4)) return;
+    const interval = feederInterval();
+    if (now - lastFeederAt < interval) return;
+    lastFeederAt = now;
+    spawnReplacement();
+    haptic(5);
+  }
+
+  function animateConveyor(now) {
+    if (upgrades.feeder <= 0) return;
+    const speed = 0.00045 + upgrades.feeder * 0.00012;
+    for (let i = 0; i < conveyorStripes.length; i += 1) {
+      conveyorStripes[i].position.x = -2.6 + ((i * 0.8 + now * speed) % 5.2);
+    }
   }
 
   function frame() {
@@ -555,8 +679,8 @@ try {
     const move = input.movement();
     tmpDirection.copy(forwardVector());
     tmpRight.set(Math.cos(player.yaw), 0, -Math.sin(player.yaw));
-    player.position.addScaledVector(tmpDirection, move.y * MOVE_SPEED * dt);
-    player.position.addScaledVector(tmpRight, move.x * MOVE_SPEED * dt);
+    player.position.addScaledVector(tmpDirection, move.y * moveSpeed() * dt);
+    player.position.addScaledVector(tmpRight, move.x * moveSpeed() * dt);
     player.position.x = THREE.MathUtils.clamp(player.position.x, -8.55, 8.55);
     player.position.z = THREE.MathUtils.clamp(player.position.z, -8.55, 8.55);
 
@@ -585,10 +709,13 @@ try {
       box.mesh.quaternion.set(r.x, r.y, r.z, r.w);
     }
 
+    const now = performance.now();
     updateHeldTransform();
     updateTrajectory();
     updateTargeting();
     checkAutoSales();
+    updateFeeder(now);
+    animateConveyor(now);
 
     const distToSell = Math.hypot(camera.position.x - SELL_CENTER.x, camera.position.z - SELL_CENTER.z);
     sellLabel.style.display = distToSell < 7.4 || held ? 'block' : 'none';
@@ -612,7 +739,10 @@ try {
   }
   addEventListener('resize', resize, { passive: true });
 
-  updateHud('箱を狙って吸着 → 緑へ投げろ');
+  syncUpgradeVisuals();
+  refreshUpgradePanel();
+  updateHud('箱を売って強化しろ');
+  showFeedback('UPGRADE LOOP READY');
   frame();
 } catch (error) {
   console.error(error);
