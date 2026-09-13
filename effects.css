@@ -95,8 +95,8 @@
 }
 
 .velvet-fx-particle.is-streak {
-  width: calc(var(--size) * 3.2);
-  height: max(2px, calc(var(--size) * .33));
+  width: 18px;
+  height: 3px;
   border-radius: 999px;
   transform-origin: center;
   filter: blur(.15px);
