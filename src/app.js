@@ -1,0 +1,654 @@
+import {
+  loadState,
+  saveState,
+  recordView,
+  recordReaction,
+  recordModeUse,
+  recordSession,
+  clearTaste,
+  clearHistory,
+  clearAll,
+  applyHistoryPolicy
+} from "./store.js";
+import {
+  chooseNext,
+  rankCandidates,
+  buildSessionQueue,
+  adaptSessionQueue,
+  dominantLikedTags,
+  recommendNextMode
+} from "./recommender.js";
+import { loadCatalog, preloadImages } from "./content.js";
+
+const $ = selector => document.querySelector(selector);
+const $$ = selector => [...document.querySelectorAll(selector)];
+const SESSION_TARGETS = Object.freeze({ 3: 12, 5: 20, 10: 40 });
+
+let state = loadState();
+let catalog = [];
+let catalogInfo = null;
+let catalogReady = false;
+let appUnlocked = false;
+let currentItem = null;
+const FLOW_PRESET_KEY = "velvet_private_v2_flow_preset";
+const VALID_FLOW_MODES = new Set(["soft", "personal", "pro", "intense", "favorites", "explore"]);
+function readFlowMode() {
+  try {
+    const value = localStorage.getItem(FLOW_PRESET_KEY);
+    return VALID_FLOW_MODES.has(value) ? value : "personal";
+  } catch (_) {
+    return "personal";
+  }
+}
+let flowMode = readFlowMode();
+let lastFlowAction = null;
+let flowTransitionTimer = null;
+let flowExclusions = new Set();
+const runtimeSeenByMode = new Map();
+let session = null;
+let dragState = null;
+
+function runtimeSeenForMode(mode = flowMode) {
+  if (!runtimeSeenByMode.has(mode)) runtimeSeenByMode.set(mode, new Set());
+  return runtimeSeenByMode.get(mode);
+}
+
+function combinedFlowExclusions(mode = flowMode) {
+  return new Set([...flowExclusions, ...runtimeSeenForMode(mode)]);
+}
+
+function isFavorite(item = currentItem) {
+  return !!item?.id && Array.isArray(state.likedItemIds) && state.likedItemIds.includes(item.id);
+}
+
+function publishFlowItem(item = currentItem) {
+  window.dispatchEvent(new CustomEvent("velvet:flow-item", {
+    detail: {
+      item: item || null,
+      mode: flowMode,
+      favorite: isFavorite(item)
+    }
+  }));
+}
+
+const els = {
+  privacyGate: $("#privacyGate"),
+  safeScreen: $("#safeScreen"),
+  safeTime: $("#safeTime"),
+  mainExperience: $("#mainExperience"),
+  unlockButton: $("#unlockButton"),
+  returnButton: $("#returnButton"),
+  quickHideButton: $("#quickHideButton"),
+  settingsButton: $("#settingsButton"),
+  settingsDialog: $("#settingsDialog"),
+  modeLabel: $("#modeLabel"),
+  flowView: $("#flowView"),
+  sessionSetupView: $("#sessionSetupView"),
+  sessionPlayerView: $("#sessionPlayerView"),
+  sessionSummaryView: $("#sessionSummaryView"),
+  mediaCard: $("#mediaCard"),
+  mediaImage: $("#mediaImage"),
+  sourceLabel: $("#sourceLabel"),
+  intensityLabel: $("#intensityLabel"),
+  dragLike: $("#dragLike"),
+  dragSkip: $("#dragSkip"),
+  emptyState: $("#emptyState"),
+  retryFeedButton: $("#retryFeedButton"),
+  skipButton: $("#skipButton"),
+  likeButton: $("#likeButton"),
+  sessionsButton: $("#sessionsButton"),
+  sessionForm: $("#sessionForm"),
+  endSessionButton: $("#endSessionButton"),
+  sessionMediaCard: $("#sessionMediaCard"),
+  sessionMediaImage: $("#sessionMediaImage"),
+  sessionPhaseLabel: $("#sessionPhaseLabel"),
+  sessionIntensityLabel: $("#sessionIntensityLabel"),
+  sessionProgressBar: $("#sessionProgressBar"),
+  sessionProgressText: $("#sessionProgressText"),
+  sessionSkipButton: $("#sessionSkipButton"),
+  sessionLikeButton: $("#sessionLikeButton"),
+  summaryLikes: $("#summaryLikes"),
+  summarySkips: $("#summarySkips"),
+  summaryCompletion: $("#summaryCompletion"),
+  summaryTagList: $("#summaryTagList"),
+  summaryRecommendation: $("#summaryRecommendation"),
+  summaryFlowButton: $("#summaryFlowButton"),
+  summaryAgainButton: $("#summaryAgainButton"),
+  privacyBlurSetting: $("#privacyBlurSetting"),
+  resumeSetting: $("#resumeSetting"),
+  reducedMotionSetting: $("#reducedMotionSetting"),
+  historyModeSetting: $("#historyModeSetting"),
+  resetTasteButton: $("#resetTasteButton"),
+  clearHistoryButton: $("#clearHistoryButton"),
+  clearAllButton: $("#clearAllButton"),
+  settingsStatus: $("#settingsStatus")
+};
+
+function setHidden(el, hidden) {
+  el.classList.toggle("is-hidden", hidden);
+}
+
+function setView(view) {
+  for (const el of [els.flowView, els.sessionSetupView, els.sessionPlayerView, els.sessionSummaryView]) {
+    el.classList.toggle("view--active", el === view);
+  }
+}
+
+function setModeLabel(label) {
+  els.modeLabel.textContent = label.toUpperCase();
+}
+
+function applyMotionPreference() {
+  document.documentElement.classList.toggle("reduced-motion", !!state.settings.reducedMotion);
+}
+
+function updateSafeTime() {
+  els.safeTime.textContent = new Intl.DateTimeFormat([], { hour: "2-digit", minute: "2-digit" }).format(new Date());
+}
+
+function showSafeScreen() {
+  updateSafeTime();
+  setHidden(els.mainExperience, true);
+  setHidden(els.privacyGate, true);
+  setHidden(els.safeScreen, false);
+}
+
+function revealApp() {
+  appUnlocked = true;
+  setHidden(els.privacyGate, true);
+  setHidden(els.safeScreen, true);
+  setHidden(els.mainExperience, false);
+  setView(els.flowView);
+  setModeLabel("Flow");
+  if (!currentItem && catalogReady) showNextFlowItem({ preferResume: true });
+}
+
+function syncSettingsUi() {
+  els.privacyBlurSetting.checked = !!state.settings.privacyBlur;
+  els.resumeSetting.checked = !!state.settings.resumeLastItem;
+  els.reducedMotionSetting.checked = !!state.settings.reducedMotion;
+  els.historyModeSetting.value = state.settings.historyMode;
+}
+
+function imageFailed(img) {
+  img.classList.add("image-failed");
+}
+
+function renderFlowItem(item, { recordExposure = true, rememberRuntime = true } = {}) {
+  currentItem = item;
+  if (!item) {
+    els.emptyState.dataset.reason = flowMode === "favorites" ? "favorites" : "feed";
+    setHidden(els.mediaCard, true);
+    setHidden(els.emptyState, false);
+    publishFlowItem(null);
+    return;
+  }
+  delete els.emptyState.dataset.reason;
+  setHidden(els.emptyState, true);
+  setHidden(els.mediaCard, false);
+  els.mediaImage.classList.remove("image-failed");
+  els.mediaImage.src = item.image_url;
+  els.mediaImage.alt = "Velvet feed item";
+  els.sourceLabel.textContent = item.source_label || item.source || "Velvet";
+  els.intensityLabel.textContent = `I${Math.round(Number(item.intensity) || 3)}`;
+  els.mediaCard.style.transform = "";
+  els.mediaCard.style.opacity = "";
+  els.dragLike.style.opacity = "0";
+  els.dragSkip.style.opacity = "0";
+
+  if (recordExposure) state = recordView(state, item);
+  flowExclusions.add(item.id);
+  if (flowExclusions.size > 25) flowExclusions = new Set([...flowExclusions].slice(-18));
+  if (rememberRuntime) runtimeSeenForMode().add(item.id);
+  const rankedPreview = rankCandidates(catalog, state, flowMode, combinedFlowExclusions(), null, 4).map(row => row.item);
+  preloadImages(rankedPreview);
+  publishFlowItem(item);
+}
+
+function selectNextFlowItem({ preferResume = false } = {}) {
+  if (!catalog.length) return null;
+
+  let item = null;
+  if (preferResume && state.settings.resumeLastItem && state.lastItemId) {
+    item = catalog.find(row => row.id === state.lastItemId) || null;
+  }
+  if (!item) item = chooseNext(catalog, state, flowMode, combinedFlowExclusions());
+  if (!item) {
+    const currentId = currentItem?.id || null;
+    runtimeSeenForMode().clear();
+    flowExclusions.clear();
+    if (currentId) {
+      runtimeSeenForMode().add(currentId);
+      flowExclusions.add(currentId);
+    }
+    item = chooseNext(catalog, state, flowMode, combinedFlowExclusions());
+  }
+  return item;
+}
+
+function showNextFlowItem(options = {}) {
+  renderFlowItem(selectNextFlowItem(options));
+}
+
+function animateFlowDecision(direction, nextItem) {
+  clearTimeout(flowTransitionTimer);
+  flowTransitionTimer = null;
+  if (state.settings.reducedMotion) {
+    renderFlowItem(nextItem);
+    return;
+  }
+  const x = direction === "like" ? 110 : -110;
+  els.mediaCard.style.transform = `translateX(${x}%) rotate(${direction === "like" ? 7 : -7}deg)`;
+  els.mediaCard.style.opacity = "0";
+  flowTransitionTimer = setTimeout(() => {
+    flowTransitionTimer = null;
+    renderFlowItem(nextItem);
+  }, 160);
+}
+
+function reactFlow(reaction) {
+  if (!currentItem) return;
+  const reactedItem = currentItem;
+  const stateBefore = JSON.parse(JSON.stringify(state));
+  const modeBefore = flowMode;
+  state = recordReaction(state, reactedItem, reaction);
+  lastFlowAction = { item: reactedItem, stateBefore, kind: reaction, modeBefore };
+  const saved = reaction === "like" && isFavorite(reactedItem);
+  if (reaction === "like") window.dispatchEvent(new CustomEvent("velvet:favorites-changed"));
+  window.dispatchEvent(new CustomEvent("velvet:flow-feedback", { detail: { reaction, saved } }));
+  const nextItem = selectNextFlowItem();
+  if (nextItem) preloadImages([nextItem]);
+  animateFlowDecision(reaction, nextItem);
+}
+
+function removeCurrentFavorite() {
+  if (!currentItem || !isFavorite(currentItem)) return false;
+  const item = currentItem;
+  const modeBefore = flowMode;
+  const stateBefore = JSON.parse(JSON.stringify(state));
+  const wasFavoritesMode = modeBefore === "favorites";
+
+  state.likedItemIds = state.likedItemIds.filter(id => id !== item.id);
+  state = saveState(applyHistoryPolicy(state));
+  lastFlowAction = { item, stateBefore, kind: "unfavorite", modeBefore };
+
+  let nextFavorite = null;
+  if (wasFavoritesMode) nextFavorite = selectNextFlowItem();
+
+  window.dispatchEvent(new CustomEvent("velvet:flow-feedback", { detail: { reaction: "unfavorite" } }));
+  window.dispatchEvent(new CustomEvent("velvet:favorites-changed"));
+
+  if (wasFavoritesMode) {
+    if (nextFavorite) {
+      preloadImages([nextFavorite]);
+      animateFlowDecision("skip", nextFavorite);
+    } else {
+      clearTimeout(flowTransitionTimer);
+      flowTransitionTimer = null;
+      showNextFlowItem();
+    }
+  } else {
+    publishFlowItem(item);
+  }
+  return true;
+}
+
+function handleFlowLike() {
+  if (isFavorite()) {
+    removeCurrentFavorite();
+    return;
+  }
+  reactFlow("like");
+}
+
+function undoLastFlowAction() {
+  if (!lastFlowAction) return;
+  const action = lastFlowAction;
+  lastFlowAction = null;
+  clearTimeout(flowTransitionTimer);
+  flowTransitionTimer = null;
+  state = saveState(action.stateBefore);
+
+  if (action.kind === "unfavorite" && action.modeBefore === "favorites") {
+    try { localStorage.setItem(FLOW_PRESET_KEY, "favorites"); } catch (_) {}
+    flowMode = "favorites";
+  }
+
+  flowExclusions.delete(action.item.id);
+  runtimeSeenForMode(action.modeBefore || flowMode).delete(action.item.id);
+  currentItem = null;
+  window.dispatchEvent(new CustomEvent("velvet:favorites-changed"));
+  renderFlowItem(action.item, { recordExposure: false, rememberRuntime: false });
+  window.dispatchEvent(new CustomEvent("velvet:flow-undone"));
+}
+
+function bindSwipe(card, onLike, onSkip) {
+  card.addEventListener("pointerdown", event => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    dragState = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, x: 0 };
+    card.setPointerCapture?.(event.pointerId);
+  });
+
+  card.addEventListener("pointermove", event => {
+    if (!dragState || dragState.pointerId !== event.pointerId) return;
+    const dx = event.clientX - dragState.startX;
+    const dy = event.clientY - dragState.startY;
+    if (Math.abs(dy) > Math.abs(dx) * 1.2 && Math.abs(dy) > 22) return;
+    dragState.x = dx;
+    const pct = Math.max(-1, Math.min(1, dx / 120));
+    if (!state.settings.reducedMotion) card.style.transform = `translateX(${dx * 0.38}px) rotate(${pct * 4}deg)`;
+    if (card === els.mediaCard) {
+      els.dragLike.style.opacity = String(Math.max(0, pct));
+      els.dragSkip.style.opacity = String(Math.max(0, -pct));
+    }
+  });
+
+  const finish = event => {
+    if (!dragState || dragState.pointerId !== event.pointerId) return;
+    const dx = dragState.x;
+    dragState = null;
+    card.releasePointerCapture?.(event.pointerId);
+    if (Math.abs(dx) >= 72) {
+      if (dx > 0) onLike(); else onSkip();
+    } else {
+      card.style.transform = "";
+      if (card === els.mediaCard) {
+        els.dragLike.style.opacity = "0";
+        els.dragSkip.style.opacity = "0";
+      }
+    }
+  };
+
+  card.addEventListener("pointerup", finish);
+  card.addEventListener("pointercancel", finish);
+}
+
+function openSessionSetup() {
+  setView(els.sessionSetupView);
+  setModeLabel("Sessions");
+}
+
+function plannedSessionCount(duration, fallback = 0) {
+  return SESSION_TARGETS[Number(duration)] || fallback;
+}
+
+function startSession({ duration, mood }) {
+  const queue = buildSessionQueue(catalog, state, { duration, mood });
+  session = {
+    duration: Number(duration),
+    mood,
+    queue,
+    targetCount: plannedSessionCount(duration, queue.length),
+    index: 0,
+    likedIds: [],
+    skippedIds: [],
+    failedIds: new Set(),
+    startedAt: Date.now(),
+    ended: false
+  };
+  state = recordModeUse(state, `session:${mood}:${duration}`);
+  setView(els.sessionPlayerView);
+  setModeLabel(`${mood} ${duration}m`);
+  renderSessionItem();
+}
+
+function replanSessionTail() {
+  if (!session || session.ended) return;
+  session.queue = adaptSessionQueue(catalog, state, {
+    duration: session.duration,
+    mood: session.mood,
+    queue: session.queue,
+    index: session.index,
+    excludedIds: [...session.failedIds]
+  });
+}
+
+function renderSessionItem() {
+  if (!session || session.ended) return;
+  if (session.index >= session.queue.length) {
+    return finishSession(session.index >= session.targetCount);
+  }
+
+  const item = session.queue[session.index];
+  els.sessionMediaImage.classList.remove("image-failed");
+  els.sessionMediaImage.src = item.image_url;
+  els.sessionMediaImage.alt = "Velvet session item";
+  els.sessionPhaseLabel.textContent = item.session_phase || "SESSION";
+  els.sessionIntensityLabel.textContent = `I${Math.round(Number(item.intensity) || 3)}`;
+  els.sessionMediaCard.style.transform = "";
+  els.sessionMediaCard.style.opacity = "";
+
+  const total = Math.max(1, session.targetCount || session.queue.length);
+  const progress = Math.min(1, session.index / total);
+  els.sessionProgressBar.style.width = `${Math.round(progress * 100)}%`;
+  els.sessionProgressText.textContent = `${Math.min(session.index + 1, total)} / ${total}`;
+  state = recordView(state, item);
+  preloadImages(session.queue.slice(session.index + 1, session.index + 4));
+  window.dispatchEvent(new CustomEvent("velvet:session-item", { detail: { item } }));
+}
+
+function reactSession(reaction) {
+  if (!session || session.ended) return;
+  const item = session.queue[session.index];
+  if (!item) return finishSession(false);
+  state = recordReaction(state, item, reaction);
+  if (reaction === "like") {
+    session.likedIds.push(item.id);
+    window.dispatchEvent(new CustomEvent("velvet:favorites-changed"));
+  } else session.skippedIds.push(item.id);
+
+  session.index += 1;
+  replanSessionTail();
+  if (state.settings.reducedMotion) return renderSessionItem();
+  els.sessionMediaCard.style.opacity = "0";
+  setTimeout(() => {
+    els.sessionMediaCard.style.opacity = "";
+    renderSessionItem();
+  }, 120);
+}
+
+function finishSession(completed = false) {
+  if (!session || session.ended) return;
+  session.ended = true;
+  const total = Math.max(1, session.targetCount || session.queue.length);
+  const consumed = Math.min(session.index, total);
+  const completion = completed ? 1 : consumed / total;
+  const dominantTags = dominantLikedTags(session.queue, session.likedIds);
+  const summary = {
+    id: `session-${Date.now()}`,
+    at: new Date().toISOString(),
+    duration: session.duration,
+    mood: session.mood,
+    likes: session.likedIds.length,
+    skips: session.skippedIds.length,
+    completion,
+    completed: completed || completion >= 0.95,
+    dominantTags
+  };
+  state = recordSession(state, summary);
+
+  els.summaryLikes.textContent = String(summary.likes);
+  els.summarySkips.textContent = String(summary.skips);
+  els.summaryCompletion.textContent = `${Math.round(summary.completion * 100)}%`;
+  els.summaryTagList.replaceChildren(...dominantTags.map(tag => {
+    const span = document.createElement("span");
+    span.className = "pill";
+    span.textContent = tag;
+    return span;
+  }));
+  if (!dominantTags.length) {
+    const span = document.createElement("span");
+    span.className = "muted";
+    span.textContent = "No strong signal yet";
+    els.summaryTagList.replaceChildren(span);
+  }
+  els.summaryRecommendation.textContent = recommendNextMode(summary);
+  setView(els.sessionSummaryView);
+  setModeLabel("Summary");
+}
+
+function resetActiveExperience() {
+  if (session) session.ended = true;
+  session = null;
+  dragState = null;
+  flowExclusions.clear();
+  runtimeSeenByMode.clear();
+  currentItem = null;
+  lastFlowAction = null;
+  clearTimeout(flowTransitionTimer);
+  flowTransitionTimer = null;
+  setView(els.flowView);
+  setModeLabel("Flow");
+  if (catalogReady && appUnlocked) showNextFlowItem();
+}
+
+function status(message) {
+  els.settingsStatus.textContent = message;
+  setTimeout(() => {
+    if (els.settingsStatus.textContent === message) els.settingsStatus.textContent = "";
+  }, 2200);
+}
+
+function saveSettings() {
+  state.settings.privacyBlur = els.privacyBlurSetting.checked;
+  state.settings.resumeLastItem = els.resumeSetting.checked;
+  state.settings.reducedMotion = els.reducedMotionSetting.checked;
+  state.settings.historyMode = els.historyModeSetting.value;
+  state = saveState(applyHistoryPolicy(state));
+  applyMotionPreference();
+  window.dispatchEvent(new CustomEvent("velvet:favorites-changed"));
+  publishFlowItem();
+  status("Saved locally");
+}
+
+async function reloadCatalog() {
+  catalogReady = false;
+  setHidden(els.emptyState, true);
+  catalogInfo = await loadCatalog();
+  catalog = catalogInfo.catalog;
+  catalogReady = true;
+  flowExclusions.clear();
+  runtimeSeenByMode.clear();
+  currentItem = null;
+  if (appUnlocked) showNextFlowItem();
+}
+
+function bindEvents() {
+  window.addEventListener("velvet:flow-undo", undoLastFlowAction);
+  window.addEventListener("velvet:flow-preset", event => {
+    const requested = event.detail?.id;
+    flowMode = VALID_FLOW_MODES.has(requested) ? requested : "personal";
+    lastFlowAction = null;
+    state = recordModeUse(state, `flow:${flowMode}`);
+  });
+  els.unlockButton.addEventListener("click", revealApp);
+  els.returnButton.addEventListener("click", () => {
+    if (state.settings.privacyBlur) {
+      setHidden(els.safeScreen, true);
+      setHidden(els.privacyGate, false);
+    } else {
+      revealApp();
+    }
+  });
+  els.quickHideButton.addEventListener("click", showSafeScreen);
+  els.settingsButton.addEventListener("click", () => {
+    syncSettingsUi();
+    els.settingsDialog.showModal();
+  });
+  els.skipButton.addEventListener("click", () => reactFlow("skip"));
+  els.likeButton.addEventListener("click", handleFlowLike);
+  els.sessionsButton.addEventListener("click", openSessionSetup);
+  els.retryFeedButton.addEventListener("click", reloadCatalog);
+  $$('[data-back-flow]').forEach(button => button.addEventListener("click", () => {
+    setView(els.flowView);
+    setModeLabel("Flow");
+  }));
+
+  els.sessionForm.addEventListener("submit", event => {
+    event.preventDefault();
+    const data = new FormData(els.sessionForm);
+    startSession({ duration: data.get("duration"), mood: data.get("mood") });
+  });
+  els.endSessionButton.addEventListener("click", () => finishSession(false));
+  els.sessionSkipButton.addEventListener("click", () => reactSession("skip"));
+  els.sessionLikeButton.addEventListener("click", () => reactSession("like"));
+  els.summaryFlowButton.addEventListener("click", () => {
+    session = null;
+    setView(els.flowView);
+    setModeLabel("Flow");
+    showNextFlowItem();
+  });
+  els.summaryAgainButton.addEventListener("click", () => {
+    session = null;
+    openSessionSetup();
+  });
+
+  for (const control of [els.privacyBlurSetting, els.resumeSetting, els.reducedMotionSetting, els.historyModeSetting]) {
+    control.addEventListener("change", saveSettings);
+  }
+  els.resetTasteButton.addEventListener("click", () => {
+    state = clearTaste(state);
+    resetActiveExperience();
+    status("Taste reset");
+  });
+  els.clearHistoryButton.addEventListener("click", () => {
+    state = clearHistory(state);
+    resetActiveExperience();
+    window.dispatchEvent(new CustomEvent("velvet:favorites-changed"));
+    status("History cleared");
+  });
+  els.clearAllButton.addEventListener("click", () => {
+    state = clearAll();
+    syncSettingsUi();
+    applyMotionPreference();
+    resetActiveExperience();
+    window.dispatchEvent(new CustomEvent("velvet:favorites-changed"));
+    status("All local Velvet data cleared");
+  });
+
+  els.mediaImage.addEventListener("error", () => {
+    imageFailed(els.mediaImage);
+    if (currentItem?.id) flowExclusions.add(currentItem.id);
+    setTimeout(showNextFlowItem, 80);
+  });
+  els.sessionMediaImage.addEventListener("error", () => {
+    imageFailed(els.sessionMediaImage);
+    if (!session || session.ended) return;
+    const failed = session.queue[session.index];
+    if (failed?.id) session.failedIds.add(failed.id);
+    replanSessionTail();
+    if (session.index >= session.queue.length) return finishSession(false);
+    setTimeout(renderSessionItem, 80);
+  });
+
+  bindSwipe(els.mediaCard, handleFlowLike, () => reactFlow("skip"));
+  bindSwipe(els.sessionMediaCard, () => reactSession("like"), () => reactSession("skip"));
+}
+
+async function init() {
+  applyMotionPreference();
+  bindEvents();
+  syncSettingsUi();
+
+  if (!state.settings.privacyBlur) revealApp();
+
+  catalogInfo = await loadCatalog();
+  catalog = catalogInfo.catalog;
+  catalogReady = true;
+  state = recordModeUse(state, "flow");
+
+  if (appUnlocked) {
+    if (!currentItem) showNextFlowItem({ preferResume: true });
+  } else if (state.settings.privacyBlur) {
+    setHidden(els.privacyGate, false);
+    setHidden(els.mainExperience, true);
+  } else {
+    revealApp();
+  }
+
+  if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  }
+}
+
+init();
