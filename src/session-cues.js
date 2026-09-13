@@ -1,5 +1,19 @@
-const backCue = document.querySelector("#sessionDragBack");
-const nextCue = document.querySelector("#sessionDragNext");
+const card = document.querySelector("#sessionMediaCard");
+
+function ensureCue(id, className, text) {
+  let cue = document.querySelector(`#${id}`);
+  if (cue || !card) return cue;
+  cue = document.createElement("div");
+  cue.id = id;
+  cue.className = `drag-cue ${className}`;
+  cue.textContent = text;
+  cue.setAttribute("aria-hidden", "true");
+  card.append(cue);
+  return cue;
+}
+
+const backCue = ensureCue("sessionDragBack", "drag-cue--like", "戻る");
+const nextCue = ensureCue("sessionDragNext", "drag-cue--skip", "進む");
 
 function reset() {
   backCue?.style.setProperty("opacity", "0");
