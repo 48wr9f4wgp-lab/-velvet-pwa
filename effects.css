@@ -49,12 +49,12 @@
 
 .velvet-fx-layer[data-gesture="next"] .velvet-fx-edge::before {
   opacity: var(--velvet-fx-strength, .55);
-  transform: scaleX(calc(.65 + var(--velvet-fx-strength, .55) * .65));
+  transform: scaleX(1.15);
 }
 
 .velvet-fx-layer[data-gesture="back"] .velvet-fx-edge::after {
   opacity: var(--velvet-fx-strength, .55);
-  transform: scaleX(calc(.65 + var(--velvet-fx-strength, .55) * .65));
+  transform: scaleX(1.15);
 }
 
 .velvet-fx-flash.is-next,
@@ -197,7 +197,10 @@
   100% { transform: scale(1); }
 }
 
-.reduced-motion .velvet-fx-layer,
+.reduced-motion .velvet-fx-layer {
+  display: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .velvet-fx-layer { display: none !important; }
 }
