@@ -44,6 +44,9 @@ let flowMode = readFlowMode();
 let lastFlowAction = null;
 let flowTransitionTimer = null;
 let flowExclusions = new Set();
+let flowBackStack = [];
+let flowForwardStack = [];
+const FLOW_NAV_LIMIT = 60;
 const runtimeSeenByMode = new Map();
 let session = null;
 let dragState = null;
@@ -230,6 +233,62 @@ function showNextFlowItem(options = {}) {
   renderFlowItem(selectNextFlowItem(options));
 }
 
+function clearFlowNavigation() {
+  flowBackStack = [];
+  flowForwardStack = [];
+}
+
+function pushFlowBack(item = currentItem, { clearForward = true } = {}) {
+  if (!item?.id) return;
+  const last = flowBackStack[flowBackStack.length - 1];
+  if (!last || last.id !== item.id) flowBackStack.push(item);
+  if (flowBackStack.length > FLOW_NAV_LIMIT) flowBackStack = flowBackStack.slice(-FLOW_NAV_LIMIT);
+  if (clearForward) flowForwardStack = [];
+}
+
+function animateFlowNavigation(direction, item, { recordExposure = true, rememberRuntime = true } = {}) {
+  if (!item) return;
+  clearTimeout(flowTransitionTimer);
+  flowTransitionTimer = null;
+  if (state.settings.reducedMotion) {
+    renderFlowItem(item, { recordExposure, rememberRuntime });
+    return;
+  }
+  const x = direction === "back" ? 110 : -110;
+  els.mediaCard.style.transform = "translateX(" + x + "%) rotate(" + (direction === "back" ? 5 : -5) + "deg)";
+  els.mediaCard.style.opacity = "0";
+  flowTransitionTimer = setTimeout(() => {
+    flowTransitionTimer = null;
+    renderFlowItem(item, { recordExposure, rememberRuntime });
+  }, 140);
+}
+
+function navigateFlowNext() {
+  if (!currentItem) return;
+  if (flowForwardStack.length) {
+    pushFlowBack(currentItem, { clearForward: false });
+    const item = flowForwardStack.pop();
+    animateFlowNavigation("next", item, { recordExposure: false, rememberRuntime: false });
+    return;
+  }
+  pushFlowBack(currentItem);
+  const item = selectNextFlowItem();
+  if (!item) return;
+  preloadImages([item]);
+  animateFlowNavigation("next", item);
+}
+
+function navigateFlowBack() {
+  if (!currentItem || !flowBackStack.length) return;
+  const item = flowBackStack.pop();
+  if (!item) return;
+  if (!flowForwardStack.length || flowForwardStack[flowForwardStack.length - 1]?.id !== currentItem.id) {
+    flowForwardStack.push(currentItem);
+    if (flowForwardStack.length > FLOW_NAV_LIMIT) flowForwardStack = flowForwardStack.slice(-FLOW_NAV_LIMIT);
+  }
+  animateFlowNavigation("back", item, { recordExposure: false, rememberRuntime: false });
+}
+
 function animateFlowDecision(direction, nextItem) {
   clearTimeout(flowTransitionTimer);
   flowTransitionTimer = null;
@@ -251,6 +310,7 @@ function reactFlow(reaction) {
   const reactedItem = currentItem;
   const stateBefore = JSON.parse(JSON.stringify(state));
   const modeBefore = flowMode;
+  pushFlowBack(reactedItem);
   state = recordReaction(state, reactedItem, reaction);
   lastFlowAction = { item: reactedItem, stateBefore, kind: reaction, modeBefore };
   const saved = reaction === "like" && isFavorite(reactedItem);
@@ -280,6 +340,7 @@ function removeCurrentFavorite() {
 
   if (wasFavoritesMode) {
     if (nextFavorite) {
+      pushFlowBack(item);
       preloadImages([nextFavorite]);
       animateFlowDecision("skip", nextFavorite);
     } else {
@@ -308,6 +369,7 @@ function undoLastFlowAction() {
   clearTimeout(flowTransitionTimer);
   flowTransitionTimer = null;
   state = saveState(action.stateBefore);
+  clearFlowNavigation();
 
   if (action.kind === "unfavorite" && action.modeBefore === "favorites") {
     try { localStorage.setItem(FLOW_PRESET_KEY, "favorites"); } catch (_) {}
@@ -322,7 +384,7 @@ function undoLastFlowAction() {
   window.dispatchEvent(new CustomEvent("velvet:flow-undone"));
 }
 
-function bindSwipe(card, onLike, onSkip) {
+function bindSwipe(card, onBack, onNext) {
   card.addEventListener("pointerdown", event => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
     dragState = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, x: 0 };
@@ -349,7 +411,7 @@ function bindSwipe(card, onLike, onSkip) {
     dragState = null;
     card.releasePointerCapture?.(event.pointerId);
     if (Math.abs(dx) >= 72) {
-      if (dx > 0) onLike(); else onSkip();
+      if (dx > 0) onBack(); else onNext();
     } else {
       card.style.transform = "";
       if (card === els.mediaCard) {
@@ -427,10 +489,26 @@ function renderSessionItem() {
   window.dispatchEvent(new CustomEvent("velvet:session-item", { detail: { item } }));
 }
 
+function navigateSessionNext() {
+  if (!session || session.ended) return;
+  session.index += 1;
+  renderSessionItem();
+}
+
+function navigateSessionBack() {
+  if (!session || session.ended || session.index <= 0) return;
+  session.index -= 1;
+  renderSessionItem();
+}
+
 function reactSession(reaction) {
   if (!session || session.ended) return;
   const item = session.queue[session.index];
   if (!item) return finishSession(false);
+  if (session.likedIds.includes(item.id) || session.skippedIds.includes(item.id)) {
+    navigateSessionNext();
+    return;
+  }
   state = recordReaction(state, item, reaction);
   if (reaction === "like") {
     session.likedIds.push(item.id);
@@ -493,6 +571,7 @@ function resetActiveExperience() {
   dragState = null;
   flowExclusions.clear();
   runtimeSeenByMode.clear();
+  clearFlowNavigation();
   currentItem = null;
   lastFlowAction = null;
   clearTimeout(flowTransitionTimer);
@@ -529,16 +608,22 @@ async function reloadCatalog() {
   catalogReady = true;
   flowExclusions.clear();
   runtimeSeenByMode.clear();
+  clearFlowNavigation();
   currentItem = null;
   if (appUnlocked) showNextFlowItem();
 }
 
 function bindEvents() {
   window.addEventListener("velvet:flow-undo", undoLastFlowAction);
+  window.addEventListener("velvet:flow-next", navigateFlowNext);
+  window.addEventListener("velvet:flow-back", navigateFlowBack);
+  window.addEventListener("velvet:session-next", navigateSessionNext);
+  window.addEventListener("velvet:session-back", navigateSessionBack);
   window.addEventListener("velvet:flow-preset", event => {
     const requested = event.detail?.id;
     flowMode = VALID_FLOW_MODES.has(requested) ? requested : "personal";
     lastFlowAction = null;
+    clearFlowNavigation();
     state = recordModeUse(state, `flow:${flowMode}`);
   });
   els.unlockButton.addEventListener("click", revealApp);
@@ -621,8 +706,8 @@ function bindEvents() {
     setTimeout(renderSessionItem, 80);
   });
 
-  bindSwipe(els.mediaCard, handleFlowLike, () => reactFlow("skip"));
-  bindSwipe(els.sessionMediaCard, () => reactSession("like"), () => reactSession("skip"));
+  bindSwipe(els.mediaCard, navigateFlowBack, navigateFlowNext);
+  bindSwipe(els.sessionMediaCard, navigateSessionBack, navigateSessionNext);
 }
 
 async function init() {

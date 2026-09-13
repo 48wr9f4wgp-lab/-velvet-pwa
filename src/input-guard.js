@@ -1,7 +1,7 @@
-import "./ui-ja.js?v=35";
-import "./flow-feedback.js?v=35";
-import "./feed-bridge.js?v=35";
-import "./media-viewer.js?v=35";
+import "./ui-ja.js?v=36";
+import "./flow-feedback.js?v=36";
+import "./feed-bridge.js?v=36";
+import "./media-viewer.js?v=36";
 
 const UX_STYLESHEET = "./flow-ux.css";
 if (!document.querySelector('link[data-velvet-flow-ux]')) {
@@ -13,7 +13,7 @@ if (!document.querySelector('link[data-velvet-flow-ux]')) {
 }
 
 const LOCK_MS = 180;
-const DECISION_DISTANCE = 52;
+const NAV_DISTANCE = 52;
 const FLICK_DISTANCE = 28;
 const FLICK_VELOCITY = 0.45;
 const TAP_DISTANCE = 9;
@@ -31,7 +31,7 @@ function acquire(group) {
   return true;
 }
 
-function resetDecisionCard(card) {
+function resetNavigationCard(card) {
   card.style.transform = "";
   card.style.opacity = "";
   document.querySelector("#dragLike")?.style.setProperty("opacity", "0");
@@ -49,24 +49,14 @@ function guardButton(selector, group, label) {
   }, { capture: true });
 }
 
-function bindFastDecisionGesture({ cardSelector, likeSelector, skipSelector, showCues = false, scope = "flow" }) {
+function bindFastNavigationGesture({ cardSelector, showCues = false, scope = "flow" }) {
   const card = document.querySelector(cardSelector);
-  const likeButton = document.querySelector(likeSelector);
-  const skipButton = document.querySelector(skipSelector);
-  if (!card || !likeButton || !skipButton) return;
-
+  if (!card) return;
   const gestures = new Map();
 
   card.addEventListener("pointerdown", event => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    gestures.set(event.pointerId, {
-      startX: event.clientX,
-      startY: event.clientY,
-      x: 0,
-      y: 0,
-      startedAt: now(),
-      vertical: false
-    });
+    gestures.set(event.pointerId, { startX: event.clientX, startY: event.clientY, x: 0, y: 0, startedAt: now(), vertical: false });
     card.setPointerCapture?.(event.pointerId);
     event.stopImmediatePropagation();
   }, { capture: true });
@@ -74,26 +64,20 @@ function bindFastDecisionGesture({ cardSelector, likeSelector, skipSelector, sho
   card.addEventListener("pointermove", event => {
     const gesture = gestures.get(event.pointerId);
     if (!gesture) return;
-
     const dx = event.clientX - gesture.startX;
     const dy = event.clientY - gesture.startY;
     gesture.x = dx;
     gesture.y = dy;
-
-    if (!gesture.vertical && Math.abs(dy) > 14 && Math.abs(dy) > Math.abs(dx) * 1.35) {
-      gesture.vertical = true;
-    }
-
+    if (!gesture.vertical && Math.abs(dy) > 14 && Math.abs(dy) > Math.abs(dx) * 1.35) gesture.vertical = true;
     if (!gesture.vertical) {
       event.preventDefault();
-      const pct = Math.max(-1, Math.min(1, dx / DECISION_DISTANCE));
-      card.style.transform = `translateX(${dx * 0.78}px) rotate(${pct * 5.5}deg)`;
+      const pct = Math.max(-1, Math.min(1, dx / NAV_DISTANCE));
+      card.style.transform = "translateX(" + (dx * 0.78) + "px) rotate(" + (pct * 4.5) + "deg)";
       if (showCues) {
         document.querySelector("#dragLike")?.style.setProperty("opacity", String(Math.max(0, Math.min(1, pct * 1.15))));
         document.querySelector("#dragSkip")?.style.setProperty("opacity", String(Math.max(0, Math.min(1, -pct * 1.15))));
       }
     }
-
     event.stopImmediatePropagation();
   }, { capture: true });
 
@@ -102,33 +86,28 @@ function bindFastDecisionGesture({ cardSelector, likeSelector, skipSelector, sho
     const gesture = gestures.get(event.pointerId);
     gestures.delete(event.pointerId);
     card.releasePointerCapture?.(event.pointerId);
-
     const elapsed = Math.max(1, now() - gesture.startedAt);
     const velocity = gesture.x / elapsed;
     const horizontalEnough = Math.abs(gesture.x) >= Math.abs(gesture.y) * 0.72;
-    const distanceDecision = Math.abs(gesture.x) >= DECISION_DISTANCE;
-    const flickDecision = Math.abs(gesture.x) >= FLICK_DISTANCE && Math.abs(velocity) >= FLICK_VELOCITY;
-    const decided = !gesture.vertical && horizontalEnough && (distanceDecision || flickDecision);
+    const distanceNavigation = Math.abs(gesture.x) >= NAV_DISTANCE;
+    const flickNavigation = Math.abs(gesture.x) >= FLICK_DISTANCE && Math.abs(velocity) >= FLICK_VELOCITY;
+    const navigated = !gesture.vertical && horizontalEnough && (distanceNavigation || flickNavigation);
     const tapped = !gesture.vertical && Math.abs(gesture.x) <= TAP_DISTANCE && Math.abs(gesture.y) <= TAP_DISTANCE && elapsed <= TAP_MAX_MS;
-
     event.preventDefault();
     event.stopImmediatePropagation();
-    resetDecisionCard(card);
-
-    if (decided) {
-      if (gesture.x > 0) likeButton.click(); else skipButton.click();
+    resetNavigationCard(card);
+    if (navigated) {
+      const direction = gesture.x > 0 ? "back" : "next";
+      window.dispatchEvent(new CustomEvent("velvet:" + scope + "-" + direction));
       return;
     }
-
-    if (tapped) {
-      window.dispatchEvent(new CustomEvent("velvet:media-tap", { detail: { scope } }));
-    }
+    if (tapped) window.dispatchEvent(new CustomEvent("velvet:media-tap", { detail: { scope } }));
   };
 
   card.addEventListener("pointerup", finish, { capture: true });
   card.addEventListener("pointercancel", event => {
     gestures.delete(event.pointerId);
-    resetDecisionCard(card);
+    resetNavigationCard(card);
     event.stopImmediatePropagation();
   }, { capture: true });
 }
@@ -138,17 +117,10 @@ guardButton("#skipButton", "flow", "スキップ");
 guardButton("#sessionLikeButton", "session", "お気に入り");
 guardButton("#sessionSkipButton", "session", "スキップ");
 
-bindFastDecisionGesture({
-  cardSelector: "#mediaCard",
-  likeSelector: "#likeButton",
-  skipSelector: "#skipButton",
-  showCues: true,
-  scope: "flow"
-});
+const backCue = document.querySelector("#dragLike");
+const nextCue = document.querySelector("#dragSkip");
+if (backCue) backCue.textContent = "戻る";
+if (nextCue) nextCue.textContent = "進む";
 
-bindFastDecisionGesture({
-  cardSelector: "#sessionMediaCard",
-  likeSelector: "#sessionLikeButton",
-  skipSelector: "#sessionSkipButton",
-  scope: "session"
-});
+bindFastNavigationGesture({ cardSelector: "#mediaCard", showCues: true, scope: "flow" });
+bindFastNavigationGesture({ cardSelector: "#sessionMediaCard", scope: "session" });
