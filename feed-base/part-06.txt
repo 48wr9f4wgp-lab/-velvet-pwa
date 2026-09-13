@@ -1,0 +1,70 @@
+  async function loadSourceText(source) {
+    const sep = source.url.includes("?") ? "&" : "?";
+    const req = new Request(`${source.url}${sep}_velvet=${Date.now()}-${Math.random()}`);
+    req.timeoutInterval = 18;
+    req.headers = {
+      "User-Agent": `VelvetFeedSync/${VERSION}`,
+      "Accept": "text/html,application/xhtml+xml",
+      "Cache-Control": "no-cache",
+      "Pragma": "no-cache",
+      "Referer": source.site + "/"
+    };
+    return await req.loadString();
+  }
+
+  function baselineForCard(meta, sourceName, rank, diagnostics) {
+    const profiles = {};
+    const rejectionSeen = new Set();
+
+    for (const [profileName, profile] of Object.entries(PROFILES)) {
+      const sourceDef = profile.sources[sourceName];
+      if (!sourceDef || rank > Number(sourceDef.maxRank || 100)) continue;
+      const gate = profileGate(meta, sourceDef, profileName, profile.stimulusMax === true);
+      if (!gate.allowed) {
+        const key = `${gate.reason}`;
+        if (!rejectionSeen.has(key)) {
+          rejectionSeen.add(key);
+          noteCount(diagnostics.baseline_rejections, gate.reason, sourceName);
+          if (SAFETY_REASONS.has(gate.reason)) noteCount(diagnostics.quarantine, gate.reason, sourceName);
+        }
+        continue;
+      }
+      const rankScore = Math.max(0.04, (101 - Math.min(100, rank)) / 100) * 0.34;
+      profiles[profileName] = {
+        eligible: true,
+        score: Number((0.22 + rankScore + gate.score).toFixed(5)),
+        run_cap: Number(sourceDef.runCap || 3),
+        max_rank: Number(sourceDef.maxRank || 100),
+        exposure_tier: gate.exposureTier,
+        intensity: intensityFromTier(gate.exposureTier),
+        post_jp: gate.postJpEvidence === true,
+        post_female: gate.postFemaleEvidence === true,
+        age_target: gate.ageTarget === true
+      };
+    }
+
+    return profiles;
+  }
+
+  async function fetchSource(source) {
+    const diagnostics = { quarantine: emptyCounts(), baseline_rejections: emptyCounts() };
+    const html = await loadSourceText(source);
+    const ranked = buildRankCards(html);
+    const cards = ranked.length ? ranked : buildFallbackCards(html);
+    const seenMedia = new Set();
+    const items = [];
+
+    for (const card of cards.slice(0, 100)) {
+      const media = extractMediaMatches(card.html).sort((a, b) => b.priority - a.priority || a.index - b.index);
+      const chosen = media.find(row => !seenMedia.has(row.url));
+      if (!chosen) continue;
+      seenMedia.add(chosen.url);
+      const meta = metadataText(card.html);
+      const rank = Number(card.rank || items.length + 1);
+      const profiles = baselineForCard(meta, source.name, rank, diagnostics);
+      if (!Object.keys(profiles).length) continue;
+      const link = statusAndHandle(card.html);
+      const idCore = mediaIdFrom(chosen.url, link.statusId);
+      const bestProfile = Object.values(profiles).sort((a, b) => b.score - a.score)[0];
+
+      items.push({
