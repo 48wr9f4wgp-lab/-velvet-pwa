@@ -1,0 +1,70 @@
+    const sourceJpEvidence = !!sourceDef.jpTrust;
+    if (!sourceJpEvidence && !postJpEvidence) return { allowed: false, reason: "no-jp-evidence" };
+
+    const postFemaleEvidence = hasTerm(plain, FEMALE_CUES);
+    const ageTarget = !!(age.adult && age.age >= 18 && age.age <= 25) || hasTerm(plain, YOUNG_ADULT_CUES);
+    const highCues = stimulusMax ? MAX_EXPOSURE_HIGH : DEFAULT_EXPOSURE_HIGH;
+    const mediumCues = stimulusMax ? MAX_EXPOSURE_MEDIUM : DEFAULT_EXPOSURE_MEDIUM;
+    const exposureHigh = hasTerm(plain, highCues);
+    const exposureMedium = !exposureHigh && hasTerm(plain, mediumCues);
+    const exposureLow = !exposureHigh && !exposureMedium && hasTerm(plain, EXPOSURE_LOW_CUES);
+    const exposureTier = exposureHigh ? "high" : exposureMedium ? "medium" : exposureLow ? "low" : "unknown";
+    const exposureScore = exposureHigh ? 0.62 : exposureMedium ? 0.30 : exposureLow ? -0.34 : 0;
+    const ambiguousTeen = hasTerm(plain, ["teen", "teenager", "teenage"]);
+    if (ambiguousTeen && (exposureHigh || exposureMedium)) return { allowed: false, reason: "teen-exposure-risk" };
+    if (profileName === "pro" && hasTerm(plain, PRO_SYNTHETIC_CUES)) return { allowed: false, reason: "pro-synthetic" };
+
+    let score = Number(sourceDef.preference || 0);
+    score += sourceDef.adultTrust ? 0.18 : 0;
+    score += sourceJpEvidence ? 0.10 : 0;
+    score += postJpEvidence ? 0.18 : 0;
+    score += Number(sourceDef.femaleBias || 0);
+    score += postFemaleEvidence ? 0.26 : 0;
+    score += ageTarget ? 0.36 : 0;
+    score += adultCue ? 0.06 : 0;
+    score += Number(sourceDef.exposureBias || 0) + exposureScore;
+
+    return {
+      allowed: true,
+      score,
+      sourceJpEvidence,
+      postJpEvidence,
+      sourceFemaleBias: Number(sourceDef.femaleBias || 0) > 0,
+      postFemaleEvidence,
+      ageTarget,
+      exposureTier,
+      exposureScore: Number(sourceDef.exposureBias || 0) + exposureScore,
+      reason: `${sourceDef.adultTrust ? "adult-source" : "adult-cue"}+${postJpEvidence ? "jp-post" : sourceJpEvidence ? "jp-source" : "jp-none"}+${postFemaleEvidence ? "female-post" : sourceDef.femaleBias ? "female-source-bias" : "female-none"}+${ageTarget ? "18-25" : "age-unknown"}`
+    };
+  }
+
+  function normalizeTwimg(url) {
+    let value = decodeEscaped(url);
+    if (/^https%3a/i.test(value)) { try { value = decodeURIComponent(value); } catch (_) {} }
+    value = value.replace(/&amp;/gi, "&");
+    if (/\/profile_images\//i.test(value) || /\/profile_banners\//i.test(value)) return null;
+    if (/[?&]name=[^&]+/i.test(value)) value = value.replace(/([?&])name=[^&]+/i, "$1name=large");
+    return /^https:\/\/pbs\.twimg\.com\//i.test(value) ? value : null;
+  }
+  function mediaPriority(url) {
+    if (/amplify_video_thumb|ext_tw_video_thumb/i.test(url)) return 5;
+    if (/\/media\//i.test(url)) return 4;
+    if (/video_thumb/i.test(url)) return 3;
+    return 1;
+  }
+  function extractMediaMatches(fragment) {
+    const src = String(fragment || "");
+    const patterns = [/https:\/\/pbs\.twimg\.com\/[^"'<>\\\s]+/gi, /https%3A%2F%2Fpbs\.twimg\.com%2F[^"'<>\\\s]+/gi];
+    const rows = [];
+    for (const rx of patterns) for (const match of src.matchAll(rx)) {
+      const url = normalizeTwimg(match[0]);
+      if (url) rows.push({ index: match.index || 0, url, priority: mediaPriority(url) });
+    }
+    rows.sort((a, b) => a.index - b.index);
+    const seen = new Set();
+    return rows.filter(row => {
+      const key = row.url.replace(/([?&])name=[^&]+/i, "$1name=large");
+      if (seen.has(key)) return false;
+      seen.add(key);
+      row.url = key;
+      return true;
