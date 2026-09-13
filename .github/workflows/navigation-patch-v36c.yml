@@ -1,0 +1,30 @@
+name: Velvet navigation patch v36c
+
+on:
+  push:
+    paths:
+      - 'scripts/patch-navigation-v36c.mjs'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply navigation patch
+        run: node scripts/patch-navigation-v36c.mjs
+      - name: Commit patched runtime
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/app.js src/input-guard.js
+          git diff --cached --quiet && exit 0
+          git commit -m "Velvet: make swipe navigation next/back"
+          git push
