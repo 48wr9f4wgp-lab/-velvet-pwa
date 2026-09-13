@@ -2,6 +2,8 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.m
 import RAPIER from 'https://cdn.jsdelivr.net/npm/@dimforge/rapier3d-compat@0.20.0/+esm';
 import { POS } from './sim.js';
 
+const TASK_TEXTURES = new Map();
+
 function roundedBox(size, color, y = size.y / 2) {
   const mesh = new THREE.Mesh(
     new THREE.BoxGeometry(size.x, size.y, size.z),
@@ -37,6 +39,38 @@ function makeTextSprite(text, color = '#ffffff') {
   return sprite;
 }
 
+function taskStyle(state) {
+  if (state === 'store') return { label: 'IN', bg: '#286fa3', line: 0x63c8ff };
+  if (state === 'pick') return { label: 'PK', bg: '#9a6c1f', line: 0xffd163 };
+  if (state === 'ship') return { label: 'OUT', bg: '#26794e', line: 0x62ef9b };
+  return { label: '•', bg: '#4b5560', line: 0xffffff };
+}
+
+function taskTexture(state) {
+  if (TASK_TEXTURES.has(state)) return TASK_TEXTURES.get(state);
+  const style = taskStyle(state);
+  const canvas = document.createElement('canvas');
+  canvas.width = 128;
+  canvas.height = 128;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = 'rgba(5,9,13,.9)';
+  ctx.beginPath();
+  ctx.arc(64, 64, 48, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = style.bg;
+  ctx.lineWidth = 10;
+  ctx.stroke();
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '900 38px -apple-system, BlinkMacSystemFont, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(style.label, 64, 66);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  TASK_TEXTURES.set(state, texture);
+  return texture;
+}
+
 function addStation(scene, name, position, color, size = { x: 2.4, y: 0.16, z: 2.0 }) {
   const group = new THREE.Group();
   const base = roundedBox(size, color, size.y / 2);
@@ -51,6 +85,8 @@ function addStation(scene, name, position, color, size = { x: 2.4, y: 0.16, z: 2
   label.position.set(0, 1.15, 0);
   group.add(label);
   group.position.set(position.x, 0, position.z);
+  group.userData.base = base;
+  group.userData.baseColor = new THREE.Color(color);
   scene.add(group);
   return group;
 }
@@ -70,6 +106,7 @@ function createRack(scene) {
     group.add(board);
   }
   group.position.set(-2.15, 0, -1.65);
+  group.userData.shelfMaterial = shelf;
   scene.add(group);
   return group;
 }
@@ -96,7 +133,15 @@ function createWorkerMesh(index) {
   ring.rotation.x = -Math.PI / 2;
   ring.position.y = 0.04;
   group.add(ring);
+  const badge = new THREE.Sprite(new THREE.SpriteMaterial({ map: taskTexture('idle'), transparent: true, depthTest: false }));
+  badge.position.y = 1.56;
+  badge.scale.set(0.72, 0.72, 1);
+  badge.visible = false;
+  badge.renderOrder = 12;
+  group.add(badge);
   group.userData.ring = ring;
+  group.userData.badge = badge;
+  group.userData.badgeState = 'idle';
   return group;
 }
 
@@ -143,12 +188,13 @@ export async function createSceneView(canvas, sim) {
   );
   floor.rotation.x = -Math.PI / 2;
   scene.add(floor);
-  scene.add(new THREE.GridHelper(18, 18, 0x6c7880, 0x4c565e));
+  const grid = new THREE.GridHelper(18, 18, 0x6c7880, 0x4c565e);
+  scene.add(grid);
 
-  addStation(scene, 'INBOUND', POS.inbound, 0x285c92, { x: 2.9, y: 0.15, z: 2.3 });
-  addStation(scene, 'PACK', POS.pack, 0xa56f1e, { x: 2.6, y: 0.15, z: 2.2 });
+  const inboundStation = addStation(scene, 'INBOUND', POS.inbound, 0x285c92, { x: 2.9, y: 0.15, z: 2.3 });
+  const packStation = addStation(scene, 'PACK', POS.pack, 0xa56f1e, { x: 2.6, y: 0.15, z: 2.2 });
   const outboundStation = addStation(scene, 'OUTBOUND', POS.outbound, 0x24794d, { x: 2.8, y: 0.15, z: 2.3 });
-  createRack(scene);
+  const rack = createRack(scene);
 
   const packMachine = new THREE.Group();
   const packBody = roundedBox({ x: 1.2, y: 0.9, z: 0.9 }, 0xc6902f, 0.45);
@@ -182,6 +228,8 @@ export async function createSceneView(canvas, sim) {
 
   const workerMeshes = new Map();
   const boxMeshes = new Map();
+  const flowLines = new Map();
+  let flowMode = false;
 
   const physicsWorld = new RAPIER.World({ x: 0, y: -9.81, z: 0 });
   physicsWorld.createCollider(RAPIER.ColliderDesc.cuboid(9, 0.08, 7).setTranslation(0, -0.08, 0));
@@ -282,6 +330,47 @@ export async function createSceneView(canvas, sim) {
     camera.lookAt(cameraState.target);
   }
 
+  function ensureFlowLine(worker) {
+    let line = flowLines.get(worker.id);
+    if (!line) {
+      line = new THREE.Line(
+        new THREE.BufferGeometry(),
+        new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8, depthTest: false })
+      );
+      line.renderOrder = 8;
+      line.visible = false;
+      scene.add(line);
+      flowLines.set(worker.id, line);
+    }
+    return line;
+  }
+
+  function flowTarget(worker) {
+    const task = worker.task;
+    if (!task) return null;
+    if (task.stage === 'pickup') {
+      const box = sim.state.boxes.find((item) => item.id === task.boxId);
+      if (box) return { x: box.x, y: Math.max(0.22, box.y || 0.22), z: box.z };
+    }
+    if (task.kind === 'store') return { x: POS.rack.x, y: 0.35, z: POS.rack.z };
+    if (task.kind === 'pick') return { x: POS.pack.x, y: 0.35, z: POS.pack.z };
+    return { x: POS.outbound.x, y: 0.35, z: POS.outbound.z };
+  }
+
+  function updateFlowLine(worker, mesh) {
+    const line = ensureFlowLine(worker);
+    const target = flowTarget(worker);
+    line.visible = Boolean(flowMode && target && worker.task);
+    if (!line.visible) return;
+    const style = taskStyle(worker.state);
+    line.material.color.setHex(style.line);
+    const start = new THREE.Vector3(mesh.position.x, 0.14, mesh.position.z);
+    const end = new THREE.Vector3(target.x, target.y, target.z);
+    const mid = start.clone().lerp(end, 0.5);
+    mid.y += 0.12;
+    line.geometry.setFromPoints([start, mid, end]);
+  }
+
   function syncWorkers(dt) {
     const live = new Set();
     sim.state.workers.forEach((worker, index) => {
@@ -296,17 +385,30 @@ export async function createSceneView(canvas, sim) {
       mesh.position.z = THREE.MathUtils.lerp(mesh.position.z, worker.z, Math.min(1, dt * 10));
       mesh.rotation.y = worker.facing;
       const ring = mesh.userData.ring;
-      if (worker.state === 'ship') ring.material.color.setHex(0x62ef9b);
-      else if (worker.state === 'pick') ring.material.color.setHex(0xffd163);
-      else if (worker.state === 'store') ring.material.color.setHex(0x63c8ff);
-      else ring.material.color.setHex(0xffffff);
+      const style = taskStyle(worker.state);
+      ring.material.color.setHex(style.line);
+      const badge = mesh.userData.badge;
+      badge.visible = worker.state !== 'idle';
+      if (mesh.userData.badgeState !== worker.state) {
+        badge.material.map = taskTexture(worker.state);
+        badge.material.needsUpdate = true;
+        mesh.userData.badgeState = worker.state;
+      }
       const moving = worker.task ? 1 : 0;
       mesh.position.y = moving ? Math.sin(performance.now() * 0.012 + worker.id) * 0.025 : 0;
+      updateFlowLine(worker, mesh);
     });
     for (const [id, mesh] of workerMeshes) {
       if (live.has(id)) continue;
       scene.remove(mesh);
       workerMeshes.delete(id);
+      const line = flowLines.get(id);
+      if (line) {
+        scene.remove(line);
+        line.geometry.dispose();
+        line.material.dispose();
+        flowLines.delete(id);
+      }
     }
   }
 
@@ -326,9 +428,12 @@ export async function createSceneView(canvas, sim) {
       mesh.position.z = THREE.MathUtils.lerp(mesh.position.z, box.z, Math.min(1, dt * 13));
       const material = mesh.children[0]?.material;
       if (material?.color) {
-        if (box.phase === 'packing') material.color.setHex(0xffc04f);
-        else if (box.phase === 'packed' || box.phase === 'carried_ship') material.color.setHex(0x69d98f);
-        else material.color.setHex(0xd69a57);
+        let color = 0xd69a57;
+        if (box.phase === 'packing') color = 0xffc04f;
+        else if (box.phase === 'packed' || box.phase === 'carried_ship') color = 0x69d98f;
+        material.color.setHex(color);
+        material.emissive?.setHex(color);
+        material.emissiveIntensity = flowMode ? 0.18 : 0.03;
       }
     }
     for (const [id, mesh] of boxMeshes) {
@@ -355,11 +460,40 @@ export async function createSceneView(canvas, sim) {
     }
   }
 
+  function heatMaterial(material, ratio) {
+    if (!material?.emissive) return;
+    const r = Math.max(0, ratio || 0);
+    const color = r >= 1 ? 0xff5151 : r >= 0.72 ? 0xffb347 : 0x48cf8d;
+    material.emissive.setHex(color);
+    const base = flowMode ? 0.18 : 0.015;
+    material.emissiveIntensity = base + Math.max(0, r - 0.48) * (flowMode ? 0.58 : 0.22);
+  }
+
+  function updateStationHeat() {
+    const ratios = sim.state.director?.ratios || {};
+    const c = sim.counts();
+    heatMaterial(inboundStation.userData.base.material, ratios.inbound || 0);
+    heatMaterial(packStation.userData.base.material, Math.max(ratios.orders || 0, c.packing / 3));
+    heatMaterial(outboundStation.userData.base.material, Math.max(ratios.packed || 0, c.packed / 4));
+    heatMaterial(rack.userData.shelfMaterial, ratios.rack || 0);
+  }
+
+  function setFlowMode(enabled) {
+    flowMode = Boolean(enabled);
+    grid.material.opacity = flowMode ? 0.7 : 1;
+    grid.material.transparent = flowMode;
+    if (!flowMode) {
+      for (const line of flowLines.values()) line.visible = false;
+    }
+    updateStationHeat();
+  }
+
   function update(dt) {
     updateCamera();
     syncWorkers(dt);
     syncBoxes(dt);
     updateOverflow(dt);
+    updateStationHeat();
 
     conveyor.visible = sim.state.upgrades.conveyor > 0;
     if (conveyor.visible) conveyor.children.forEach((child, index) => {
@@ -385,5 +519,5 @@ export async function createSceneView(canvas, sim) {
 
   updateCamera();
 
-  return { update, resetCamera };
+  return { update, resetCamera, setFlowMode, isFlowMode: () => flowMode };
 }

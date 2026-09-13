@@ -16,11 +16,13 @@ export function bindUi(sim, sceneView) {
     inbound: document.getElementById('inbound'), rack: document.getElementById('rack'),
     throughput: document.getElementById('throughput'), workers: document.getElementById('workers'),
     status: document.getElementById('status'), toast: document.getElementById('toast'),
-    reset: document.getElementById('resetBtn'), camera: document.getElementById('cameraBtn'),
+    reset: document.getElementById('resetBtn'), camera: document.getElementById('cameraBtn'), flow: document.getElementById('flowBtn'),
+    insightPanel: document.getElementById('insightPanel'), insightToggle: document.getElementById('insightToggle'),
     directorLabel: document.getElementById('directorLabel'), directorDetail: document.getElementById('directorDetail'),
     directorRecommendation: document.getElementById('directorRecommendation'), severityBadge: document.getElementById('severityBadge'),
     contractTitle: document.getElementById('contractTitle'), contractBody: document.getElementById('contractBody'),
-    contractChoices: document.getElementById('contractChoices'),
+    contractChoices: document.getElementById('contractChoices'), celebration: document.getElementById('celebration'),
+    celebrationTitle: document.getElementById('celebrationTitle'), celebrationReward: document.getElementById('celebrationReward'),
   };
 
   const policyButtons = [...document.querySelectorAll('[data-policy]')];
@@ -29,7 +31,10 @@ export function bindUi(sim, sceneView) {
   const perkButtons = [...document.querySelectorAll('[data-perk]')];
   const priorityButtons = [...document.querySelectorAll('[data-priority-kind]')];
   let toastTimer = 0;
+  let celebrationTimer = 0;
   let lastOfferSignature = '';
+  let insightCompact = false;
+  let flowEnabled = false;
 
   function toast(text, tone = 'normal') {
     clearTimeout(toastTimer);
@@ -37,6 +42,25 @@ export function bindUi(sim, sceneView) {
     el.toast.dataset.tone = tone;
     el.toast.classList.add('show');
     toastTimer = setTimeout(() => el.toast.classList.remove('show'), 1500);
+  }
+
+  function celebrate(title, reward = '') {
+    clearTimeout(celebrationTimer);
+    el.celebrationTitle.textContent = title;
+    el.celebrationReward.textContent = reward;
+    el.celebration.classList.remove('show');
+    void el.celebration.offsetWidth;
+    el.celebration.classList.add('show');
+    try { navigator.vibrate?.([28, 35, 45]); } catch {}
+    celebrationTimer = setTimeout(() => el.celebration.classList.remove('show'), 1900);
+  }
+
+  function setInsightCompact(compact) {
+    insightCompact = Boolean(compact);
+    el.insightPanel.classList.toggle('compact', insightCompact);
+    el.insightToggle.textContent = insightCompact ? '＋' : '−';
+    el.insightToggle.setAttribute('aria-expanded', String(!insightCompact));
+    el.insightToggle.setAttribute('aria-label', insightCompact ? '分析パネルを展開' : '分析パネルを縮小');
   }
 
   policyButtons.forEach((button) => {
@@ -89,11 +113,20 @@ export function bindUi(sim, sceneView) {
     });
   });
 
+  el.insightToggle.addEventListener('click', () => setInsightCompact(!insightCompact));
+  el.flow.addEventListener('click', () => {
+    flowEnabled = !flowEnabled;
+    sceneView.setFlowMode?.(flowEnabled);
+    el.flow.classList.toggle('active', flowEnabled);
+    el.flow.setAttribute('aria-pressed', String(flowEnabled));
+    toast(flowEnabled ? 'FLOW表示 ON' : 'FLOW表示 OFF');
+  });
   el.camera.addEventListener('click', () => sceneView.resetCamera());
   el.reset.addEventListener('click', () => {
     if (!confirm('進行・強化・研究を初期状態へ戻しますか？')) return;
     localStorage.removeItem('observer_logistics_save');
     sim.resetProgress();
+    setInsightCompact(false);
     toast('初期状態へ戻した', 'warn');
     render();
   });
@@ -102,8 +135,15 @@ export function bindUi(sim, sceneView) {
     if (event.type === 'shipment') toast(event.text, 'good');
     else if (event.type === 'overflow') toast(event.text, 'warn');
     else if (event.type === 'upgrade' || event.type === 'perk') toast(event.text, 'good');
-    else if (event.type === 'contract_complete' || event.type === 'milestone') toast(event.text, 'good');
-    else if (event.type === 'contract_failed') toast(event.text, 'warn');
+    else if (event.type === 'contract_complete') {
+      toast(event.text, 'good');
+      const reward = event.reward ? `${yen(event.reward.cash)}  +${event.reward.research} RP` : event.text;
+      celebrate('CONTRACT COMPLETE', reward);
+      setInsightCompact(false);
+    } else if (event.type === 'milestone') {
+      toast(event.text, 'good');
+      celebrate('MILESTONE', event.text);
+    } else if (event.type === 'contract_failed') toast(event.text, 'warn');
     else if (event.type === 'order') toast(event.text);
   });
 
@@ -123,6 +163,7 @@ export function bindUi(sim, sceneView) {
     el.contractTitle.textContent = offers.length ? '契約を1つ選択' : '次の契約を準備中';
     el.contractBody.innerHTML = offers.length ? '<div class="contractDesc">短い目標を選び、施設の方針を切り替えて達成する。</div>' : '';
     if (signature === lastOfferSignature) return;
+    if (offers.length) setInsightCompact(false);
     lastOfferSignature = signature;
     el.contractChoices.innerHTML = '';
     for (const offer of offers) {
@@ -133,7 +174,10 @@ export function bindUi(sim, sceneView) {
       button.addEventListener('click', () => {
         const result = sim.chooseContract(offer.id);
         if (!result.ok) toast(result.reason, 'warn');
-        else toast(`契約開始: ${offer.title}`);
+        else {
+          toast(`契約開始: ${offer.title}`);
+          setInsightCompact(true);
+        }
         render();
       });
       el.contractChoices.appendChild(button);

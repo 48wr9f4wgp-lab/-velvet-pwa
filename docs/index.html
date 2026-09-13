@@ -26,7 +26,10 @@
     <section id="insightPanel" aria-live="polite">
       <div class="insightHead">
         <div><small>BOTTLENECK DIRECTOR</small><strong id="directorLabel">分析中</strong></div>
-        <span id="severityBadge">OK</span>
+        <div class="insightTools">
+          <span id="severityBadge">OK</span>
+          <button id="insightToggle" type="button" aria-label="分析パネルを縮小" aria-expanded="true">−</button>
+        </div>
       </div>
       <div id="directorDetail">施設の流れを解析しています</div>
       <div id="directorRecommendation">—</div>
@@ -44,7 +47,8 @@
       <div class="dockHead">
         <div><small>DIRECTIVE</small><strong>作業方針</strong></div>
         <div class="utilityButtons">
-          <button id="cameraBtn" type="button">視点リセット</button>
+          <button id="flowBtn" type="button" aria-pressed="false">FLOW</button>
+          <button id="cameraBtn" type="button">視点</button>
           <button id="resetBtn" type="button">初期化</button>
         </div>
       </div>
@@ -93,6 +97,10 @@
       </div>
     </section>
 
+    <div id="celebration" role="status" aria-live="assertive">
+      <strong id="celebrationTitle">CONTRACT COMPLETE</strong>
+      <span id="celebrationReward"></span>
+    </div>
     <div id="fatal" role="alert" hidden></div>
   </main>
   <script type="module" src="./src/main.js"></script>
