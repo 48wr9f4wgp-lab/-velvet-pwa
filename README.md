@@ -39,6 +39,12 @@
 - physics timestep: 60Hz
 - stopped bodies: Rapier sleepingを利用
 
+## Free-tier deployment policy
+
+ビルド用サーバーや常時APIを使わず、`docs/` をそのまま静的配信する。GitHub Actionsは初期段階では使わない。
+
+GitHub Pagesの初回のみ、Repository Settings → Pages → Build and deployment → Deploy from a branch → `main` / `/docs` → Save を設定する。以後は `docs/` への更新をそのまま実機確認する。
+
 ## Release rule
 
 起動・操作・進行不能を最優先で修正し、変更後は build相当確認 → behavior verify → regression の順で確認する。公開商品化前には最新ベンチマーク、UI/Art/Game Feel、Audio/Haptics、Analytics、Save safety、Performance、QAを別途通す。
