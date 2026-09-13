@@ -3,6 +3,8 @@ name: Velvet static QA
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -35,17 +37,65 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -f index.html
-          test -f styles.css
-          test -f flow-ux.css
-          test -f manifest.webmanifest
-          test -f sw.js
-          test -f velvet-content.json
-          test -f src/app.js
-          test -f src/content.js
-          test -f src/input-guard.js
-          test -f src/recommender.js
+          for file in \
+            index.html styles.css flow-ux.css touch-polish.css manifest.webmanifest sw.js velvet-content.json \
+            icons/icon-180.png icons/icon-192.png icons/icon-512.png \
+            src/app.js src/content.js src/input-guard.js src/image-guard.js src/session-cues.js src/recommender.js; do
+            test -f "$file"
+          done
           echo "PWA files OK"
+
+      - name: UX regression contracts
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const html = fs.readFileSync('index.html','utf8');
+          const ja = fs.readFileSync('src/ui-ja.js','utf8');
+          const input = fs.readFileSync('src/input-guard.js','utf8');
+          const manifest = JSON.parse(fs.readFileSync('manifest.webmanifest','utf8'));
+
+          for (const token of [
+            'id="dragLike" class="drag-cue drag-cue--like">戻る<',
+            'id="dragSkip" class="drag-cue drag-cue--skip">進む<',
+            'id="sessionDragBack" class="drag-cue drag-cue--like">戻る<',
+            'id="sessionDragNext" class="drag-cue drag-cue--skip">進む<',
+            './src/image-guard.js?v=44',
+            './src/session-cues.js?v=44',
+            './src/input-guard.js?v=44'
+          ]) {
+            if (!html.includes(token)) throw new Error(`index contract missing: ${token}`);
+          }
+          if (!ja.includes('setText("#dragLike", "戻る")') || !ja.includes('setText("#dragSkip", "進む")')) {
+            throw new Error('Japanese swipe navigation labels regressed');
+          }
+          if (ja.includes('setText("#dragLike", "保存")') || ja.includes('setText("#dragSkip", "スキップ")')) {
+            throw new Error('Reaction semantics leaked back into swipe navigation');
+          }
+          if (!input.includes('gesture.x > 0 ? "back" : "next"')) throw new Error('Swipe direction contract missing');
+          const sizes = new Set((manifest.icons || []).map(icon => icon.sizes));
+          if (!sizes.has('192x192') || !sizes.has('512x512')) throw new Error('Manifest icons incomplete');
+          console.log('UX regression contracts OK');
+          NODE
+
+      - name: Icon dimensions
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          function pngSize(path) {
+            const b = fs.readFileSync(path);
+            if (b.readUInt32BE(0) !== 0x89504e47) throw new Error(`${path}: not PNG`);
+            return [b.readUInt32BE(16), b.readUInt32BE(20)];
+          }
+          for (const [path, expected] of [
+            ['icons/icon-180.png', 180],
+            ['icons/icon-192.png', 192],
+            ['icons/icon-512.png', 512]
+          ]) {
+            const [w, h] = pngSize(path);
+            if (w !== expected || h !== expected) throw new Error(`${path}: ${w}x${h}, expected ${expected}x${expected}`);
+          }
+          console.log('Icon dimensions OK');
+          NODE
 
       - name: Public feed target contract
         run: |
