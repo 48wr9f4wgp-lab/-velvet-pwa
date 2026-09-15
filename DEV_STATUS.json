@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "phase": "中核部分の試作",
+  "checks": {
+    "boot": "warn",
+    "test": "none",
+    "device": "warn",
+    "save": "none",
+    "analytics": "none",
+    "performance": "warn",
+    "release": "warn"
+  },
+  "next": "中核部分の実機動作と性能を確認する",
+  "note": "共通基盤の中核部分の試作段階として管理。",
+  "updated_at": "2026-09-15"
+}
