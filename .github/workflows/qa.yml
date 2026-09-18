@@ -143,7 +143,7 @@ jobs:
           console.log('Flow v45 behavior contracts OK');
           NODE
 
-      - name: Exposure v46 contracts
+      - name: Exposure v46.1 contracts
         run: |
           node <<'NODE'
           const fs = require('fs');
@@ -158,38 +158,49 @@ jobs:
             'exposureBasis = "source-prior"',
             'exposureConfidence = 0.35',
             'intensityFromTier(gate.exposureTier, gate.exposureBasis)',
+            'exposure_tier: gate.exposureBasis === "metadata" ? gate.exposureTier : "unknown"',
+            'exposure_estimate_tier: gate.exposureTier',
             'exposure_basis: gate.exposureBasis',
             'exposure_confidence:'
           ]) {
             if (!engine.includes(token)) throw new Error(`Exposure engine contract missing: ${token}`);
           }
-          for (const token of ['exposure_basis: exposureBasis','exposure_confidence: exposureConfidence']) {
+          for (const token of ['exposure_estimate_tier: estimatedTier','exposure_basis: exposureBasis','exposure_confidence: exposureConfidence']) {
             if (!content.includes(token)) throw new Error(`Catalog exposure contract missing: ${token}`);
           }
           if (!recommender.includes('0.34 * exposureConfidence') || !recommender.includes('0.16 * exposureConfidence')) {
             throw new Error('Exposure confidence weighting missing from recommender');
           }
-          if (!sync.includes('1.2.2-public') || !sync.includes('Velvet v0.9.5 + Exposure Recovery 2026-09-19')) {
-            throw new Error('Exposure recovery feed version missing');
+          if (!sync.includes('1.2.3-public') || !sync.includes('Velvet v0.9.6 + Exposure Compatibility 2026-09-19')) {
+            throw new Error('Exposure compatibility feed version missing');
           }
 
           const feed = JSON.parse(fs.readFileSync('velvet-content.json','utf8'));
-          if (String(feed.generated_by || '').includes('1.2.2-public')) {
+          if (String(feed.generated_by || '').includes('1.2.3-public')) {
             let profiles = 0;
-            let known = 0;
+            let effectiveKnown = 0;
             let priors = 0;
+            let unsafePriorTier = 0;
             for (const item of feed.items || []) {
               for (const profile of Object.values(item.baseline?.profiles || {})) {
                 profiles += 1;
-                if (profile.exposure_tier && profile.exposure_tier !== 'unknown') known += 1;
-                if (profile.exposure_basis === 'source-prior') priors += 1;
+                const directTier = String(profile.exposure_tier || 'unknown');
+                const estimateTier = String(profile.exposure_estimate_tier || 'unknown');
+                if (directTier !== 'unknown' || estimateTier !== 'unknown') effectiveKnown += 1;
+                if (profile.exposure_basis === 'source-prior') {
+                  priors += 1;
+                  if (directTier !== 'unknown') unsafePriorTier += 1;
+                  if (estimateTier === 'unknown') throw new Error('Source prior missing exposure estimate');
+                  if (Number(profile.exposure_confidence) > 0.5) throw new Error('Source prior confidence too high');
+                }
               }
             }
             if (profiles < 10) throw new Error('Exposure feed has too few profiles');
-            if (known / profiles < 0.8) throw new Error(`Exposure coverage too low: ${known}/${profiles}`);
+            if (effectiveKnown / profiles < 0.8) throw new Error(`Exposure coverage too low: ${effectiveKnown}/${profiles}`);
             if (priors < 1) throw new Error('Exposure recovery produced no source-prior classifications');
+            if (unsafePriorTier > 0) throw new Error(`Old-client compatibility leak: ${unsafePriorTier} source priors exposed as direct tiers`);
           }
-          console.log('Exposure v46 contracts OK');
+          console.log('Exposure v46.1 contracts OK');
           NODE
 
           node --input-type=module <<'NODE'
