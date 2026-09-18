@@ -36,7 +36,9 @@
         run_cap: Number(sourceDef.runCap || 3),
         max_rank: Number(sourceDef.maxRank || 100),
         exposure_tier: gate.exposureTier,
-        intensity: intensityFromTier(gate.exposureTier),
+        exposure_basis: gate.exposureBasis || "unknown",
+        exposure_confidence: Number.isFinite(Number(gate.exposureConfidence)) ? Number(gate.exposureConfidence) : 0,
+        intensity: intensityFromTier(gate.exposureTier, gate.exposureBasis),
         post_jp: gate.postJpEvidence === true,
         post_female: gate.postFemaleEvidence === true,
         age_target: gate.ageTarget === true
