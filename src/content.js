@@ -76,12 +76,18 @@ export function demoCatalog() {
 
 function normalizeBaselineProfile(raw) {
   if (!raw || typeof raw !== "object" || raw.eligible !== true) return null;
-  const tier = ["high", "medium", "low", "unknown"].includes(raw.exposure_tier) ? raw.exposure_tier : "unknown";
+  const declaredTier = ["high", "medium", "low", "unknown"].includes(raw.exposure_tier) ? raw.exposure_tier : "unknown";
+  const estimatedTier = ["high", "medium", "low", "unknown"].includes(raw.exposure_estimate_tier) ? raw.exposure_estimate_tier : "unknown";
+  const exposureBasis = ["metadata", "source-prior", "unknown"].includes(raw.exposure_basis)
+    ? raw.exposure_basis
+    : (declaredTier === "unknown" ? "unknown" : "metadata");
+  const tier = declaredTier !== "unknown"
+    ? declaredTier
+    : (exposureBasis === "source-prior" ? estimatedTier : "unknown");
   const score = Number(raw.score);
   const runCap = Number(raw.run_cap);
   const maxRank = Number(raw.max_rank);
   const intensity = Number(raw.intensity);
-  const exposureBasis = ["metadata", "source-prior", "unknown"].includes(raw.exposure_basis) ? raw.exposure_basis : (tier === "unknown" ? "unknown" : "metadata");
   const rawConfidence = Number(raw.exposure_confidence);
   const exposureConfidence = Number.isFinite(rawConfidence)
     ? Math.max(0, Math.min(1, rawConfidence))
@@ -92,6 +98,7 @@ function normalizeBaselineProfile(raw) {
     run_cap: Number.isFinite(runCap) ? Math.max(1, Math.min(10, Math.round(runCap))) : 3,
     max_rank: Number.isFinite(maxRank) ? Math.max(1, Math.min(100, Math.round(maxRank))) : 100,
     exposure_tier: tier,
+    exposure_estimate_tier: estimatedTier,
     exposure_basis: exposureBasis,
     exposure_confidence: exposureConfidence,
     intensity: Number.isFinite(intensity) ? Math.max(1, Math.min(5, intensity)) : 3,
