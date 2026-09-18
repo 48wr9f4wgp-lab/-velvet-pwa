@@ -35,7 +35,10 @@
         score: Number((0.22 + rankScore + gate.score).toFixed(5)),
         run_cap: Number(sourceDef.runCap || 3),
         max_rank: Number(sourceDef.maxRank || 100),
-        exposure_tier: gate.exposureTier,
+        // Compatibility: old clients only understand exposure_tier and must not
+        // treat a low-confidence source prior as per-post evidence.
+        exposure_tier: gate.exposureBasis === "metadata" ? gate.exposureTier : "unknown",
+        exposure_estimate_tier: gate.exposureTier,
         exposure_basis: gate.exposureBasis || "unknown",
         exposure_confidence: Number.isFinite(Number(gate.exposureConfidence)) ? Number(gate.exposureConfidence) : 0,
         intensity: intensityFromTier(gate.exposureTier, gate.exposureBasis),
