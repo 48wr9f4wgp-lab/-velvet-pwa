@@ -40,7 +40,7 @@ jobs:
           for file in \
             index.html styles.css flow-ux.css touch-polish.css manifest.webmanifest sw.js velvet-content.json \
             icons/icon-180.png icons/icon-192.png icons/icon-512.png \
-            src/app.js src/content.js src/input-guard.js src/image-guard.js src/session-cues.js src/recommender.js; do
+            src/app.js src/content.js src/flow-presets.js src/input-guard.js src/image-guard.js src/session-cues.js src/recommender.js src/ui-ja.js; do
             test -f "$file"
           done
           echo "PWA files OK"
@@ -61,7 +61,9 @@ jobs:
             'id="sessionDragNext" class="drag-cue drag-cue--skip">進む<',
             './src/image-guard.js?v=44',
             './src/session-cues.js?v=44',
-            './src/input-guard.js?v=44'
+            './src/flow-presets.js?v=45',
+            './src/input-guard.js?v=45',
+            './src/app.js?v=45'
           ]) {
             if (!html.includes(token)) throw new Error(`index contract missing: ${token}`);
           }
@@ -75,6 +77,62 @@ jobs:
           const sizes = new Set((manifest.icons || []).map(icon => icon.sizes));
           if (!sizes.has('192x192') || !sizes.has('512x512')) throw new Error('Manifest icons incomplete');
           console.log('UX regression contracts OK');
+          NODE
+
+      - name: Flow v45 contracts
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const flow = fs.readFileSync('src/flow-presets.js','utf8');
+          const recommender = fs.readFileSync('src/recommender.js','utf8');
+          const app = fs.readFileSync('src/app.js','utf8');
+          const content = fs.readFileSync('src/content.js','utf8');
+
+          for (const token of ['おすすめ','人気','新着','すべて','素人','プロ','♡ お気に入り']) {
+            if (!flow.includes(token)) throw new Error(`Flow Japanese label missing: ${token}`);
+          }
+          for (const legacy of ['Soft ·','Personal ·','Intense ·','Explore ·']) {
+            if (flow.includes(legacy)) throw new Error(`Legacy Flow label still exposed: ${legacy}`);
+          }
+          for (const token of [
+            'FLOW_SOURCE_FILTER_KEY',
+            'resolved === "popular"',
+            'resolved === "latest"',
+            'isAmateurItem',
+            'isProItem'
+          ]) {
+            if (!recommender.includes(token)) throw new Error(`Flow recommender contract missing: ${token}`);
+          }
+          if (!app.includes('"popular", "latest"')) throw new Error('Flow modes popular/latest missing from app');
+          if (!app.includes('"velvet:flow-filter"')) throw new Error('Flow filter event missing from app');
+          if (!content.includes('X_EPOCH_MS = 1288834974657n')) throw new Error('X post-time derivation missing');
+          console.log('Flow v45 static contracts OK');
+          NODE
+
+          node --input-type=module <<'NODE'
+          globalThis.localStorage = {
+            values: new Map([
+              ['velvet_private_v2_flow_preset', 'popular'],
+              ['velvet_private_v3_source_filter', 'amateur']
+            ]),
+            getItem(key) { return this.values.get(key) ?? null; }
+          };
+          const { rankCandidates } = await import('./src/recommender.js');
+          const state = { likedItemIds: [], recentItemIds: [], recentSources: [], tagWeights: {}, sourceWeights: {}, intensityWeights: {}, sourceClassWeights: {} };
+          const catalog = [
+            { id:'ama-1', image_url:'a', source:'TGAma', source_class:'personal', tags:['personal'], rank:2, published_at_ms:2000, baseline:null },
+            { id:'pro-1', image_url:'b', source:'TGAV1', source_class:'pro', tags:['pro'], rank:1, published_at_ms:3000, baseline:null }
+          ];
+          let rows = rankCandidates(catalog, state, 'popular', new Set(), null, 10);
+          if (rows.length !== 1 || rows[0].item.id !== 'ama-1') throw new Error('Amateur filter leaked pro item');
+          localStorage.values.set('velvet_private_v3_source_filter', 'pro');
+          rows = rankCandidates(catalog, state, 'popular', new Set(), null, 10);
+          if (rows.length !== 1 || rows[0].item.id !== 'pro-1') throw new Error('Pro filter leaked amateur item');
+          localStorage.values.set('velvet_private_v2_flow_preset', 'latest');
+          localStorage.values.set('velvet_private_v3_source_filter', 'all');
+          rows = rankCandidates(catalog, state, 'latest', new Set(), null, 10);
+          if (rows[0].item.id !== 'pro-1') throw new Error('Latest ordering is not newest first');
+          console.log('Flow v45 behavior contracts OK');
           NODE
 
       - name: Icon dimensions
