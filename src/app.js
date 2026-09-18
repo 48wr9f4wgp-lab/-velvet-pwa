@@ -17,8 +17,8 @@ import {
   adaptSessionQueue,
   dominantLikedTags,
   recommendNextMode
-} from "./recommender.js?v=45";
-import { loadCatalog, preloadImages } from "./content.js?v=45";
+} from "./recommender.js?v=46";
+import { loadCatalog, preloadImages } from "./content.js?v=46";
 
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
