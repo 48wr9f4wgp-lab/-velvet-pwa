@@ -8,7 +8,27 @@
     const exposureHigh = hasTerm(plain, highCues);
     const exposureMedium = !exposureHigh && hasTerm(plain, mediumCues);
     const exposureLow = !exposureHigh && !exposureMedium && hasTerm(plain, EXPOSURE_LOW_CUES);
-    const exposureTier = exposureHigh ? "high" : exposureMedium ? "medium" : exposureLow ? "low" : "unknown";
+
+    const sourceExposureBias = Number(sourceDef.exposureBias || 0);
+    let exposureTier = exposureHigh ? "high" : exposureMedium ? "medium" : exposureLow ? "low" : "unknown";
+    let exposureBasis = exposureTier === "unknown" ? "unknown" : "metadata";
+    let exposureConfidence = exposureTier === "unknown" ? 0 : 1;
+
+    // Ranking pages frequently omit descriptive text around cards. Preserve direct metadata
+    // as the strongest signal, then fall back to the already-approved source/profile prior.
+    // The fallback is explicitly low-confidence so the recommender cannot treat it like
+    // per-post evidence.
+    if (exposureTier === "unknown") {
+      if (sourceExposureBias >= 0.34) exposureTier = "high";
+      else if (sourceExposureBias >= 0.18) exposureTier = "medium";
+      else if (sourceExposureBias <= 0.14) exposureTier = "low";
+
+      if (exposureTier !== "unknown") {
+        exposureBasis = "source-prior";
+        exposureConfidence = 0.35;
+      }
+    }
+
     const exposureScore = exposureHigh ? 0.62 : exposureMedium ? 0.30 : exposureLow ? -0.34 : 0;
     const ambiguousTeen = hasTerm(plain, ["teen", "teenager", "teenage"]);
     if (ambiguousTeen && (exposureHigh || exposureMedium)) return { allowed: false, reason: "teen-exposure-risk" };
@@ -33,7 +53,9 @@
       postFemaleEvidence,
       ageTarget,
       exposureTier,
-      exposureScore: Number(sourceDef.exposureBias || 0) + exposureScore,
+      exposureBasis,
+      exposureConfidence,
+      exposureScore: sourceExposureBias + exposureScore,
       reason: `${sourceDef.adultTrust ? "adult-source" : "adult-cue"}+${postJpEvidence ? "jp-post" : sourceJpEvidence ? "jp-source" : "jp-none"}+${postFemaleEvidence ? "female-post" : sourceDef.femaleBias ? "female-source-bias" : "female-none"}+${ageTarget ? "18-25" : "age-unknown"}`
     };
   }

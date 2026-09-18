@@ -63,7 +63,7 @@ jobs:
             './src/session-cues.js?v=44',
             './src/flow-presets.js?v=45',
             './src/input-guard.js?v=45',
-            './src/app.js?v=45'
+            './src/app.js?v=46'
           ]) {
             if (!html.includes(token)) throw new Error(`index contract missing: ${token}`);
           }
@@ -141,6 +141,76 @@ jobs:
           rows = rankCandidates(catalog, state, 'latest', new Set(), null, 10);
           if (rows[0].item.id !== 'pro-1') throw new Error('Latest ordering is not newest first');
           console.log('Flow v45 behavior contracts OK');
+          NODE
+
+      - name: Exposure v46 contracts
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const engine = fs.readFileSync('feed-base/part-04.txt','utf8')
+            + fs.readFileSync('feed-base/part-05.txt','utf8')
+            + fs.readFileSync('feed-base/part-06.txt','utf8');
+          const content = fs.readFileSync('src/content.js','utf8');
+          const recommender = fs.readFileSync('src/recommender-core-v30.js','utf8');
+          const sync = fs.readFileSync('velvet-feed-sync.js','utf8');
+
+          for (const token of [
+            'exposureBasis = "source-prior"',
+            'exposureConfidence = 0.35',
+            'intensityFromTier(gate.exposureTier, gate.exposureBasis)',
+            'exposure_basis: gate.exposureBasis',
+            'exposure_confidence:'
+          ]) {
+            if (!engine.includes(token)) throw new Error(`Exposure engine contract missing: ${token}`);
+          }
+          for (const token of ['exposure_basis: exposureBasis','exposure_confidence: exposureConfidence']) {
+            if (!content.includes(token)) throw new Error(`Catalog exposure contract missing: ${token}`);
+          }
+          if (!recommender.includes('0.34 * exposureConfidence') || !recommender.includes('0.16 * exposureConfidence')) {
+            throw new Error('Exposure confidence weighting missing from recommender');
+          }
+          if (!sync.includes('1.2.2-public') || !sync.includes('Velvet v0.9.5 + Exposure Recovery 2026-09-19')) {
+            throw new Error('Exposure recovery feed version missing');
+          }
+
+          const feed = JSON.parse(fs.readFileSync('velvet-content.json','utf8'));
+          if (String(feed.generated_by || '').includes('1.2.2-public')) {
+            let profiles = 0;
+            let known = 0;
+            let priors = 0;
+            for (const item of feed.items || []) {
+              for (const profile of Object.values(item.baseline?.profiles || {})) {
+                profiles += 1;
+                if (profile.exposure_tier && profile.exposure_tier !== 'unknown') known += 1;
+                if (profile.exposure_basis === 'source-prior') priors += 1;
+              }
+            }
+            if (profiles < 10) throw new Error('Exposure feed has too few profiles');
+            if (known / profiles < 0.8) throw new Error(`Exposure coverage too low: ${known}/${profiles}`);
+            if (priors < 1) throw new Error('Exposure recovery produced no source-prior classifications');
+          }
+          console.log('Exposure v46 contracts OK');
+          NODE
+
+          node --input-type=module <<'NODE'
+          const { scoreItem } = await import('./src/recommender-core-v30.js');
+          const state = {
+            likedItemIds: [], skippedItemIds: [], recentItemIds: [], recentSources: [],
+            tagWeights: {}, sourceWeights: {}, intensityWeights: {}, sourceClassWeights: {}
+          };
+          const base = {
+            image_url: 'x', source: 'T', source_class: 'pro', tags: [], intensity: 3,
+            baseline: { profiles: { personal: {
+              eligible: true, score: 1, run_cap: 3, exposure_tier: 'high',
+              intensity: 3, post_jp: false, post_female: false, age_target: false
+            } } }
+          };
+          const direct = { ...base, id: 'direct', baseline: { profiles: { personal: { ...base.baseline.profiles.personal, exposure_confidence: 1 } } } };
+          const prior = { ...base, id: 'prior', baseline: { profiles: { personal: { ...base.baseline.profiles.personal, exposure_confidence: 0.35 } } } };
+          const directScore = scoreItem(direct, state, 'personal', 3);
+          const priorScore = scoreItem(prior, state, 'personal', 3);
+          if (!(directScore > priorScore)) throw new Error('Low-confidence source prior is not damped');
+          console.log('Exposure confidence behavior OK');
           NODE
 
       - name: Icon dimensions

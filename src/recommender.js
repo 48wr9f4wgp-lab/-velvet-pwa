@@ -8,7 +8,7 @@ import {
   sessionTargetIntensity,
   dominantLikedTags,
   recommendNextMode
-} from "./recommender-core-v30.js";
+} from "./recommender-core-v30.js?v=46";
 
 // Source Lab 2026-08-27 winner mix.
 // Exact target across a rolling 20-card window: AV1 40 / 1W 35 / AV2 15 / U 10.

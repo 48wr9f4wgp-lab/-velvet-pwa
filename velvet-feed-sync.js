@@ -1,4 +1,4 @@
-// Velvet Feed Sync v1.2.1-public — dedicated public PWA publisher
+// Velvet Feed Sync v1.2.2-public — dedicated public PWA publisher
 // Reassembles the validated v1.1.0 engine, applies the approved Mix composition,
 // and publishes only shared feed data to this public repository.
 (async () => {
@@ -16,7 +16,7 @@
     req.headers = {
       "Cache-Control": "no-cache",
       "Pragma": "no-cache",
-      "User-Agent": "VelvetFeedSync/1.2.1-public"
+      "User-Agent": "VelvetFeedSync/1.2.2-public"
     };
     const text = await req.loadString();
     if (!text || text.length < 20) throw new Error(`Feed engine part ${part} unavailable`);
@@ -50,9 +50,9 @@
     },`;
 
   const patches = [
-    ['// Velvet Feed Sync v1.1.0', '// Velvet Feed Sync v1.2.1-public'],
-    ['const VERSION = "1.1.0";', 'const VERSION = "1.2.1-public";'],
-    ['const CANONICAL_BASELINE = "Velvet v0.9.3";', 'const CANONICAL_BASELINE = "Velvet v0.9.4 + Mix Source Lab 2026-08-27";'],
+    ['// Velvet Feed Sync v1.1.0', '// Velvet Feed Sync v1.2.2-public'],
+    ['const VERSION = "1.1.0";', 'const VERSION = "1.2.2-public";'],
+    ['const CANONICAL_BASELINE = "Velvet v0.9.3";', 'const CANONICAL_BASELINE = "Velvet v0.9.5 + Exposure Recovery 2026-09-19";'],
     ['const REPO = "eros-hub";', 'const REPO = "-velvet-pwa";'],
     ['const TARGET_BRANCH = "velvet-pages";', 'const TARGET_BRANCH = "main";'],
     ['const TOKEN_KEY = "velvet_feed_sync_github_token_v1";', 'const TOKEN_KEY = "velvet_feed_sync_github_token_public_v1";'],

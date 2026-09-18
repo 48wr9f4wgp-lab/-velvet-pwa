@@ -139,9 +139,14 @@ function canonicalBaselineScore(item, mode) {
   else score += 0.07;
   if (profile.post_jp) score += 0.08;
   if (profile.age_target) score += 0.18;
-  if (profile.exposure_tier === "high") score += 0.34;
-  else if (profile.exposure_tier === "medium") score += 0.16;
-  else if (profile.exposure_tier === "low") score -= mode === "pro" ? 0.82 : 0.28;
+
+  const rawConfidence = Number(profile.exposure_confidence);
+  const exposureConfidence = Number.isFinite(rawConfidence)
+    ? clamp(rawConfidence, 0, 1)
+    : (profile.exposure_tier === "unknown" ? 0 : 1);
+  if (profile.exposure_tier === "high") score += 0.34 * exposureConfidence;
+  else if (profile.exposure_tier === "medium") score += 0.16 * exposureConfidence;
+  else if (profile.exposure_tier === "low") score -= (mode === "pro" ? 0.82 : 0.28) * exposureConfidence;
   return score;
 }
 
