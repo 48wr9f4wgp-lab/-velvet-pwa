@@ -81,12 +81,19 @@ function normalizeBaselineProfile(raw) {
   const runCap = Number(raw.run_cap);
   const maxRank = Number(raw.max_rank);
   const intensity = Number(raw.intensity);
+  const exposureBasis = ["metadata", "source-prior", "unknown"].includes(raw.exposure_basis) ? raw.exposure_basis : (tier === "unknown" ? "unknown" : "metadata");
+  const rawConfidence = Number(raw.exposure_confidence);
+  const exposureConfidence = Number.isFinite(rawConfidence)
+    ? Math.max(0, Math.min(1, rawConfidence))
+    : (tier === "unknown" ? 0 : 1);
   return {
     eligible: true,
     score: Number.isFinite(score) ? score : 0,
     run_cap: Number.isFinite(runCap) ? Math.max(1, Math.min(10, Math.round(runCap))) : 3,
     max_rank: Number.isFinite(maxRank) ? Math.max(1, Math.min(100, Math.round(maxRank))) : 100,
     exposure_tier: tier,
+    exposure_basis: exposureBasis,
+    exposure_confidence: exposureConfidence,
     intensity: Number.isFinite(intensity) ? Math.max(1, Math.min(5, intensity)) : 3,
     post_jp: raw.post_jp === true,
     post_female: raw.post_female === true,
