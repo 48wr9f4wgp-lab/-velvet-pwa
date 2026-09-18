@@ -103,6 +103,70 @@
   text-overflow: ellipsis;
 }
 
+.flow-query-section {
+  margin-top: 18px;
+}
+
+.flow-query-section__label {
+  margin: 0 0 9px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: .08em;
+}
+
+.flow-option-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.flow-option {
+  min-width: 0;
+  min-height: 58px;
+  padding: 9px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  text-align: center;
+}
+
+.flow-option b {
+  font-size: 13px;
+}
+
+.flow-option small {
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.2;
+}
+
+.flow-option--compact {
+  min-height: 48px;
+  font-size: 13px;
+}
+
+.flow-option.is-active,
+.flow-favorites-button.is-active {
+  border-color: rgba(233,213,255,.52);
+  background: rgba(192,132,252,.16);
+  box-shadow: 0 0 0 1px rgba(233,213,255,.06);
+}
+
+.flow-option.is-active small {
+  color: #eadcff;
+}
+
+.flow-favorites-button {
+  margin-top: 22px;
+}
+
+.flow-favorites-button:disabled {
+  opacity: .42;
+}
+
 .flow-feedback {
   position: absolute;
   left: 14px;
