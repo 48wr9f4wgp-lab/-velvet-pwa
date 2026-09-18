@@ -63,7 +63,7 @@ jobs:
             './src/session-cues.js?v=44',
             './src/flow-presets.js?v=45',
             './src/input-guard.js?v=45',
-            './src/app.js?v=45'
+            './src/app.js?v=46'
           ]) {
             if (!html.includes(token)) throw new Error(`index contract missing: ${token}`);
           }
