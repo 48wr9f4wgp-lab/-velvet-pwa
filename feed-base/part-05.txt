@@ -35,7 +35,13 @@
     if (statusId) return `status:${statusId}:${String(url).slice(-36)}`;
     return (String(url).match(/\/(\d{8,})\//) || [])[1] || String(url).replace(/[^a-z0-9]/gi, "").slice(-80);
   }
-  function intensityFromTier(tier) {
+  function intensityFromTier(tier, basis = "metadata") {
+    if (basis === "source-prior") {
+      if (tier === "high") return 4.0;
+      if (tier === "medium") return 3.4;
+      if (tier === "low") return 2.4;
+      return 3;
+    }
     if (tier === "high") return 5;
     if (tier === "medium") return 3.8;
     if (tier === "low") return 1.3;
@@ -43,8 +49,8 @@
   }
   function itemTags(meta, source, baselineProfiles) {
     const t = textOf(meta);
-    const tiers = Object.values(baselineProfiles).map(row => row.exposure_tier);
-    const strongest = tiers.includes("high") ? 5 : tiers.includes("medium") ? 3.8 : tiers.includes("low") ? 1.3 : 3;
+    const intensities = Object.values(baselineProfiles).map(row => Number(row.intensity || 3));
+    const strongest = intensities.length ? Math.max(...intensities) : 3;
     const out = new Set([source.sourceClass, source.name.toLowerCase(), strongest >= 4.5 ? "intense" : strongest <= 2 ? "soft" : "mid"]);
     const map = {
       portrait: ["portrait", "ポートレート"], casual: ["casual", "日常", "自撮り"], studio: ["studio", "撮影", "スタジオ"],
