@@ -106,7 +106,15 @@ jobs:
           if (!app.includes('"popular", "latest"')) throw new Error('Flow modes popular/latest missing from app');
           if (!app.includes('"velvet:flow-filter"')) throw new Error('Flow filter event missing from app');
           if (!content.includes('X_EPOCH_MS = 1288834974657n')) throw new Error('X post-time derivation missing');
-          console.log('Flow v45 static contracts OK');
+          const feed = JSON.parse(fs.readFileSync('velvet-content.json','utf8'));
+          const classCounts = (feed.items || []).reduce((acc, item) => {
+            const key = String(item.source_class || 'mixed');
+            acc[key] = (acc[key] || 0) + 1;
+            return acc;
+          }, {});
+          if ((classCounts.personal || 0) < 3) throw new Error('Amateur/personal feed class has too few items');
+          if ((classCounts.pro || 0) < 3) throw new Error('Pro feed class has too few items');
+          console.log('Flow v45 static contracts OK', classCounts);
           NODE
 
           node --input-type=module <<'NODE'
