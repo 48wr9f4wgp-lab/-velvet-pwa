@@ -31,6 +31,28 @@ const PRELOADED_URLS = new Set();
 const PRELOAD_MEMORY_LIMIT = 80;
 const BASELINE_PROFILES = ["mix", "personal", "pro", "max"];
 
+const X_EPOCH_MS = 1288834974657n;
+
+function xStatusId(raw, fallbackId = "") {
+  const page = typeof raw?.page_url === "string" ? raw.page_url : "";
+  const pageMatch = page.match(/\/status\/(\d{15,22})/);
+  if (pageMatch) return pageMatch[1];
+  const idMatch = String(raw?.id || fallbackId).match(/status:(\d{15,22})/);
+  return idMatch ? idMatch[1] : "";
+}
+
+function xPublishedAtMs(raw, fallbackId = "") {
+  const explicit = Number(raw?.published_at_ms);
+  if (Number.isFinite(explicit) && explicit > 0) return explicit;
+  const statusId = xStatusId(raw, fallbackId);
+  if (!statusId) return 0;
+  try {
+    return Number((BigInt(statusId) >> 22n) + X_EPOCH_MS);
+  } catch (_) {
+    return 0;
+  }
+}
+
 export function demoCatalog() {
   return DEMO_TAG_SETS.map((tags, i) => ({
     id: `demo-${i + 1}`,
@@ -41,6 +63,7 @@ export function demoCatalog() {
     source_label: "Demo",
     source_class: tags.includes("pro") ? "pro" : tags.includes("personal") ? "personal" : "mixed",
     tags,
+    published_at_ms: Date.now() - i * 60 * 60 * 1000,
     intensity: tags.includes("intense") ? 5 : tags.includes("soft") ? 1 : tags.includes("pro") ? 3.5 : 3,
     page_url: null,
     handle: null,
@@ -99,8 +122,9 @@ function normalizeItem(raw, index) {
     title: typeof raw.title === "string" ? raw.title : "",
     source: String(raw.source || "unknown"),
     source_label: String(raw.source_label || raw.source || "Velvet"),
-    source_class: ["personal", "pro", "mixed"].includes(raw.source_class) ? raw.source_class : "mixed",
+    source_class: raw.source_class === "amateur" ? "personal" : ["personal", "pro", "mixed"].includes(raw.source_class) ? raw.source_class : "mixed",
     tags,
+    published_at_ms: xPublishedAtMs(raw, id),
     intensity: Math.max(1, Math.min(5, Number(raw.intensity) || 3)),
     page_url: typeof raw.page_url === "string" ? raw.page_url : null,
     handle: typeof raw.handle === "string" && raw.handle.trim() ? raw.handle.trim() : null,
