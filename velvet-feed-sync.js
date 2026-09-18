@@ -16,7 +16,7 @@
     req.headers = {
       "Cache-Control": "no-cache",
       "Pragma": "no-cache",
-      "User-Agent": "VelvetFeedSync/1.2.2-public"
+      "User-Agent": "VelvetFeedSync/1.2.3-public"
     };
     const text = await req.loadString();
     if (!text || text.length < 20) throw new Error(`Feed engine part ${part} unavailable`);
@@ -51,7 +51,7 @@
 
   const patches = [
     ['// Velvet Feed Sync v1.1.0', '// Velvet Feed Sync v1.2.3-public'],
-    ['const VERSION = "1.1.0";', 'const VERSION = "1.2.2-public";'],
+    ['const VERSION = "1.1.0";', 'const VERSION = "1.2.3-public";'],
     ['const CANONICAL_BASELINE = "Velvet v0.9.3";', 'const CANONICAL_BASELINE = "Velvet v0.9.6 + Exposure Compatibility 2026-09-19";'],
     ['const REPO = "eros-hub";', 'const REPO = "-velvet-pwa";'],
     ['const TARGET_BRANCH = "velvet-pages";', 'const TARGET_BRANCH = "main";'],
