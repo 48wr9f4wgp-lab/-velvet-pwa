@@ -17,8 +17,8 @@ import {
   adaptSessionQueue,
   dominantLikedTags,
   recommendNextMode
-} from "./recommender.js";
-import { loadCatalog, preloadImages } from "./content.js";
+} from "./recommender.js?v=45";
+import { loadCatalog, preloadImages } from "./content.js?v=45";
 
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
@@ -31,11 +31,12 @@ let catalogReady = false;
 let appUnlocked = false;
 let currentItem = null;
 const FLOW_PRESET_KEY = "velvet_private_v2_flow_preset";
-const VALID_FLOW_MODES = new Set(["soft", "personal", "pro", "intense", "favorites", "explore"]);
+const VALID_FLOW_MODES = new Set(["soft", "personal", "pro", "intense", "favorites", "explore", "popular", "latest"]);
 function readFlowMode() {
   try {
     const value = localStorage.getItem(FLOW_PRESET_KEY);
-    return VALID_FLOW_MODES.has(value) ? value : "personal";
+    if (VALID_FLOW_MODES.has(value)) return value;
+    return "personal";
   } catch (_) {
     return "personal";
   }
@@ -623,8 +624,20 @@ function bindEvents() {
     const requested = event.detail?.id;
     flowMode = VALID_FLOW_MODES.has(requested) ? requested : "personal";
     lastFlowAction = null;
+    flowExclusions.clear();
+    runtimeSeenByMode.clear();
     clearFlowNavigation();
+    currentItem = null;
     state = recordModeUse(state, `flow:${flowMode}`);
+    if (catalogReady && appUnlocked) showNextFlowItem();
+  });
+  window.addEventListener("velvet:flow-filter", () => {
+    lastFlowAction = null;
+    flowExclusions.clear();
+    runtimeSeenByMode.clear();
+    clearFlowNavigation();
+    currentItem = null;
+    if (catalogReady && appUnlocked) showNextFlowItem();
   });
   els.unlockButton.addEventListener("click", revealApp);
   els.returnButton.addEventListener("click", () => {
