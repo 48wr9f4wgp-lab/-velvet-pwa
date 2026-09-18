@@ -88,20 +88,8 @@ function localizeStaticUi() {
 
   const presetDialog = document.querySelector("#flowPresetDialog");
   if (presetDialog) {
-    setText("#flowPresetDialog h2", "Flowモード");
-    const presetCopy = {
-      soft: "Soft · 穏やかに",
-      personal: "Personal · 好みを優先",
-      pro: "Pro · プロ寄り",
-      intense: "Intense · 刺激強め",
-      favorites: "Favorites · お気に入りのみ",
-      explore: "Explore · 発見を増やす"
-    };
-    presetDialog.querySelectorAll("[data-preset]").forEach(button => {
-      const id = button.dataset.preset;
-      if (presetCopy[id] && !button.disabled) writeText(button, presetCopy[id]);
-    });
-    setText("#flowPresetDialog .settings-status", "次のカードから反映します。");
+    setText("#flowPresetDialog h2", "表示を選ぶ");
+    setText("#flowPresetDialog .settings-status", "選ぶとすぐ反映します。");
   }
 }
 
@@ -123,8 +111,6 @@ function translateDynamic(root = document) {
     if (translated) writeText(el, translated);
   });
 
-  const favoriteButton = document.querySelector('#flowPresetDialog [data-preset="favorites"]');
-  if (favoriteButton?.disabled) writeText(favoriteButton, "Favorites · まず1件保存");
 }
 
 function translateAll() {
