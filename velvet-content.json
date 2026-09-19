@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-09-19T00:33:56.633Z",
-  "generated_by": "Velvet Feed Sync/1.2.2-public",
+  "generated_at": "2026-09-19T02:11:45.303Z",
+  "generated_by": "Velvet Feed Sync/1.2.3-public",
   "canonical_baseline": "Velvet v0.9.6 + Exposure Compatibility 2026-09-19",
   "items": [
     {
@@ -10891,7 +10891,7 @@
     }
   ],
   "failures": [
-    "TGUra: HTTP 403 for https://twiigle.com/hot.html?_velvet=1789778034681-0.437971687164727: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta "
+    "TGUra: HTTP 403 for https://twiigle.com/hot.html?_velvet=1789783902984-0.9429432918332368: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta"
   ],
   "diagnostics": {
     "quarantine": {
