@@ -3,7 +3,7 @@ import "./flow-feedback.js?v=44";
 import "./feed-bridge.js?v=44";
 import "./media-viewer.js?v=44";
 
-const UX_STYLESHEET = "./flow-ux.css?v=45";
+const UX_STYLESHEET = "./flow-ux.css?v=47";
 if (!document.querySelector('link[data-velvet-flow-ux]')) {
   const link = document.createElement("link");
   link.rel = "stylesheet";
@@ -127,5 +127,4 @@ const nextCue = document.querySelector("#dragSkip");
 if (backCue) backCue.textContent = "戻る";
 if (nextCue) nextCue.textContent = "進む";
 
-bindFastNavigationGesture({ cardSelector: "#mediaCard", showCues: true, scope: "flow" });
 bindFastNavigationGesture({ cardSelector: "#sessionMediaCard", scope: "session" });
