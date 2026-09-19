@@ -376,3 +376,179 @@ html.media-viewer-open body {
     bottom: calc(80px + var(--safe-bottom));
   }
 }
+
+
+/* Velvet v47 — Flow is a browseable two-column list. Session keeps the focused swipe deck. */
+#flowView .card-stage {
+  display: none !important;
+}
+
+.flow-grid-shell {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 6px 0 10px;
+}
+
+.flow-grid-shell::-webkit-scrollbar {
+  display: none;
+}
+
+.flow-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  align-items: start;
+}
+
+.flow-grid-card {
+  position: relative;
+  min-width: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #121216;
+  border: 1px solid rgba(255,255,255,.075);
+  box-shadow: 0 8px 24px rgba(0,0,0,.14);
+}
+
+.flow-grid-card__media {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  padding: 0;
+  border: 0;
+  background: #141419;
+  overflow: hidden;
+  color: inherit;
+  touch-action: manipulation;
+}
+
+.flow-grid-card__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: linear-gradient(110deg, #121217 20%, #1b1b22 45%, #121217 70%);
+  transition: transform .16s ease, opacity .16s ease;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+.flow-grid-card__media:active img {
+  transform: scale(.985);
+}
+
+.flow-grid-card.image-failed .flow-grid-card__media img {
+  opacity: 0;
+}
+
+.flow-grid-card__source {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  min-height: 23px;
+  padding: 0 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  background: rgba(8,8,11,.68);
+  border: 1px solid rgba(255,255,255,.12);
+  color: rgba(255,255,255,.78);
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: .04em;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  pointer-events: none;
+}
+
+.flow-grid-card__favorite {
+  position: absolute;
+  z-index: 2;
+  top: 7px;
+  right: 7px;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.13);
+  background: rgba(10,10,13,.68);
+  color: rgba(255,255,255,.74);
+  font-size: 18px;
+  line-height: 1;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  touch-action: manipulation;
+  transition: transform .10s ease, background .14s ease, border-color .14s ease, color .14s ease;
+}
+
+.flow-grid-card__favorite:active {
+  transform: scale(.91);
+}
+
+.flow-grid-card__favorite.is-saved {
+  color: #eadcff;
+  border-color: rgba(233,213,255,.46);
+  background: rgba(126,34,206,.34);
+}
+
+.flow-grid-status {
+  margin: 14px 0 4px;
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: .04em;
+}
+
+.flow-grid-sentinel {
+  width: 100%;
+  height: 2px;
+}
+
+.flow-grid-sentinel[hidden] {
+  display: none;
+}
+
+#flowView .flow-controls {
+  flex: 0 0 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 0 1px;
+}
+
+#flowView #skipButton,
+#flowView #likeButton {
+  display: none !important;
+}
+
+#flowView .action-button--session {
+  width: min(100%, 320px);
+  min-width: 0;
+  height: 48px;
+  padding: 0 18px;
+  border-radius: 17px;
+  font-size: 12px;
+  letter-spacing: .02em;
+}
+
+@media (max-height: 740px) {
+  #flowView .flow-controls {
+    flex-basis: 56px;
+    padding-top: 4px;
+  }
+
+  #flowView .action-button--session {
+    height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-grid-card__media img,
+  .flow-grid-card__favorite {
+    transition-duration: .001ms !important;
+  }
+}
