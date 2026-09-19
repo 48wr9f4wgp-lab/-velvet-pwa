@@ -62,8 +62,8 @@ jobs:
             './src/image-guard.js?v=44',
             './src/session-cues.js?v=44',
             './src/flow-presets.js?v=45',
-            './src/input-guard.js?v=45',
-            './src/app.js?v=46'
+            './src/input-guard.js?v=47',
+            './src/app.js?v=47'
           ]) {
             if (!html.includes(token)) throw new Error(`index contract missing: ${token}`);
           }
@@ -141,6 +141,50 @@ jobs:
           rows = rankCandidates(catalog, state, 'latest', new Set(), null, 10);
           if (rows[0].item.id !== 'pro-1') throw new Error('Latest ordering is not newest first');
           console.log('Flow v45 behavior contracts OK');
+          NODE
+
+      - name: Flow grid v47 contracts
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const html = fs.readFileSync('index.html','utf8');
+          const app = fs.readFileSync('src/app.js','utf8');
+          const input = fs.readFileSync('src/input-guard.js','utf8');
+          const css = fs.readFileSync('flow-ux.css','utf8');
+
+          for (const token of ['id="flowGridShell"','id="flowGrid"','id="flowGridStatus"','id="flowGridSentinel"']) {
+            if (!html.includes(token)) throw new Error(`Flow grid DOM missing: ${token}`);
+          }
+          for (const token of [
+            'const FLOW_GRID_BATCH = 12',
+            'function refreshFlowGrid',
+            'function appendFlowGridBatch',
+            'loading = index < 6 ? "eager" : "lazy"',
+            'window.dispatchEvent(new CustomEvent("velvet:media-tap", { detail: { scope: "flow" } }))'
+          ]) {
+            if (!app.includes(token)) throw new Error(`Flow grid app contract missing: ${token}`);
+          }
+          if (app.includes('bindSwipe(els.mediaCard, navigateFlowBack, navigateFlowNext)')) {
+            throw new Error('Legacy Flow swipe deck is still bound in app');
+          }
+          if (app.includes('window.addEventListener("velvet:flow-next"') || app.includes('window.addEventListener("velvet:flow-back"')) {
+            throw new Error('Legacy Flow swipe navigation events are still active');
+          }
+          if (input.includes('bindFastNavigationGesture({ cardSelector: "#mediaCard"')) {
+            throw new Error('Input guard still binds Flow swipe navigation');
+          }
+          if (!input.includes('bindFastNavigationGesture({ cardSelector: "#sessionMediaCard", scope: "session" })')) {
+            throw new Error('Session swipe navigation was removed');
+          }
+          for (const token of [
+            'grid-template-columns: repeat(2, minmax(0, 1fr))',
+            '#flowView .card-stage',
+            '#flowView #skipButton',
+            '#flowView #likeButton'
+          ]) {
+            if (!css.includes(token)) throw new Error(`Flow grid CSS contract missing: ${token}`);
+          }
+          console.log('Flow grid v47 contracts OK');
           NODE
 
       - name: Exposure v46.1 contracts
