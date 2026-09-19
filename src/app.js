@@ -51,6 +51,11 @@ const FLOW_NAV_LIMIT = 60;
 const runtimeSeenByMode = new Map();
 let session = null;
 let dragState = null;
+const FLOW_GRID_BATCH = 12;
+const FLOW_GRID_LIMIT = 160;
+let flowGridItems = [];
+let flowGridRendered = 0;
+let flowGridObserver = null;
 
 function runtimeSeenForMode(mode = flowMode) {
   if (!runtimeSeenByMode.has(mode)) runtimeSeenByMode.set(mode, new Set());
@@ -87,6 +92,10 @@ const els = {
   settingsDialog: $("#settingsDialog"),
   modeLabel: $("#modeLabel"),
   flowView: $("#flowView"),
+  flowGridShell: $("#flowGridShell"),
+  flowGrid: $("#flowGrid"),
+  flowGridStatus: $("#flowGridStatus"),
+  flowGridSentinel: $("#flowGridSentinel"),
   sessionSetupView: $("#sessionSetupView"),
   sessionPlayerView: $("#sessionPlayerView"),
   sessionSummaryView: $("#sessionSummaryView"),
@@ -164,7 +173,7 @@ function revealApp() {
   setHidden(els.mainExperience, false);
   setView(els.flowView);
   setModeLabel("Flow");
-  if (!currentItem && catalogReady) showNextFlowItem({ preferResume: true });
+  if (catalogReady) refreshFlowGrid({ preserveCount: true });
 }
 
 function syncSettingsUi() {
@@ -176,6 +185,183 @@ function syncSettingsUi() {
 
 function imageFailed(img) {
   img.classList.add("image-failed");
+}
+
+function flowListItems() {
+  if (!catalog.length) return [];
+  if (flowMode === "favorites") {
+    const byId = new Map(catalog.map(item => [item.id, item]));
+    return (state.likedItemIds || []).map(id => byId.get(id)).filter(Boolean);
+  }
+  const limit = Math.min(FLOW_GRID_LIMIT, Math.max(1, catalog.length));
+  return rankCandidates(catalog, state, flowMode, new Set(), null, limit).map(row => row.item);
+}
+
+function updateFlowGridStatus() {
+  if (!els.flowGridStatus || !els.flowGridSentinel) return;
+  if (!flowGridItems.length) {
+    els.flowGridStatus.textContent = flowMode === "favorites"
+      ? "お気に入りはまだありません"
+      : "表示できる項目がありません";
+    els.flowGridSentinel.hidden = true;
+    return;
+  }
+  els.flowGridStatus.textContent = flowMode === "favorites"
+    ? `${flowGridItems.length}件のお気に入り`
+    : `${flowGridItems.length}件`;
+  els.flowGridSentinel.hidden = flowGridRendered >= flowGridItems.length;
+}
+
+function gridSourceLabel(item) {
+  if (item?.source_class === "pro") return "プロ";
+  if (item?.source_class === "personal") return "素人";
+  return "";
+}
+
+function buildFlowGridCard(item, index) {
+  const card = document.createElement("article");
+  card.className = "flow-grid-card";
+  card.dataset.itemId = item.id;
+
+  const media = document.createElement("button");
+  media.type = "button";
+  media.className = "flow-grid-card__media";
+  media.setAttribute("aria-label", "画像を開く");
+
+  const img = document.createElement("img");
+  img.alt = "";
+  img.draggable = false;
+  img.decoding = "async";
+  img.loading = index < 6 ? "eager" : "lazy";
+  if ("fetchPriority" in img && index < 4) img.fetchPriority = "high";
+  img.src = item.image_url;
+
+  img.addEventListener("error", () => {
+    const fallback = typeof item.thumb_url === "string" ? item.thumb_url.trim() : "";
+    if (fallback && fallback !== img.src && img.dataset.velvetFallbackTried !== "1") {
+      img.dataset.velvetFallbackTried = "1";
+      img.src = fallback;
+      return;
+    }
+    card.classList.add("image-failed");
+  });
+  img.addEventListener("load", () => card.classList.remove("image-failed"));
+
+  media.append(img);
+  media.addEventListener("click", () => openFlowGridItem(item));
+
+  const source = gridSourceLabel(item);
+  if (source) {
+    const badge = document.createElement("span");
+    badge.className = "flow-grid-card__source";
+    badge.textContent = source;
+    media.append(badge);
+  }
+
+  const favorite = document.createElement("button");
+  favorite.type = "button";
+  favorite.className = "flow-grid-card__favorite";
+  favorite.dataset.favoriteId = item.id;
+  favorite.setAttribute("aria-label", "お気に入り");
+  favorite.textContent = "♥";
+  const saved = isFavorite(item);
+  favorite.classList.toggle("is-saved", saved);
+  favorite.setAttribute("aria-pressed", saved ? "true" : "false");
+  favorite.addEventListener("click", event => {
+    event.preventDefault();
+    event.stopPropagation();
+    toggleFlowGridFavorite(item);
+  });
+
+  card.append(media, favorite);
+  return card;
+}
+
+function appendFlowGridBatch() {
+  if (!els.flowGrid || flowGridRendered >= flowGridItems.length) {
+    updateFlowGridStatus();
+    return;
+  }
+  const end = Math.min(flowGridRendered + FLOW_GRID_BATCH, flowGridItems.length);
+  const fragment = document.createDocumentFragment();
+  for (let i = flowGridRendered; i < end; i++) fragment.append(buildFlowGridCard(flowGridItems[i], i));
+  els.flowGrid.append(fragment);
+  flowGridRendered = end;
+  updateFlowGridStatus();
+}
+
+function refreshFlowGrid({ resetScroll = false, preserveCount = false } = {}) {
+  if (!els.flowGrid) return;
+  const previousCount = flowGridRendered;
+  flowGridItems = flowListItems();
+  flowGridRendered = 0;
+  els.flowGrid.replaceChildren();
+
+  const target = preserveCount
+    ? Math.max(FLOW_GRID_BATCH, Math.min(previousCount || FLOW_GRID_BATCH, flowGridItems.length))
+    : Math.min(FLOW_GRID_BATCH, flowGridItems.length);
+  while (flowGridRendered < target) appendFlowGridBatch();
+  if (!target) updateFlowGridStatus();
+
+  if (resetScroll && els.flowGridShell) els.flowGridShell.scrollTop = 0;
+  preloadImages(flowGridItems.slice(0, 4));
+}
+
+function syncFlowGridFavoriteStates() {
+  if (!els.flowGrid) return;
+  els.flowGrid.querySelectorAll("[data-favorite-id]").forEach(button => {
+    const saved = (state.likedItemIds || []).includes(button.dataset.favoriteId);
+    button.classList.toggle("is-saved", saved);
+    button.setAttribute("aria-pressed", saved ? "true" : "false");
+  });
+}
+
+function openFlowGridItem(item) {
+  if (!item?.id) return;
+  currentItem = item;
+  state = recordView(state, item);
+  publishFlowItem(item);
+  const index = flowGridItems.findIndex(row => row.id === item.id);
+  if (index >= 0) preloadImages(flowGridItems.slice(index + 1, index + 4));
+  window.dispatchEvent(new CustomEvent("velvet:media-tap", { detail: { scope: "flow" } }));
+}
+
+function toggleFlowGridFavorite(item) {
+  if (!item?.id) return;
+  const stateBefore = JSON.parse(JSON.stringify(state));
+  const wasSaved = isFavorite(item);
+
+  if (wasSaved) {
+    state.likedItemIds = state.likedItemIds.filter(id => id !== item.id);
+    state = saveState(applyHistoryPolicy(state));
+    lastFlowAction = { item, stateBefore, kind: "unfavorite", modeBefore: flowMode };
+    window.dispatchEvent(new CustomEvent("velvet:flow-feedback", { detail: { reaction: "unfavorite" } }));
+  } else {
+    state = recordReaction(state, item, "like");
+    const saved = isFavorite(item);
+    lastFlowAction = { item, stateBefore, kind: "like", modeBefore: flowMode };
+    window.dispatchEvent(new CustomEvent("velvet:flow-feedback", { detail: { reaction: "like", saved } }));
+  }
+
+  window.dispatchEvent(new CustomEvent("velvet:favorites-changed"));
+  if (flowMode === "favorites") refreshFlowGrid({ preserveCount: true });
+  else syncFlowGridFavoriteStates();
+}
+
+function setupFlowGridObserver() {
+  if (!els.flowGridSentinel) return;
+  if (!("IntersectionObserver" in window)) {
+    while (flowGridRendered < flowGridItems.length) appendFlowGridBatch();
+    return;
+  }
+  flowGridObserver?.disconnect();
+  flowGridObserver = new IntersectionObserver(entries => {
+    if (entries.some(entry => entry.isIntersecting)) appendFlowGridBatch();
+  }, {
+    root: els.flowGridShell || null,
+    rootMargin: "360px 0px"
+  });
+  flowGridObserver.observe(els.flowGridSentinel);
 }
 
 function renderFlowItem(item, { recordExposure = true, rememberRuntime = true } = {}) {
@@ -381,7 +567,7 @@ function undoLastFlowAction() {
   runtimeSeenForMode(action.modeBefore || flowMode).delete(action.item.id);
   currentItem = null;
   window.dispatchEvent(new CustomEvent("velvet:favorites-changed"));
-  renderFlowItem(action.item, { recordExposure: false, rememberRuntime: false });
+  refreshFlowGrid({ preserveCount: true });
   window.dispatchEvent(new CustomEvent("velvet:flow-undone"));
 }
 
@@ -579,7 +765,7 @@ function resetActiveExperience() {
   flowTransitionTimer = null;
   setView(els.flowView);
   setModeLabel("Flow");
-  if (catalogReady && appUnlocked) showNextFlowItem();
+  if (catalogReady && appUnlocked) refreshFlowGrid({ resetScroll: true });
 }
 
 function status(message) {
@@ -611,13 +797,11 @@ async function reloadCatalog() {
   runtimeSeenByMode.clear();
   clearFlowNavigation();
   currentItem = null;
-  if (appUnlocked) showNextFlowItem();
+  if (appUnlocked) refreshFlowGrid({ resetScroll: true });
 }
 
 function bindEvents() {
   window.addEventListener("velvet:flow-undo", undoLastFlowAction);
-  window.addEventListener("velvet:flow-next", navigateFlowNext);
-  window.addEventListener("velvet:flow-back", navigateFlowBack);
   window.addEventListener("velvet:session-next", navigateSessionNext);
   window.addEventListener("velvet:session-back", navigateSessionBack);
   window.addEventListener("velvet:flow-preset", event => {
@@ -629,7 +813,7 @@ function bindEvents() {
     clearFlowNavigation();
     currentItem = null;
     state = recordModeUse(state, `flow:${flowMode}`);
-    if (catalogReady && appUnlocked) showNextFlowItem();
+    if (catalogReady && appUnlocked) refreshFlowGrid({ resetScroll: true });
   });
   window.addEventListener("velvet:flow-filter", () => {
     lastFlowAction = null;
@@ -637,7 +821,7 @@ function bindEvents() {
     runtimeSeenByMode.clear();
     clearFlowNavigation();
     currentItem = null;
-    if (catalogReady && appUnlocked) showNextFlowItem();
+    if (catalogReady && appUnlocked) refreshFlowGrid({ resetScroll: true });
   });
   els.unlockButton.addEventListener("click", revealApp);
   els.returnButton.addEventListener("click", () => {
@@ -657,9 +841,10 @@ function bindEvents() {
   els.likeButton.addEventListener("click", handleFlowLike);
   els.sessionsButton.addEventListener("click", openSessionSetup);
   els.retryFeedButton.addEventListener("click", reloadCatalog);
-  $$('[data-back-flow]').forEach(button => button.addEventListener("click", () => {
+  $('[data-back-flow]').forEach(button => button.addEventListener("click", () => {
     setView(els.flowView);
     setModeLabel("Flow");
+    refreshFlowGrid({ preserveCount: true });
   }));
 
   els.sessionForm.addEventListener("submit", event => {
@@ -674,7 +859,7 @@ function bindEvents() {
     session = null;
     setView(els.flowView);
     setModeLabel("Flow");
-    showNextFlowItem();
+    refreshFlowGrid({ preserveCount: true });
   });
   els.summaryAgainButton.addEventListener("click", () => {
     session = null;
@@ -719,8 +904,8 @@ function bindEvents() {
     setTimeout(renderSessionItem, 80);
   });
 
-  bindSwipe(els.mediaCard, navigateFlowBack, navigateFlowNext);
   bindSwipe(els.sessionMediaCard, navigateSessionBack, navigateSessionNext);
+  setupFlowGridObserver();
 }
 
 async function init() {
@@ -736,7 +921,7 @@ async function init() {
   state = recordModeUse(state, "flow");
 
   if (appUnlocked) {
-    if (!currentItem) showNextFlowItem({ preferResume: true });
+    refreshFlowGrid({ resetScroll: true });
   } else if (state.settings.privacyBlur) {
     setHidden(els.privacyGate, false);
     setHidden(els.mainExperience, true);
