@@ -171,7 +171,9 @@ jobs:
           if (!recommender.includes('0.34 * exposureConfidence') || !recommender.includes('0.16 * exposureConfidence')) {
             throw new Error('Exposure confidence weighting missing from recommender');
           }
-          if (!sync.includes('1.2.3-public') || !sync.includes('Velvet v0.9.6 + Exposure Compatibility 2026-09-19')) {
+          if (!sync.includes('"User-Agent": "VelvetFeedSync/1.2.3-public"')
+              || !sync.includes('const VERSION = "1.2.3-public";')
+              || !sync.includes('Velvet v0.9.6 + Exposure Compatibility 2026-09-19')) {
             throw new Error('Exposure compatibility feed version missing');
           }
 
