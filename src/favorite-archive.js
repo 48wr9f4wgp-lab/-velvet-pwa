@@ -161,9 +161,26 @@ export function backfillFavoriteArchive(ids, catalog) {
   if (!liked.length || !Array.isArray(catalog)) return;
 
   const byId = new Map(catalog.map(item => [String(item?.id || ""), item]));
+  const map = loadArchiveMap();
+  const queue = [];
+
   for (const id of liked) {
-    const item = byId.get(String(id));
-    if (!item) continue;
-    if (!getArchivedFavorite(id)) archiveFavorite(item);
+    const key = String(id);
+    if (map[key]) continue;
+    const snapshot = normalizeSnapshot(byId.get(key));
+    if (!snapshot) continue;
+    map[key] = snapshot;
+    queue.push(snapshot);
   }
+
+  if (!queue.length) return;
+  saveArchiveMap(map);
+  void requestFavoritePersistence();
+
+  void (async () => {
+    for (const snapshot of queue) {
+      await Promise.allSettled(urlsFor(snapshot).map(cacheMediaUrl));
+      await new Promise(resolve => setTimeout(resolve, 40));
+    }
+  })();
 }
