@@ -585,6 +585,12 @@ async function reloadCatalog() {
 
 function bindEvents() {
   window.addEventListener("velvet:flow-undo", undoLastFlowAction);
+  window.addEventListener("velvet:flow-toggle-favorite", event => {
+    const requestedId = String(event.detail?.id || "");
+    if (!currentItem?.id || currentItem.id !== requestedId) return;
+    toggleFlowGridFavorite(currentItem);
+    publishFlowItem(currentItem);
+  });
   window.addEventListener("velvet:flow-preset", event => {
     const requested = event.detail?.id;
     flowMode = VALID_FLOW_MODES.has(requested) ? requested : "personal";
