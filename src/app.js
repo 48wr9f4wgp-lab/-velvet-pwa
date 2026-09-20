@@ -841,7 +841,7 @@ function bindEvents() {
   els.likeButton.addEventListener("click", handleFlowLike);
   els.sessionsButton.addEventListener("click", openSessionSetup);
   els.retryFeedButton.addEventListener("click", reloadCatalog);
-  $('[data-back-flow]').forEach(button => button.addEventListener("click", () => {
+  $$('[data-back-flow]').forEach(button => button.addEventListener("click", () => {
     setView(els.flowView);
     setModeLabel("Flow");
     refreshFlowGrid({ preserveCount: true });
