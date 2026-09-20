@@ -6,7 +6,6 @@ const flowView = document.querySelector("#flowView");
 const panel = document.querySelector("#pinterestPanel");
 const gridShell = document.querySelector("#flowGridShell");
 let renderedHref = "";
-let renderedHref = "";
 
 function readFilter() {
   try { return localStorage.getItem(SOURCE_FILTER_KEY) || "all"; }
@@ -144,7 +143,6 @@ function buildWidget(normalized) {
   widgetWrap.append(anchor);
   panel.append(toolbar, widgetWrap);
 
-  renderedHref = normalized.href;
   renderedHref = normalized.href;
   loadPinterestScript();
 }
