@@ -2,9 +2,8 @@ const CACHE_PREFIX = "velvet-shell-";
 const RECOVERY_VERSION = "v49.5";
 const FAVORITE_MEDIA_CACHE = "velvet-favorite-media-v1";
 
-// v34 is intentionally a cache-recovery service worker.
-// The previous cache-first shell could keep an installed iOS PWA on stale UI modules.
-// Keep the worker registered, but remove all Velvet shell caches and stop intercepting fetches.
+// The shell remains network-first: old Velvet shell caches are removed so iOS PWA UI modules do not go stale.
+// The only fetch interception below is for images explicitly archived by Favorites.
 self.addEventListener("install", () => {
   self.skipWaiting();
 });
