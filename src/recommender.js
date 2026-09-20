@@ -17,7 +17,7 @@ const MIX_WINDOW = 20;
 const FLOW_PRESET_KEY = "velvet_private_v2_flow_preset";
 const FLOW_SOURCE_FILTER_KEY = "velvet_private_v3_source_filter";
 const VALID_MODES = new Set(["soft", "personal", "pro", "intense", "favorites", "explore", "popular", "latest"]);
-const VALID_SOURCE_FILTERS = new Set(["all", "amateur", "pro"]);
+const VALID_SOURCE_FILTERS = new Set(["all", "amateur", "pro", "pinterest"]);
 const runtimeMixSources = [];
 const SESSION_COUNTS = Object.freeze({ 3: 12, 5: 20, 10: 40 });
 
@@ -64,11 +64,18 @@ function isProItem(item) {
     || tags.includes("pro");
 }
 
+function isPinterestItem(item) {
+  const sourceClass = String(item?.source_class || "").toLowerCase();
+  const source = String(item?.source || "").toLowerCase();
+  return sourceClass === "pinterest" || source === "pinterest";
+}
+
 function filterFlowCatalog(catalog, mode, targetIntensity) {
   if (targetIntensity != null || mode === "favorites") return catalog;
   const filter = sourceFilter();
   if (filter === "amateur") return catalog.filter(isAmateurItem);
   if (filter === "pro") return catalog.filter(isProItem);
+  if (filter === "pinterest") return catalog.filter(isPinterestItem);
   return catalog;
 }
 
@@ -203,11 +210,34 @@ function rankLatest(catalog, exclusions, limit) {
     .slice(0, Math.max(1, Number(limit) || 70));
 }
 
+function rankPinterest(catalog, mode, exclusions, limit) {
+  const rows = catalog
+    .filter(item => isPinterestItem(item) && item?.id && item?.image_url && !exclusions.has(item.id))
+    .map(item => ({
+      item,
+      score: mode === "latest"
+        ? (Number(item?.published_at_ms) || 0) / 1e12
+        : 1000 - Math.min(999, Math.max(1, Number(item?.rank) || 999))
+    }));
+  rows.sort((a, b) =>
+    b.score - a.score
+    || (Number(a.item?.rank) || 999) - (Number(b.item?.rank) || 999)
+    || String(a.item.id).localeCompare(String(b.item.id))
+  );
+  return rows.slice(0, Math.max(1, Number(limit) || 70));
+}
+
 export const scoreItem = coreScoreItem;
 
 export function rankCandidates(catalog, state, mode = "personal", exclusions = new Set(), targetIntensity = null, limit = 70) {
   const resolved = resolvedMode(mode, targetIntensity);
   const filteredCatalog = filterFlowCatalog(catalog, resolved, targetIntensity);
+  const filter = sourceFilter();
+
+  // Pinterest stays isolated from Velvet's cross-source preference model.
+  if (targetIntensity == null && filter === "pinterest") {
+    return rankPinterest(filteredCatalog, resolved, exclusions, limit);
+  }
 
   if (targetIntensity == null && resolved === "personal") {
     return rankRecommended(filteredCatalog, state, exclusions, limit);
