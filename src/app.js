@@ -14,6 +14,13 @@ import {
   rankCandidates
 } from "./recommender.js?v=46";
 import { loadCatalog, preloadImages } from "./content.js?v=46";
+import {
+  archiveFavorite,
+  backfillFavoriteArchive,
+  clearFavoriteArchive,
+  getArchivedFavorites,
+  removeFavoriteArchive
+} from "./favorite-archive.js?v=49.5";
 
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
@@ -159,7 +166,10 @@ function flowListItems() {
   if (!catalog.length) return [];
   if (flowMode === "favorites") {
     const byId = new Map(catalog.map(item => [item.id, item]));
-    return (state.likedItemIds || []).map(id => byId.get(id)).filter(Boolean);
+    const archived = new Map(getArchivedFavorites(state.likedItemIds).map(item => [item.id, item]));
+    return (state.likedItemIds || [])
+      .map(id => archived.get(id) || byId.get(id))
+      .filter(Boolean);
   }
   const limit = Math.min(FLOW_GRID_LIMIT, Math.max(1, catalog.length));
   return rankCandidates(catalog, state, flowMode, new Set(), null, limit).map(row => row.item);
@@ -345,11 +355,13 @@ function toggleFlowGridFavorite(item) {
   if (wasSaved) {
     state.likedItemIds = state.likedItemIds.filter(id => id !== item.id);
     state = saveState(applyHistoryPolicy(state));
+    removeFavoriteArchive(item);
     lastFlowAction = { item, stateBefore, kind: "unfavorite", modeBefore: flowMode };
     window.dispatchEvent(new CustomEvent("velvet:flow-feedback", { detail: { reaction: "unfavorite" } }));
   } else {
     state = recordReaction(state, item, "like");
     const saved = isFavorite(item);
+    if (saved) archiveFavorite(item);
     lastFlowAction = { item, stateBefore, kind: "like", modeBefore: flowMode };
     window.dispatchEvent(new CustomEvent("velvet:flow-feedback", { detail: { reaction: "like", saved } }));
   }
@@ -528,6 +540,7 @@ function removeCurrentFavorite() {
 
   state.likedItemIds = state.likedItemIds.filter(id => id !== item.id);
   state = saveState(applyHistoryPolicy(state));
+  removeFavoriteArchive(item);
   lastFlowAction = { item, stateBefore, kind: "unfavorite", modeBefore };
 
   let nextFavorite = null;
@@ -567,6 +580,8 @@ function undoLastFlowAction() {
   clearTimeout(flowTransitionTimer);
   flowTransitionTimer = null;
   state = saveState(action.stateBefore);
+  if (action.kind === "unfavorite" && isFavorite(action.item)) archiveFavorite(action.item);
+  if (action.kind === "like" && !isFavorite(action.item)) removeFavoriteArchive(action.item, 0);
   clearFlowNavigation();
 
   if (action.kind === "unfavorite" && action.modeBefore === "favorites") {
@@ -604,11 +619,13 @@ function status(message) {
 }
 
 function saveSettings() {
+  const hadFavorites = (state.likedItemIds || []).length > 0;
   state.settings.privacyBlur = els.privacyBlurSetting.checked;
   state.settings.resumeLastItem = els.resumeSetting.checked;
   state.settings.reducedMotion = els.reducedMotionSetting.checked;
   state.settings.historyMode = els.historyModeSetting.value;
   state = saveState(applyHistoryPolicy(state));
+  if (hadFavorites && !(state.likedItemIds || []).length) void clearFavoriteArchive();
   applyMotionPreference();
   window.dispatchEvent(new CustomEvent("velvet:favorites-changed"));
   publishFlowItem();
@@ -621,6 +638,7 @@ async function reloadCatalog() {
   catalogInfo = await loadCatalog();
   catalog = catalogInfo.catalog;
   catalogReady = true;
+  backfillFavoriteArchive(state.likedItemIds, catalog);
   flowViewerItems = [];
   flowExclusions.clear();
   runtimeSeenByMode.clear();
@@ -696,12 +714,14 @@ function bindEvents() {
   });
   els.clearHistoryButton.addEventListener("click", () => {
     state = clearHistory(state);
+    void clearFavoriteArchive();
     resetActiveExperience();
     window.dispatchEvent(new CustomEvent("velvet:favorites-changed"));
     status("History cleared");
   });
   els.clearAllButton.addEventListener("click", () => {
     state = clearAll();
+    void clearFavoriteArchive();
     syncSettingsUi();
     applyMotionPreference();
     resetActiveExperience();
@@ -727,6 +747,7 @@ async function init() {
   catalogInfo = await loadCatalog();
   catalog = catalogInfo.catalog;
   catalogReady = true;
+  backfillFavoriteArchive(state.likedItemIds, catalog);
   state = recordModeUse(state, "flow");
 
   if (appUnlocked) {
@@ -739,7 +760,7 @@ async function init() {
   }
 
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-    navigator.serviceWorker.register("./sw.js").catch(() => {});
+    navigator.serviceWorker.register("./sw.js?v=49.5").catch(() => {});
   }
 }
 
