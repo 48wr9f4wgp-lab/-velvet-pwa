@@ -60,8 +60,8 @@ jobs:
             './styles.css?v=48',
             './src/image-guard.js?v=44',
             './src/flow-presets.js?v=49.2',
-            './src/input-guard.js?v=49.4',
-            './src/app.js?v=49.4'
+            './src/input-guard.js?v=49.4.1',
+            './src/app.js?v=49.4.1'
           ]) {
             if (!html.includes(token)) throw new Error(`index contract missing: ${token}`);
           }
@@ -231,8 +231,8 @@ jobs:
           const css = fs.readFileSync('flow-ux.css','utf8');
 
           for (const token of [
-            './src/input-guard.js?v=49.4',
-            './src/app.js?v=49.4'
+            './src/input-guard.js?v=49.4.1',
+            './src/app.js?v=49.4.1'
           ]) {
             if (!html.includes(token)) throw new Error(`v49.3 asset version missing: ${token}`);
           }
@@ -256,7 +256,7 @@ jobs:
             if (!app.includes(token)) throw new Error(`Fullscreen favorite app bridge missing: ${token}`);
           }
 
-          if (!input.includes('import "./media-viewer.js?v=49.4";')) {
+          if (!input.includes('import "./media-viewer.js?v=49.4.1";')) {
             throw new Error('Fullscreen viewer media cache bust missing');
           }
 
@@ -275,7 +275,12 @@ jobs:
             'gesture.zoom <= 1',
             'renderViewerItem(flowItem, { resetZoom: true })',
             'velvet:media-viewer-close',
-            '左右スワイプ · ダブルタップで拡大'
+            '左右スワイプ · ダブルタップ / ピンチで拡大',
+            'const activePointers = new Map()',
+            'Math.max(1, Math.min(4',
+            'moved > 18',
+            'now - lastTapAt < 420',
+            'Math.hypot(event.clientX - lastTapPoint.x'
           ]) {
             if (!viewer.includes(token)) throw new Error(`Fullscreen swipe viewer contract missing: ${token}`);
           }
@@ -291,7 +296,7 @@ jobs:
             if (!app.includes(token)) throw new Error(`Fullscreen swipe app contract missing: ${token}`);
           }
 
-          if (!input.includes('./flow-ux.css?v=49.4')) {
+          if (!input.includes('./flow-ux.css?v=49.4.1')) {
             throw new Error('Fullscreen swipe CSS cache bust missing');
           }
 
@@ -318,7 +323,7 @@ jobs:
               throw new Error(`Public Pinterest runtime still exposed: ${forbidden}`);
             }
           }
-          if (!input.includes('./flow-ux.css?v=49.4')) throw new Error('Retirement CSS cache bust missing');
+          if (!input.includes('./flow-ux.css?v=49.4.1')) throw new Error('Retirement CSS cache bust missing');
           console.log('Pinterest public widget retired');
           NODE
 
