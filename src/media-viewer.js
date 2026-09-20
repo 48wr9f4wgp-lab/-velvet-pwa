@@ -30,7 +30,7 @@ function ensureViewer() {
     <div class="media-viewer__stage">
       <img id="mediaViewerImage" alt="" draggable="false" />
     </div>
-    <p class="media-viewer__hint">ダブルタップで拡大</p>
+    <p id="mediaViewerHint" class="media-viewer__hint">左右スワイプ · ダブルタップで拡大</p>
   `;
   document.body.append(viewer);
 
@@ -48,7 +48,7 @@ function ensureViewer() {
   const image = viewer.querySelector("#mediaViewerImage");
   image?.addEventListener("pointerdown", event => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    dragging = { id: event.pointerId, x: event.clientX, y: event.clientY, panX, panY };
+    dragging = { id: event.pointerId, x: event.clientX, y: event.clientY, panX, panY, zoom };
     image.setPointerCapture?.(event.pointerId);
   });
   image?.addEventListener("pointermove", event => {
@@ -61,9 +61,24 @@ function ensureViewer() {
   });
   image?.addEventListener("pointerup", event => {
     if (!dragging || dragging.id !== event.pointerId) return;
-    const moved = Math.hypot(event.clientX - dragging.x, event.clientY - dragging.y);
+    const gesture = dragging;
+    const dx = event.clientX - gesture.x;
+    const dy = event.clientY - gesture.y;
+    const moved = Math.hypot(dx, dy);
     image.releasePointerCapture?.(event.pointerId);
     dragging = null;
+
+    if (gesture.zoom <= 1 && activeScope === "flow") {
+      const horizontalSwipe = Math.abs(dx) >= 56 && Math.abs(dx) > Math.abs(dy) * 1.15;
+      if (horizontalSwipe) {
+        lastTapAt = 0;
+        window.dispatchEvent(new CustomEvent("velvet:flow-viewer-navigate", {
+          detail: { direction: dx < 0 ? "next" : "previous" }
+        }));
+        return;
+      }
+    }
+
     if (moved > 8) return;
     const now = performance.now();
     if (now - lastTapAt < 320) {
@@ -115,6 +130,29 @@ function toggleZoom() {
   applyTransform();
 }
 
+function syncViewerHint() {
+  const hint = document.querySelector("#mediaViewerHint");
+  if (!hint) return;
+  hint.textContent = activeScope === "flow"
+    ? "左右スワイプ · ダブルタップで拡大"
+    : "ダブルタップで拡大";
+}
+
+function renderViewerItem(item, { resetZoom = false } = {}) {
+  if (!item?.image_url) return;
+  const viewer = ensureViewer();
+  const image = viewer.querySelector("#mediaViewerImage");
+  const source = viewer.querySelector("#mediaViewerSource");
+  const intensity = viewer.querySelector("#mediaViewerIntensity");
+  if (resetZoom) resetTransform();
+  image.src = item.image_url;
+  image.alt = "Velvet image focus";
+  source.textContent = item.source_label || item.source || "Velvet";
+  intensity.textContent = `I${Math.round(Number(item.intensity) || 3)}`;
+  syncViewerFavoriteButton();
+  syncViewerHint();
+}
+
 function syncViewerFavoriteButton() {
   const button = document.querySelector("#mediaViewerFavorite");
   if (!button) return;
@@ -129,16 +167,8 @@ function openViewer(scope) {
   const item = scope === "session" ? sessionItem : flowItem;
   if (!item?.image_url) return;
   const viewer = ensureViewer();
-  const image = viewer.querySelector("#mediaViewerImage");
-  const source = viewer.querySelector("#mediaViewerSource");
-  const intensity = viewer.querySelector("#mediaViewerIntensity");
   activeScope = scope;
-  resetTransform();
-  image.src = item.image_url;
-  image.alt = "Velvet image focus";
-  source.textContent = item.source_label || item.source || "Velvet";
-  intensity.textContent = `I${Math.round(Number(item.intensity) || 3)}`;
-  syncViewerFavoriteButton();
+  renderViewerItem(item, { resetZoom: true });
   viewer.classList.add("is-open");
   viewer.setAttribute("aria-hidden", "false");
   document.documentElement.classList.add("media-viewer-open");
@@ -147,11 +177,18 @@ function openViewer(scope) {
 function closeViewer() {
   const viewer = document.querySelector("#mediaViewer");
   if (!viewer) return;
+  const closingScope = activeScope;
+  const closingItem = closingScope === "session" ? sessionItem : flowItem;
   viewer.classList.remove("is-open", "is-zoomed");
   viewer.setAttribute("aria-hidden", "true");
   document.documentElement.classList.remove("media-viewer-open");
   activeScope = null;
   resetTransform();
+  if (closingScope) {
+    window.dispatchEvent(new CustomEvent("velvet:media-viewer-close", {
+      detail: { scope: closingScope, id: String(closingItem?.id || "") }
+    }));
+  }
 }
 
 function isDemoItem(item) {
@@ -166,9 +203,16 @@ function openScriptableFeedSync() {
 }
 
 window.addEventListener("velvet:flow-item", event => {
+  const previousId = flowItem?.id || "";
   flowItem = event.detail?.item || null;
   flowFavorite = event.detail?.favorite === true;
-  if (activeScope === "flow") syncViewerFavoriteButton();
+  if (activeScope === "flow") {
+    if (flowItem?.id && flowItem.id !== previousId) {
+      renderViewerItem(flowItem, { resetZoom: true });
+    } else {
+      syncViewerFavoriteButton();
+    }
+  }
 });
 window.addEventListener("velvet:session-item", event => { sessionItem = event.detail?.item || null; });
 window.addEventListener("velvet:media-tap", event => {
@@ -186,7 +230,16 @@ window.addEventListener("resize", () => {
   applyTransform();
 });
 document.addEventListener("keydown", event => {
-  if (event.key === "Escape") closeViewer();
+  if (event.key === "Escape") {
+    closeViewer();
+    return;
+  }
+  if (activeScope !== "flow" || zoom > 1) return;
+  if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+    window.dispatchEvent(new CustomEvent("velvet:flow-viewer-navigate", {
+      detail: { direction: event.key === "ArrowLeft" ? "previous" : "next" }
+    }));
+  }
 });
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "hidden") closeViewer();
