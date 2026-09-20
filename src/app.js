@@ -12,8 +12,8 @@ import {
 import {
   chooseNext,
   rankCandidates
-} from "./recommender.js?v=49";
-import { loadCatalog, loadPinterestCatalog, preloadImages } from "./content.js?v=49";
+} from "./recommender.js?v=46";
+import { loadCatalog, preloadImages } from "./content.js?v=46";
 
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
@@ -21,14 +21,10 @@ const $$ = selector => [...document.querySelectorAll(selector)];
 let state = loadState();
 let catalog = [];
 let catalogInfo = null;
-let primaryCatalog = [];
-let primaryCatalogInfo = null;
-let pinterestStatus = "";
 let catalogReady = false;
 let appUnlocked = false;
 let currentItem = null;
 const FLOW_PRESET_KEY = "velvet_private_v2_flow_preset";
-const FLOW_SOURCE_FILTER_KEY = "velvet_private_v3_source_filter";
 const VALID_FLOW_MODES = new Set(["soft", "personal", "pro", "intense", "favorites", "explore", "popular", "latest"]);
 function readFlowMode() {
   try {
@@ -39,23 +35,6 @@ function readFlowMode() {
     return "personal";
   }
 }
-function readSourceFilter() {
-  try {
-    return localStorage.getItem(FLOW_SOURCE_FILTER_KEY) || "all";
-  } catch (_) {
-    return "all";
-  }
-}
-
-function isPinterestFilter() {
-  return readSourceFilter() === "pinterest";
-}
-
-function isPinterestItem(item) {
-  return String(item?.source_class || "").toLowerCase() === "pinterest"
-    || String(item?.source || "").toLowerCase() === "pinterest";
-}
-
 let flowMode = readFlowMode();
 let lastFlowAction = null;
 let flowTransitionTimer = null;
@@ -177,20 +156,6 @@ function imageFailed(img) {
 
 function flowListItems() {
   if (!catalog.length) return [];
-
-  if (isPinterestFilter()) {
-    const rows = catalog.filter(isPinterestItem);
-    if (flowMode === "latest") {
-      rows.sort((a, b) =>
-        (Number(b?.published_at_ms) || 0) - (Number(a?.published_at_ms) || 0)
-        || (Number(a?.rank) || 999) - (Number(b?.rank) || 999)
-      );
-    } else {
-      rows.sort((a, b) => (Number(a?.rank) || 999) - (Number(b?.rank) || 999));
-    }
-    return rows.slice(0, FLOW_GRID_LIMIT);
-  }
-
   if (flowMode === "favorites") {
     const byId = new Map(catalog.map(item => [item.id, item]));
     return (state.likedItemIds || []).map(id => byId.get(id)).filter(Boolean);
@@ -202,11 +167,9 @@ function flowListItems() {
 function updateFlowGridStatus() {
   if (!els.flowGridStatus || !els.flowGridSentinel) return;
   if (!flowGridItems.length) {
-    els.flowGridStatus.textContent = isPinterestFilter()
-      ? (pinterestStatus || "Pinterestに表示できるPinがありません")
-      : flowMode === "favorites"
-        ? "お気に入りはまだありません"
-        : "表示できる項目がありません";
+    els.flowGridStatus.textContent = flowMode === "favorites"
+      ? "お気に入りはまだありません"
+      : "表示できる項目がありません";
     els.flowGridSentinel.hidden = true;
     return;
   }
@@ -227,20 +190,10 @@ function buildFlowGridCard(item, index) {
   card.className = "flow-grid-card";
   card.dataset.itemId = item.id;
 
-  const pinterest = isPinterestItem(item);
-  const media = document.createElement(pinterest ? "a" : "button");
-  if (pinterest) {
-    media.href = item.page_url || "https://www.pinterest.com/";
-    media.target = "_blank";
-    media.rel = "noopener noreferrer";
-    media.className = "flow-grid-card__media";
-    media.setAttribute("aria-label", "PinterestでPinを見る");
-    card.classList.add("flow-grid-card--pinterest");
-  } else {
-    media.type = "button";
-    media.className = "flow-grid-card__media";
-    media.setAttribute("aria-label", "画像を開く");
-  }
+  const media = document.createElement("button");
+  media.type = "button";
+  media.className = "flow-grid-card__media";
+  media.setAttribute("aria-label", "画像を開く");
 
   const img = document.createElement("img");
   img.alt = "";
@@ -262,26 +215,14 @@ function buildFlowGridCard(item, index) {
   img.addEventListener("load", () => card.classList.remove("image-failed"));
 
   media.append(img);
-  if (!pinterest) media.addEventListener("click", () => openFlowGridItem(item));
+  media.addEventListener("click", () => openFlowGridItem(item));
 
-  const source = pinterest ? "" : gridSourceLabel(item);
+  const source = gridSourceLabel(item);
   if (source) {
     const badge = document.createElement("span");
     badge.className = "flow-grid-card__source";
     badge.textContent = source;
     media.append(badge);
-  }
-
-  if (pinterest) {
-    const sourceLink = document.createElement("a");
-    sourceLink.className = "flow-grid-card__pinterest-link";
-    sourceLink.href = item.page_url || "https://www.pinterest.com/";
-    sourceLink.target = "_blank";
-    sourceLink.rel = "noopener noreferrer";
-    sourceLink.textContent = "Pinterestで見る ↗";
-    sourceLink.setAttribute("aria-label", "Pinterestで元のPinを見る");
-    card.append(media, sourceLink);
-    return card;
   }
 
   const favorite = document.createElement("button");
@@ -343,7 +284,7 @@ function syncFlowGridFavoriteStates() {
 }
 
 function openFlowGridItem(item) {
-  if (!item?.id || isPinterestItem(item)) return;
+  if (!item?.id) return;
   currentItem = item;
   state = recordView(state, item);
   publishFlowItem(item);
@@ -353,7 +294,7 @@ function openFlowGridItem(item) {
 }
 
 function toggleFlowGridFavorite(item) {
-  if (!item?.id || isPinterestItem(item)) return;
+  if (!item?.id) return;
   const stateBefore = JSON.parse(JSON.stringify(state));
   const wasSaved = isFavorite(item);
 
@@ -629,58 +570,17 @@ function saveSettings() {
   status("Saved locally");
 }
 
-function resetFlowAfterCatalogChange({ resetScroll = true } = {}) {
+async function reloadCatalog() {
+  catalogReady = false;
+  setHidden(els.emptyState, true);
+  catalogInfo = await loadCatalog();
+  catalog = catalogInfo.catalog;
+  catalogReady = true;
   flowExclusions.clear();
   runtimeSeenByMode.clear();
   clearFlowNavigation();
   currentItem = null;
-  lastFlowAction = null;
-  if (appUnlocked) refreshFlowGrid({ resetScroll });
-}
-
-async function activateSourceCatalog(filter = readSourceFilter()) {
-  if (filter !== "pinterest") {
-    catalog = primaryCatalog;
-    catalogInfo = primaryCatalogInfo;
-    catalogReady = true;
-    pinterestStatus = "";
-    resetFlowAfterCatalogChange();
-    return;
-  }
-
-  catalogReady = false;
-  catalog = [];
-  pinterestStatus = "Pinterestを読み込み中…";
-  resetFlowAfterCatalogChange();
-
-  const info = await loadPinterestCatalog();
-  if (readSourceFilter() !== "pinterest") return;
-
-  catalog = info.catalog;
-  catalogInfo = info;
-  catalogReady = true;
-  pinterestStatus = info.catalog.length
-    ? ""
-    : info.configured === false
-      ? "Pinterestは未接続です"
-      : "Pinterestを読み込めません";
-  resetFlowAfterCatalogChange();
-}
-
-async function reloadCatalog() {
-  setHidden(els.emptyState, true);
-  if (isPinterestFilter()) {
-    await activateSourceCatalog("pinterest");
-    return;
-  }
-
-  catalogReady = false;
-  primaryCatalogInfo = await loadCatalog();
-  primaryCatalog = primaryCatalogInfo.catalog;
-  catalog = primaryCatalog;
-  catalogInfo = primaryCatalogInfo;
-  catalogReady = true;
-  resetFlowAfterCatalogChange();
+  if (appUnlocked) refreshFlowGrid({ resetScroll: true });
 }
 
 function bindEvents() {
@@ -696,9 +596,13 @@ function bindEvents() {
     state = recordModeUse(state, `flow:${flowMode}`);
     if (catalogReady && appUnlocked) refreshFlowGrid({ resetScroll: true });
   });
-  window.addEventListener("velvet:flow-filter", async event => {
-    const filter = event.detail?.id || readSourceFilter();
-    await activateSourceCatalog(filter);
+  window.addEventListener("velvet:flow-filter", () => {
+    lastFlowAction = null;
+    flowExclusions.clear();
+    runtimeSeenByMode.clear();
+    clearFlowNavigation();
+    currentItem = null;
+    if (catalogReady && appUnlocked) refreshFlowGrid({ resetScroll: true });
   });
   els.unlockButton.addEventListener("click", revealApp);
   els.returnButton.addEventListener("click", () => {
@@ -759,16 +663,10 @@ async function init() {
 
   if (!state.settings.privacyBlur) revealApp();
 
-  primaryCatalogInfo = await loadCatalog();
-  primaryCatalog = primaryCatalogInfo.catalog;
-  catalogInfo = primaryCatalogInfo;
-  catalog = primaryCatalog;
+  catalogInfo = await loadCatalog();
+  catalog = catalogInfo.catalog;
   catalogReady = true;
   state = recordModeUse(state, "flow");
-
-  if (isPinterestFilter()) {
-    await activateSourceCatalog("pinterest");
-  }
 
   if (appUnlocked) {
     refreshFlowGrid({ resetScroll: true });
