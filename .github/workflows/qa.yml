@@ -251,6 +251,8 @@ jobs:
           }
           if (!input.includes('./flow-ux.css?v=49')) throw new Error('Pinterest CSS cache bust missing');
           if (!css.includes('.flow-grid-card__pinterest-link')) throw new Error('Pinterest source-link styling missing');
+          if (!css.includes('.flow-grid-card--pinterest .flow-grid-card__media img')) throw new Error('Pinterest full-image presentation missing');
+          if (!css.includes('object-fit: contain')) throw new Error('Pinterest image must not be cropped');
           if (!css.includes('.flow-query-section--filters .flow-option-grid')) throw new Error('Four-source filter layout missing');
           console.log('Pinterest v49 contracts OK');
           NODE
