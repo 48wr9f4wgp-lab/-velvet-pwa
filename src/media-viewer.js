@@ -6,7 +6,10 @@ let zoom = 1;
 let panX = 0;
 let panY = 0;
 let dragging = null;
+let pinchGesture = null;
+const activePointers = new Map();
 let lastTapAt = 0;
+let lastTapPoint = null;
 
 function ensureViewer() {
   let viewer = document.querySelector("#mediaViewer");
@@ -30,7 +33,7 @@ function ensureViewer() {
     <div class="media-viewer__stage">
       <img id="mediaViewerImage" alt="" draggable="false" />
     </div>
-    <p id="mediaViewerHint" class="media-viewer__hint">左右スワイプ · ダブルタップで拡大</p>
+    <p id="mediaViewerHint" class="media-viewer__hint">左右スワイプ · ダブルタップ / ピンチで拡大</p>
   `;
   document.body.append(viewer);
 
@@ -48,10 +51,42 @@ function ensureViewer() {
   const image = viewer.querySelector("#mediaViewerImage");
   image?.addEventListener("pointerdown", event => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    dragging = { id: event.pointerId, x: event.clientX, y: event.clientY, panX, panY, zoom };
+    activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
     image.setPointerCapture?.(event.pointerId);
+
+    if (activePointers.size === 2) {
+      const [a, b] = [...activePointers.values()];
+      pinchGesture = {
+        distance: Math.hypot(b.x - a.x, b.y - a.y),
+        zoom
+      };
+      dragging = null;
+      lastTapAt = 0;
+      lastTapPoint = null;
+      return;
+    }
+
+    if (activePointers.size === 1) {
+      dragging = { id: event.pointerId, x: event.clientX, y: event.clientY, panX, panY, zoom };
+    }
   });
   image?.addEventListener("pointermove", event => {
+    if (activePointers.has(event.pointerId)) {
+      activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    }
+
+    if (pinchGesture && activePointers.size >= 2) {
+      event.preventDefault();
+      const [a, b] = [...activePointers.values()];
+      const distance = Math.hypot(b.x - a.x, b.y - a.y);
+      if (pinchGesture.distance > 0) {
+        zoom = Math.max(1, Math.min(4, pinchGesture.zoom * (distance / pinchGesture.distance)));
+        clampPan();
+        applyTransform();
+      }
+      return;
+    }
+
     if (!dragging || dragging.id !== event.pointerId || zoom <= 1) return;
     event.preventDefault();
     panX = dragging.panX + event.clientX - dragging.x;
@@ -60,18 +95,39 @@ function ensureViewer() {
     applyTransform();
   });
   image?.addEventListener("pointerup", event => {
-    if (!dragging || dragging.id !== event.pointerId) return;
-    const gesture = dragging;
-    const dx = event.clientX - gesture.x;
-    const dy = event.clientY - gesture.y;
-    const moved = Math.hypot(dx, dy);
+    const gesture = dragging?.id === event.pointerId ? dragging : null;
+    const dx = gesture ? event.clientX - gesture.x : 0;
+    const dy = gesture ? event.clientY - gesture.y : 0;
+    const moved = gesture ? Math.hypot(dx, dy) : 0;
+
+    activePointers.delete(event.pointerId);
     image.releasePointerCapture?.(event.pointerId);
+
+    if (pinchGesture) {
+      if (activePointers.size < 2) pinchGesture = null;
+      dragging = null;
+      lastTapAt = 0;
+      lastTapPoint = null;
+      if (zoom < 1.04) {
+        zoom = 1;
+        panX = 0;
+        panY = 0;
+        applyTransform();
+      }
+      return;
+    }
+
+    if (!gesture) {
+      dragging = null;
+      return;
+    }
     dragging = null;
 
     if (gesture.zoom <= 1 && activeScope === "flow") {
       const horizontalSwipe = Math.abs(dx) >= 56 && Math.abs(dx) > Math.abs(dy) * 1.15;
       if (horizontalSwipe) {
         lastTapAt = 0;
+        lastTapPoint = null;
         window.dispatchEvent(new CustomEvent("velvet:flow-viewer-navigate", {
           detail: { direction: dx < 0 ? "next" : "previous" }
         }));
@@ -79,16 +135,31 @@ function ensureViewer() {
       }
     }
 
-    if (moved > 8) return;
+    if (moved > 18) {
+      lastTapAt = 0;
+      lastTapPoint = null;
+      return;
+    }
+
     const now = performance.now();
-    if (now - lastTapAt < 320) {
+    const nearLastTap = lastTapPoint
+      ? Math.hypot(event.clientX - lastTapPoint.x, event.clientY - lastTapPoint.y) <= 48
+      : false;
+
+    if (nearLastTap && now - lastTapAt < 420) {
       toggleZoom();
       lastTapAt = 0;
+      lastTapPoint = null;
     } else {
       lastTapAt = now;
+      lastTapPoint = { x: event.clientX, y: event.clientY };
     }
   });
-  image?.addEventListener("pointercancel", () => { dragging = null; });
+  image?.addEventListener("pointercancel", event => {
+    activePointers.delete(event.pointerId);
+    if (activePointers.size < 2) pinchGesture = null;
+    dragging = null;
+  });
 
   return viewer;
 }
@@ -117,6 +188,10 @@ function resetTransform() {
   panX = 0;
   panY = 0;
   dragging = null;
+  pinchGesture = null;
+  activePointers.clear();
+  lastTapAt = 0;
+  lastTapPoint = null;
   applyTransform();
 }
 
@@ -134,8 +209,8 @@ function syncViewerHint() {
   const hint = document.querySelector("#mediaViewerHint");
   if (!hint) return;
   hint.textContent = activeScope === "flow"
-    ? "左右スワイプ · ダブルタップで拡大"
-    : "ダブルタップで拡大";
+    ? "左右スワイプ · ダブルタップ / ピンチで拡大"
+    : "ダブルタップ / ピンチで拡大";
 }
 
 function renderViewerItem(item, { resetZoom = false } = {}) {
