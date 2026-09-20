@@ -273,8 +273,15 @@ html.media-viewer-open body {
   white-space: nowrap;
 }
 
-.media-viewer__close {
+.media-viewer__actions {
   pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.media-viewer__favorite,
+.media-viewer__close {
   width: 44px;
   height: 44px;
   border-radius: 16px;
@@ -282,10 +289,30 @@ html.media-viewer-open body {
   background: rgba(20,20,24,.68);
   color: #fff;
   font: inherit;
-  font-size: 28px;
   line-height: 1;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
+}
+
+.media-viewer__favorite {
+  font-size: 19px;
+  color: rgba(255,255,255,.72);
+  transition: transform .10s ease, background .14s ease, border-color .14s ease, color .14s ease;
+}
+
+.media-viewer__favorite:active,
+.media-viewer__close:active {
+  transform: scale(.92);
+}
+
+.media-viewer__favorite.is-saved {
+  color: #eadcff;
+  border-color: rgba(233,213,255,.46);
+  background: rgba(126,34,206,.34);
+}
+
+.media-viewer__close {
+  font-size: 28px;
 }
 
 .media-viewer__stage {
