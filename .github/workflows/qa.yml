@@ -362,12 +362,6 @@ jobs:
             setItem(key, value) { values.set(key, String(value)); },
             removeItem(key) { values.delete(key); }
           };
-          globalThis.navigator = {
-            storage: {
-              async persisted() { return true; },
-              async persist() { return true; }
-            }
-          };
           const cached = new Map();
           globalThis.caches = {
             async open() {
