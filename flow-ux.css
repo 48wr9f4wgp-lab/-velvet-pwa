@@ -365,6 +365,17 @@ html.media-viewer-open body {
   opacity: .28;
 }
 
+.media-viewer__stage img {
+  backface-visibility: hidden;
+}
+
+@media (max-width: 380px) {
+  .media-viewer__hint {
+    font-size: 9px;
+    padding-inline: 9px;
+  }
+}
+
 @media (max-width: 699px) {
   .settings-dialog {
     position: fixed;
