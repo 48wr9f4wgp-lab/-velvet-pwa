@@ -1,4 +1,5 @@
 let flowItem = null;
+let flowFavorite = false;
 let sessionItem = null;
 let activeScope = null;
 let zoom = 1;
@@ -21,7 +22,10 @@ function ensureViewer() {
         <span id="mediaViewerSource">Velvet</span>
         <span id="mediaViewerIntensity">—</span>
       </div>
-      <button id="mediaViewerClose" class="media-viewer__close" type="button" aria-label="閉じる">×</button>
+      <div class="media-viewer__actions">
+        <button id="mediaViewerFavorite" class="media-viewer__favorite" type="button" aria-label="お気に入りに追加" aria-pressed="false">♥</button>
+        <button id="mediaViewerClose" class="media-viewer__close" type="button" aria-label="閉じる">×</button>
+      </div>
     </div>
     <div class="media-viewer__stage">
       <img id="mediaViewerImage" alt="" draggable="false" />
@@ -31,6 +35,12 @@ function ensureViewer() {
   document.body.append(viewer);
 
   viewer.querySelector("#mediaViewerClose")?.addEventListener("click", closeViewer);
+  viewer.querySelector("#mediaViewerFavorite")?.addEventListener("click", () => {
+    if (activeScope !== "flow" || !flowItem?.id) return;
+    window.dispatchEvent(new CustomEvent("velvet:flow-toggle-favorite", {
+      detail: { id: flowItem.id }
+    }));
+  });
   viewer.addEventListener("click", event => {
     if (event.target === viewer || event.target?.classList?.contains("media-viewer__stage")) closeViewer();
   });
@@ -105,6 +115,16 @@ function toggleZoom() {
   applyTransform();
 }
 
+function syncViewerFavoriteButton() {
+  const button = document.querySelector("#mediaViewerFavorite");
+  if (!button) return;
+  const visible = activeScope === "flow" && !!flowItem?.id;
+  button.hidden = !visible;
+  button.classList.toggle("is-saved", visible && flowFavorite);
+  button.setAttribute("aria-pressed", visible && flowFavorite ? "true" : "false");
+  button.setAttribute("aria-label", flowFavorite ? "お気に入りから外す" : "お気に入りに追加");
+}
+
 function openViewer(scope) {
   const item = scope === "session" ? sessionItem : flowItem;
   if (!item?.image_url) return;
@@ -118,6 +138,7 @@ function openViewer(scope) {
   image.alt = "Velvet image focus";
   source.textContent = item.source_label || item.source || "Velvet";
   intensity.textContent = `I${Math.round(Number(item.intensity) || 3)}`;
+  syncViewerFavoriteButton();
   viewer.classList.add("is-open");
   viewer.setAttribute("aria-hidden", "false");
   document.documentElement.classList.add("media-viewer-open");
@@ -144,7 +165,11 @@ function openScriptableFeedSync() {
   window.location.href = "scriptable:///run/Velvet%20Feed%20Sync";
 }
 
-window.addEventListener("velvet:flow-item", event => { flowItem = event.detail?.item || null; });
+window.addEventListener("velvet:flow-item", event => {
+  flowItem = event.detail?.item || null;
+  flowFavorite = event.detail?.favorite === true;
+  if (activeScope === "flow") syncViewerFavoriteButton();
+});
 window.addEventListener("velvet:session-item", event => { sessionItem = event.detail?.item || null; });
 window.addEventListener("velvet:media-tap", event => {
   const scope = event.detail?.scope === "session" ? "session" : "flow";
