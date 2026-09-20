@@ -40,7 +40,7 @@ jobs:
           for file in \
             index.html styles.css flow-ux.css touch-polish.css manifest.webmanifest sw.js velvet-content.json \
             icons/icon-180.png icons/icon-192.png icons/icon-512.png \
-            src/app.js src/content.js src/flow-presets.js src/input-guard.js src/image-guard.js src/recommender.js src/ui-ja.js; do
+            src/app.js src/content.js src/flow-presets.js src/input-guard.js src/image-guard.js src/recommender.js src/ui-ja.js api/pinterest.js; do
             test -f "$file"
           done
           echo "PWA files OK"
@@ -59,9 +59,9 @@ jobs:
             'id="dragSkip" class="drag-cue drag-cue--skip">進む<',
             './styles.css?v=48',
             './src/image-guard.js?v=44',
-            './src/flow-presets.js?v=45',
-            './src/input-guard.js?v=48',
-            './src/app.js?v=48'
+            './src/flow-presets.js?v=49',
+            './src/input-guard.js?v=49',
+            './src/app.js?v=49'
           ]) {
             if (!html.includes(token)) throw new Error(`index contract missing: ${token}`);
           }
@@ -86,7 +86,7 @@ jobs:
           console.log('UX regression contracts OK');
           NODE
 
-      - name: Flow v45 contracts
+      - name: Flow v49 contracts
         run: |
           node <<'NODE'
           const fs = require('fs');
@@ -95,7 +95,7 @@ jobs:
           const app = fs.readFileSync('src/app.js','utf8');
           const content = fs.readFileSync('src/content.js','utf8');
 
-          for (const token of ['おすすめ','人気','新着','すべて','素人','プロ','♡ お気に入り']) {
+          for (const token of ['おすすめ','人気','新着','すべて','素人','プロ','Pinterest','♡ お気に入り']) {
             if (!flow.includes(token)) throw new Error(`Flow Japanese label missing: ${token}`);
           }
           for (const legacy of ['Soft ·','Personal ·','Intense ·','Explore ·']) {
@@ -106,13 +106,16 @@ jobs:
             'resolved === "popular"',
             'resolved === "latest"',
             'isAmateurItem',
-            'isProItem'
+            'isProItem',
+            'isPinterestItem',
+            '"pinterest"'
           ]) {
             if (!recommender.includes(token)) throw new Error(`Flow recommender contract missing: ${token}`);
           }
           if (!app.includes('"popular", "latest"')) throw new Error('Flow modes popular/latest missing from app');
           if (!app.includes('"velvet:flow-filter"')) throw new Error('Flow filter event missing from app');
           if (!content.includes('X_EPOCH_MS = 1288834974657n')) throw new Error('X post-time derivation missing');
+          if (!content.includes('export async function loadPinterestCatalog()')) throw new Error('Pinterest live loader missing');
           const feed = JSON.parse(fs.readFileSync('velvet-content.json','utf8'));
           const classCounts = (feed.items || []).reduce((acc, item) => {
             const key = String(item.source_class || 'mixed');
@@ -121,7 +124,7 @@ jobs:
           }, {});
           if ((classCounts.personal || 0) < 3) throw new Error('Amateur/personal feed class has too few items');
           if ((classCounts.pro || 0) < 3) throw new Error('Pro feed class has too few items');
-          console.log('Flow v45 static contracts OK', classCounts);
+          console.log('Flow v49 static contracts OK', classCounts);
           NODE
 
           node --input-type=module <<'NODE'
@@ -147,10 +150,16 @@ jobs:
           localStorage.values.set('velvet_private_v3_source_filter', 'all');
           rows = rankCandidates(catalog, state, 'latest', new Set(), null, 10);
           if (rows[0].item.id !== 'pro-1') throw new Error('Latest ordering is not newest first');
-          console.log('Flow v45 behavior contracts OK');
+
+          catalog.push({ id:'pin-1', image_url:'c', source:'Pinterest', source_class:'pinterest', tags:['pinterest'], rank:1, published_at_ms:4000, baseline:null });
+          localStorage.values.set('velvet_private_v2_flow_preset', 'personal');
+          localStorage.values.set('velvet_private_v3_source_filter', 'pinterest');
+          rows = rankCandidates(catalog, state, 'personal', new Set(), null, 10);
+          if (rows.length !== 1 || rows[0].item.id !== 'pin-1') throw new Error('Pinterest isolation leaked another source');
+          console.log('Flow v49 behavior contracts OK');
           NODE
 
-      - name: Flow grid v48 contracts
+      - name: Flow grid v49 contracts
         run: |
           node <<'NODE'
           const fs = require('fs');
@@ -200,7 +209,50 @@ jobs:
           for (const token of ['height: 100svh','height: 100dvh','max-height: 100dvh']) {
             if (!baseCss.includes(token)) throw new Error(`iOS PWA viewport contract missing: ${token}`);
           }
-          console.log('Flow grid v48 contracts OK');
+          console.log('Flow grid v49 contracts OK');
+          NODE
+
+      - name: Pinterest v49 contracts
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const api = fs.readFileSync('api/pinterest.js','utf8');
+          const app = fs.readFileSync('src/app.js','utf8');
+          const content = fs.readFileSync('src/content.js','utf8');
+          const flow = fs.readFileSync('src/flow-presets.js','utf8');
+          const input = fs.readFileSync('src/input-guard.js','utf8');
+          const css = fs.readFileSync('flow-ux.css','utf8');
+
+          for (const token of [
+            'https://api.pinterest.com/v5',
+            'PINTEREST_ACCESS_TOKEN',
+            'PINTEREST_BOARD_ID',
+            'Cache-Control',
+            'no-store',
+            'pinterest-api-live'
+          ]) {
+            if (!api.includes(token)) throw new Error(`Pinterest API contract missing: ${token}`);
+          }
+          if (api.includes('velvet-content.json') || api.includes('api.github.com')) {
+            throw new Error('Pinterest API data must not be persisted into Velvet/GitHub feed');
+          }
+          if (!flow.includes('{ id: "pinterest", label: "Pinterest" }')) throw new Error('Pinterest category missing');
+          if (flow.includes('import "./session-ux.js"')) throw new Error('Removed Session runtime still imported');
+          if (!content.includes('loadPinterestCatalog')) throw new Error('Pinterest loader missing');
+          if (!content.includes('source_class === "pinterest"')) throw new Error('Pinterest normalization missing');
+          for (const token of [
+            'isPinterestFilter',
+            'isPinterestItem',
+            'Pinterestで見る ↗',
+            'Pinterestは未接続です',
+            'if (!item?.id || isPinterestItem(item)) return;'
+          ]) {
+            if (!app.includes(token)) throw new Error(`Pinterest app contract missing: ${token}`);
+          }
+          if (!input.includes('./flow-ux.css?v=49')) throw new Error('Pinterest CSS cache bust missing');
+          if (!css.includes('.flow-grid-card__pinterest-link')) throw new Error('Pinterest source-link styling missing');
+          if (!css.includes('.flow-query-section--filters .flow-option-grid')) throw new Error('Four-source filter layout missing');
+          console.log('Pinterest v49 contracts OK');
           NODE
 
       - name: Exposure v46.1 contracts
