@@ -99,7 +99,7 @@ export async function requestFavoritePersistence() {
   if (persistenceRequested) return null;
   persistenceRequested = true;
   try {
-    if (!navigator?.storage?.persist) return null;
+    if (typeof navigator === "undefined" || !navigator.storage?.persist) return null;
     const already = await navigator.storage.persisted?.();
     if (already) return true;
     return await navigator.storage.persist();
