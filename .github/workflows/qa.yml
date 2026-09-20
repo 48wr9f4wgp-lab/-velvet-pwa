@@ -24,7 +24,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in src/*.js sw.js velvet-feed-sync.js; do
+          for file in src/*.js api/*.js server/*.js sw.js velvet-feed-sync.js; do
             node --check "$file"
           done
           cat feed-base/part-*.txt > /tmp/velvet-feed-base.js
@@ -40,7 +40,9 @@ jobs:
           for file in \
             index.html styles.css flow-ux.css touch-polish.css manifest.webmanifest sw.js velvet-content.json \
             icons/icon-180.png icons/icon-192.png icons/icon-512.png \
-            src/app.js src/content.js src/flow-presets.js src/input-guard.js src/image-guard.js src/recommender.js src/ui-ja.js; do
+            src/app.js src/content.js src/flow-presets.js src/input-guard.js src/image-guard.js src/recommender.js src/ui-ja.js src/pinterest-private.js \
+            server/pinterest-session.js api/pinterest-status.js api/pinterest-connect.js api/pinterest-callback.js \
+            api/pinterest-disconnect.js api/pinterest-boards.js api/pinterest-pins.js; do
             test -f "$file"
           done
           echo "PWA files OK"
@@ -59,8 +61,9 @@ jobs:
             'id="dragSkip" class="drag-cue drag-cue--skip">進む<',
             './styles.css?v=48',
             './src/image-guard.js?v=44',
-            './src/flow-presets.js?v=49.2',
-            './src/input-guard.js?v=49.2',
+            './src/flow-presets.js?v=50',
+            './src/input-guard.js?v=50',
+            './src/pinterest-private.js?v=50',
             './src/app.js?v=48'
           ]) {
             if (!html.includes(token)) throw new Error(`index contract missing: ${token}`);
@@ -86,7 +89,7 @@ jobs:
           console.log('UX regression contracts OK');
           NODE
 
-      - name: Flow v49.2 contracts
+      - name: Flow v50 contracts
         run: |
           node <<'NODE'
           const fs = require('fs');
@@ -95,28 +98,22 @@ jobs:
           const app = fs.readFileSync('src/app.js','utf8');
           const content = fs.readFileSync('src/content.js','utf8');
 
-          for (const token of ['おすすめ','人気','新着','すべて','素人','プロ','♡ お気に入り']) {
+          for (const token of ['おすすめ','人気','新着','すべて','素人','プロ','Pinterest','♡ お気に入り']) {
             if (!flow.includes(token)) throw new Error(`Flow Japanese label missing: ${token}`);
           }
           for (const legacy of ['Soft ·','Personal ·','Intense ·','Explore ·']) {
             if (flow.includes(legacy)) throw new Error(`Legacy Flow label still exposed: ${legacy}`);
           }
-          for (const exposed of [
+          for (const token of [
             '{ id: "pinterest", label: "Pinterest" }',
             'filter === "pinterest" ? "Pinterest"',
-            'button.textContent = "Pinterest"'
+            'cleanupLegacyPinterestWidgetState',
+            'velvet_private_v49_pinterest_url'
           ]) {
-            if (flow.includes(exposed)) throw new Error(`Retired public Pinterest category still exposed: ${exposed}`);
+            if (!flow.includes(token)) throw new Error(`Pinterest v50 Flow contract missing: ${token}`);
           }
           if (flow.includes('import "./session-ux.js"')) {
             throw new Error('Removed Session runtime still imported through Flow presets');
-          }
-          for (const token of [
-            'velvet_private_v49_pinterest_url',
-            'retirePinterestWidgetState',
-            'localStorage.setItem(SOURCE_FILTER_KEY, "all")'
-          ]) {
-            if (!flow.includes(token)) throw new Error(`Pinterest retirement migration missing: ${token}`);
           }
           for (const token of [
             'FLOW_SOURCE_FILTER_KEY',
@@ -138,7 +135,7 @@ jobs:
           }, {});
           if ((classCounts.personal || 0) < 3) throw new Error('Amateur/personal feed class has too few items');
           if ((classCounts.pro || 0) < 3) throw new Error('Pro feed class has too few items');
-          console.log('Flow v49.2 static contracts OK', classCounts);
+          console.log('Flow v50 static contracts OK', classCounts);
           NODE
 
           node --input-type=module <<'NODE'
@@ -164,10 +161,10 @@ jobs:
           localStorage.values.set('velvet_private_v3_source_filter', 'all');
           rows = rankCandidates(catalog, state, 'latest', new Set(), null, 10);
           if (rows[0].item.id !== 'pro-1') throw new Error('Latest ordering is not newest first');
-          console.log('Flow v49.2 behavior contracts OK');
+          console.log('Flow v50 behavior contracts OK');
           NODE
 
-      - name: Flow grid v49.2 contracts
+      - name: Flow grid v50 contracts
         run: |
           node <<'NODE'
           const fs = require('fs');
@@ -217,31 +214,128 @@ jobs:
           for (const token of ['height: 100svh','height: 100dvh','max-height: 100dvh']) {
             if (!baseCss.includes(token)) throw new Error(`iOS PWA viewport contract missing: ${token}`);
           }
-          console.log('Flow grid v49.2 contracts OK');
+          console.log('Flow grid v50 contracts OK');
           NODE
 
-      - name: Pinterest retirement v49.2 contracts
+      - name: Pinterest private OAuth v50 contracts
         run: |
           node <<'NODE'
           const fs = require('fs');
           const html = fs.readFileSync('index.html','utf8');
+          const flow = fs.readFileSync('src/flow-presets.js','utf8');
+          const client = fs.readFileSync('src/pinterest-private.js','utf8');
+          const session = fs.readFileSync('server/pinterest-session.js','utf8');
+          const status = fs.readFileSync('api/pinterest-status.js','utf8');
+          const connect = fs.readFileSync('api/pinterest-connect.js','utf8');
+          const callback = fs.readFileSync('api/pinterest-callback.js','utf8');
+          const boards = fs.readFileSync('api/pinterest-boards.js','utf8');
+          const pins = fs.readFileSync('api/pinterest-pins.js','utf8');
           const css = fs.readFileSync('flow-ux.css','utf8');
           const input = fs.readFileSync('src/input-guard.js','utf8');
 
+          for (const token of [
+            'id="pinterestPrivateView"',
+            './src/pinterest-private.js?v=50'
+          ]) {
+            if (!html.includes(token)) throw new Error(`Pinterest v50 HTML missing: ${token}`);
+          }
+
+          for (const token of [
+            '"boards:read"',
+            '"boards:read_secret"',
+            '"pins:read"',
+            '"pins:read_secret"',
+            'aes-256-gcm',
+            '"HttpOnly"',
+            '"Secure"',
+            'SameSite',
+            'velvet_pin_a_v50',
+            'velvet_pin_r_v50',
+            'private, no-store'
+          ]) {
+            if (!session.includes(token)) throw new Error(`Pinterest session security missing: ${token}`);
+          }
           for (const forbidden of [
-            'id="pinterestPanel"',
-            'pinterest-embed.js',
+            'boards:write',
+            'boards:write_secret',
+            'pins:write',
+            'pins:write_secret'
+          ]) {
+            if (session.includes(forbidden)) throw new Error(`Pinterest write scope leaked into read-only v50: ${forbidden}`);
+          }
+
+          if (!connect.includes('https://www.pinterest.com/oauth/')) throw new Error('Pinterest OAuth authorize endpoint missing');
+          if (!connect.includes('response_type') || !connect.includes('"code"')) throw new Error('Authorization Code flow missing');
+          if (!callback.includes('timingSafeEqual')) throw new Error('OAuth state validation is not timing safe');
+          if (!callback.includes('exchangeAuthorizationCode')) throw new Error('OAuth code exchange missing');
+
+          for (const token of [
+            'PINTEREST_APP_ID',
+            'PINTEREST_APP_SECRET',
+            'VELVET_PINTEREST_SESSION_SECRET'
+          ]) {
+            if (!session.includes(token)) throw new Error(`Pinterest server config missing: ${token}`);
+          }
+
+          if (!boards.includes('"/boards"') || !boards.includes('page_size: 250')) throw new Error('Board pagination contract missing');
+          if (!pins.includes('/pins') || !pins.includes('page_size: 50')) throw new Error('Pin paging contract missing');
+
+          for (const token of [
+            'velvet_private_v50_pinterest_board_id',
+            '/api/pinterest-status',
+            '/api/pinterest-connect',
+            '/api/pinterest-boards',
+            '/api/pinterest-pins',
+            '/api/pinterest-disconnect',
+            'pinterest-board-chip',
+            'pinterest-pins-grid'
+          ]) {
+            if (!client.includes(token)) throw new Error(`Pinterest client contract missing: ${token}`);
+          }
+
+          for (const forbidden of [
+            'access_token',
+            'refresh_token',
+            'PINTEREST_APP_SECRET',
             'assets.pinterest.com/js/pinit.js',
-            'Pinterestを接続',
             'embedBoard',
             'embedUser'
           ]) {
-            if (html.includes(forbidden) || css.includes(forbidden)) {
-              throw new Error(`Public Pinterest runtime still exposed: ${forbidden}`);
+            if (client.includes(forbidden)) throw new Error(`Secret/public-widget behavior leaked into client: ${forbidden}`);
+          }
+
+          if (!flow.includes('{ id: "pinterest", label: "Pinterest" }')) throw new Error('Private Pinterest category missing');
+          if (!input.includes('./flow-ux.css?v=50')) throw new Error('Pinterest v50 CSS cache bust missing');
+          for (const token of [
+            '#flowView.pinterest-private-mode #flowGridShell',
+            '.pinterest-private-view',
+            '.pinterest-board-rail',
+            '.pinterest-pins-grid'
+          ]) {
+            if (!css.includes(token)) throw new Error(`Pinterest v50 CSS missing: ${token}`);
+          }
+
+          for (const file of ['velvet-content.json','src/content.js','src/recommender.js']) {
+            const body = fs.readFileSync(file,'utf8');
+            if (body.includes('pinterest-private') || body.includes('PINTEREST_APP_SECRET')) {
+              throw new Error(`Pinterest private data persistence leaked into ${file}`);
             }
           }
-          if (!input.includes('./flow-ux.css?v=49.2')) throw new Error('Retirement CSS cache bust missing');
-          console.log('Pinterest public widget retired');
+
+          if (!status.includes('required_scopes') || !status.includes('redirect_uri')) throw new Error('Pinterest status setup guidance missing');
+
+          console.log('Pinterest private OAuth v50 static contracts OK');
+          NODE
+
+          node --input-type=module <<'NODE'
+          process.env.VELVET_PINTEREST_SESSION_SECRET = 'v'.repeat(48);
+          const { seal, unseal } = await import('./server/pinterest-session.js');
+          const payload = { token: 'private-test-token', expires_at: Date.now() + 60000 };
+          const sealed = seal(payload);
+          if (sealed.includes(payload.token)) throw new Error('Encrypted cookie exposes plaintext token');
+          const opened = unseal(sealed);
+          if (opened?.token !== payload.token) throw new Error('Encrypted Pinterest session round trip failed');
+          console.log('Pinterest encrypted-session behavior OK');
           NODE
 
       - name: Exposure v46.1 contracts
