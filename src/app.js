@@ -46,6 +46,7 @@ const runtimeSeenByMode = new Map();
 const FLOW_GRID_BATCH = 12;
 const FLOW_GRID_LIMIT = 160;
 let flowGridItems = [];
+let flowViewerItems = [];
 let flowGridRendered = 0;
 let flowGridObserver = null;
 
@@ -285,12 +286,55 @@ function syncFlowGridFavoriteStates() {
 
 function openFlowGridItem(item) {
   if (!item?.id) return;
+  flowViewerItems = flowGridItems.slice();
   currentItem = item;
   state = recordView(state, item);
   publishFlowItem(item);
   const index = flowGridItems.findIndex(row => row.id === item.id);
   if (index >= 0) preloadImages(flowGridItems.slice(index + 1, index + 4));
   window.dispatchEvent(new CustomEvent("velvet:media-tap", { detail: { scope: "flow" } }));
+}
+
+function navigateFlowViewer(direction) {
+  const step = direction === "previous" ? -1 : direction === "next" ? 1 : 0;
+  if (!step || !currentItem?.id) return;
+
+  const sequence = flowViewerItems.length ? flowViewerItems : flowGridItems;
+  const currentIndex = sequence.findIndex(item => item.id === currentItem.id);
+  if (currentIndex < 0) return;
+
+  const nextIndex = currentIndex + step;
+  const item = sequence[nextIndex];
+  if (!item?.id) {
+    window.dispatchEvent(new CustomEvent("velvet:flow-viewer-edge", { detail: { direction } }));
+    return;
+  }
+
+  currentItem = item;
+  state = recordView(state, item);
+  publishFlowItem(item);
+
+  const preloadStart = Math.max(0, nextIndex - 1);
+  preloadImages(sequence.slice(preloadStart, nextIndex + 3));
+}
+
+function ensureFlowGridRenderedThrough(index) {
+  if (!Number.isInteger(index) || index < 0) return;
+  while (flowGridRendered <= index && flowGridRendered < flowGridItems.length) {
+    appendFlowGridBatch();
+  }
+}
+
+function restoreFlowGridPositionFromViewer(itemId) {
+  if (!itemId || !els.flowGrid) return;
+  const index = flowGridItems.findIndex(item => item.id === itemId);
+  if (index < 0) return;
+  ensureFlowGridRenderedThrough(index);
+  requestAnimationFrame(() => {
+    const card = [...els.flowGrid.querySelectorAll("[data-item-id]")]
+      .find(node => node.dataset.itemId === itemId);
+    card?.scrollIntoView({ block: "center", behavior: "auto" });
+  });
 }
 
 function toggleFlowGridFavorite(item) {
@@ -539,6 +583,7 @@ function undoLastFlowAction() {
 }
 
 function resetActiveExperience() {
+  flowViewerItems = [];
   flowExclusions.clear();
   runtimeSeenByMode.clear();
   clearFlowNavigation();
@@ -576,6 +621,7 @@ async function reloadCatalog() {
   catalogInfo = await loadCatalog();
   catalog = catalogInfo.catalog;
   catalogReady = true;
+  flowViewerItems = [];
   flowExclusions.clear();
   runtimeSeenByMode.clear();
   clearFlowNavigation();
@@ -591,10 +637,18 @@ function bindEvents() {
     toggleFlowGridFavorite(currentItem);
     publishFlowItem(currentItem);
   });
+  window.addEventListener("velvet:flow-viewer-navigate", event => {
+    navigateFlowViewer(event.detail?.direction);
+  });
+  window.addEventListener("velvet:media-viewer-close", event => {
+    if (event.detail?.scope !== "flow") return;
+    restoreFlowGridPositionFromViewer(String(event.detail?.id || ""));
+  });
   window.addEventListener("velvet:flow-preset", event => {
     const requested = event.detail?.id;
     flowMode = VALID_FLOW_MODES.has(requested) ? requested : "personal";
     lastFlowAction = null;
+    flowViewerItems = [];
     flowExclusions.clear();
     runtimeSeenByMode.clear();
     clearFlowNavigation();
@@ -604,6 +658,7 @@ function bindEvents() {
   });
   window.addEventListener("velvet:flow-filter", () => {
     lastFlowAction = null;
+    flowViewerItems = [];
     flowExclusions.clear();
     runtimeSeenByMode.clear();
     clearFlowNavigation();
