@@ -101,8 +101,12 @@ jobs:
           for (const legacy of ['Soft ·','Personal ·','Intense ·','Explore ·']) {
             if (flow.includes(legacy)) throw new Error(`Legacy Flow label still exposed: ${legacy}`);
           }
-          if (flow.includes('Pinterest') || flow.includes('{ id: "pinterest"')) {
-            throw new Error('Retired public Pinterest category still exposed');
+          for (const exposed of [
+            '{ id: "pinterest", label: "Pinterest" }',
+            'filter === "pinterest" ? "Pinterest"',
+            'button.textContent = "Pinterest"'
+          ]) {
+            if (flow.includes(exposed)) throw new Error(`Retired public Pinterest category still exposed: ${exposed}`);
           }
           if (flow.includes('import "./session-ux.js"')) {
             throw new Error('Removed Session runtime still imported through Flow presets');
