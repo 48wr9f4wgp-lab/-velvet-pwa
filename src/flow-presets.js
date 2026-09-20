@@ -15,8 +15,7 @@ const ORDERS = [
 const FILTERS = [
   { id: "all", label: "すべて" },
   { id: "amateur", label: "素人" },
-  { id: "pro", label: "プロ" },
-  { id: "pinterest", label: "Pinterest" }
+  { id: "pro", label: "プロ" }
 ];
 
 const VALID_ORDERS = new Set(ORDERS.map(row => row.id));
@@ -111,6 +110,17 @@ function announceFilter(id) {
 
 legacyMigration();
 
+function retirePinterestWidgetState() {
+  try {
+    localStorage.removeItem("velvet_private_v49_pinterest_url");
+    if (localStorage.getItem(SOURCE_FILTER_KEY) === "pinterest") {
+      localStorage.setItem(SOURCE_FILTER_KEY, "all");
+    }
+  } catch (_) {}
+}
+
+retirePinterestWidgetState();
+
 const actions = document.querySelector(".topbar__actions");
 const app = document.querySelector("#app");
 
@@ -154,8 +164,6 @@ if (actions && app) {
 
   const orderSection = section("並び方");
   const filterSection = section("系統");
-  orderSection.wrap.classList.add("flow-query-section--orders");
-  filterSection.wrap.classList.add("flow-query-section--filters");
   const orderButtons = new Map();
   const filterButtons = new Map();
 
@@ -229,7 +237,7 @@ if (actions && app) {
     const orderRow = ORDERS.find(row => row.id === order) || ORDERS[0];
     const filterRow = FILTERS.find(row => row.id === filter) || FILTERS[0];
 
-    trigger.textContent = mode === "favorites" ? "お気に入り" : filter === "pinterest" ? "Pinterest" : `${orderRow.label}・${filterRow.label}`;
+    trigger.textContent = mode === "favorites" ? "お気に入り" : `${orderRow.label}・${filterRow.label}`;
     trigger.dataset.flowMode = mode;
     trigger.dataset.flowFilter = filter;
 
