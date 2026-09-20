@@ -226,10 +226,12 @@ jobs:
             'embedBoard',
             'embedUser',
             'Pinterestを接続',
-            'location.reload()'
+            'location.reload()',
+            'parts.join("/")'
           ]) {
             if (!pin.includes(token)) throw new Error(`Pinterest widget contract missing: ${token}`);
           }
+          if (pin.includes('parts.map(encodeURIComponent)')) throw new Error('Pinterest path is double-encoded');
 
           for (const forbidden of [
             'api.pinterest.com',

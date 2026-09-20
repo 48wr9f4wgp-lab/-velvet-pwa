@@ -46,7 +46,7 @@ function normalizePinterestUrl(raw) {
   if (!parts.length || parts[0].toLowerCase() === "pin") return null;
 
   return {
-    href: `https://www.pinterest.com/${parts.map(encodeURIComponent).join("/")}/`,
+    href: `https://www.pinterest.com/${parts.join("/")}/`,
     type: parts.length >= 2 ? "board" : "profile"
   };
 }
