@@ -136,7 +136,7 @@ function normalizeItem(raw, index) {
     title: typeof raw.title === "string" ? raw.title : "",
     source: String(raw.source || "unknown"),
     source_label: String(raw.source_label || raw.source || "Velvet"),
-    source_class: raw.source_class === "amateur" ? "personal" : ["personal", "pro", "mixed"].includes(raw.source_class) ? raw.source_class : "mixed",
+    source_class: raw.source_class === "amateur" ? "personal" : ["personal", "pro", "mixed", "pinterest"].includes(raw.source_class) ? raw.source_class : "mixed",
     tags,
     published_at_ms: xPublishedAtMs(raw, id),
     intensity: Math.max(1, Math.min(5, Number(raw.intensity) || 3)),
@@ -221,6 +221,43 @@ function feedAttempts() {
   const hostname = typeof location === "undefined" ? "" : String(location.hostname || "").toLowerCase();
   const onGitHubPages = hostname.endsWith("github.io");
   return onGitHubPages ? [staticFeed] : [staticFeed, "./api/feed?limit=120"];
+}
+
+export async function loadPinterestCatalog() {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 12000);
+  try {
+    const response = await fetch(`./api/pinterest?t=${Date.now()}`, {
+      cache: "no-store",
+      credentials: "same-origin",
+      signal: controller.signal
+    });
+    const payload = await response.json().catch(() => null);
+    if (!response.ok) {
+      return {
+        catalog: [],
+        source: "pinterest-api",
+        configured: payload?.configured !== false,
+        error: payload?.error || `HTTP ${response.status}`
+      };
+    }
+    const catalog = normalizeCatalog(payload).filter(item => item.source_class === "pinterest");
+    return {
+      catalog,
+      source: "pinterest-api",
+      configured: payload?.configured !== false,
+      error: catalog.length ? null : "Pinterest board has no displayable image Pins"
+    };
+  } catch (error) {
+    return {
+      catalog: [],
+      source: "pinterest-api",
+      configured: true,
+      error: error?.name === "AbortError" ? "Pinterest request timed out" : (error?.message || String(error))
+    };
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 export async function loadCatalog() {
