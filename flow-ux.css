@@ -148,6 +148,15 @@
   font-size: 13px;
 }
 
+.flow-query-section--filters .flow-option-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.flow-query-section--filters .flow-option--compact {
+  padding-inline: 5px;
+  font-size: 11px;
+}
+
 .flow-option.is-active,
 .flow-favorites-button.is-active {
   border-color: rgba(233,213,255,.52);
@@ -425,6 +434,7 @@ html.media-viewer-open body {
   overflow: hidden;
   color: inherit;
   touch-action: manipulation;
+  text-decoration: none;
 }
 
 .flow-grid-card__media img {
@@ -464,6 +474,29 @@ html.media-viewer-open body {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   pointer-events: none;
+}
+
+.flow-grid-card--pinterest .flow-grid-card__media {
+  border-radius: 0;
+}
+
+.flow-grid-card__pinterest-link {
+  min-height: 38px;
+  padding: 9px 10px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,.78);
+  text-decoration: none;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: .02em;
+  border-top: 1px solid rgba(255,255,255,.075);
+  background: rgba(255,255,255,.025);
+}
+
+.flow-grid-card__pinterest-link:active {
+  background: rgba(255,255,255,.07);
 }
 
 .flow-grid-card__favorite {
