@@ -480,6 +480,14 @@ html.media-viewer-open body {
   border-radius: 0;
 }
 
+.flow-grid-card--pinterest .flow-grid-card__media img {
+  object-fit: contain;
+}
+
+.flow-grid-card--pinterest .flow-grid-card__media:active img {
+  transform: none;
+}
+
 .flow-grid-card__pinterest-link {
   min-height: 38px;
   padding: 9px 10px 10px;
