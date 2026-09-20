@@ -378,7 +378,7 @@ html.media-viewer-open body {
 }
 
 
-/* Velvet v47 — Flow is a browseable two-column list. Session keeps the focused swipe deck. */
+/* Velvet v48 — Flow-only two-column browser with stable iOS PWA sizing. */
 #flowView .card-stage {
   display: none !important;
 }
@@ -551,4 +551,20 @@ html.media-viewer-open body {
   .flow-grid-card__favorite {
     transition-duration: .001ms !important;
   }
+}
+
+
+/* Velvet v48: iOS Home Screen PWA layout hardening. */
+#flowView.view--active {
+  flex: 1 1 0%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.flow-grid-shell {
+  flex: 1 1 0%;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
 }
