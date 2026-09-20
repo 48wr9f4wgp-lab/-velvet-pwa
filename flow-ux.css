@@ -568,3 +568,172 @@ html.media-viewer-open body {
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
 }
+
+
+/* Velvet v50: private Pinterest OAuth browser. */
+.flow-query-section--filters .flow-option-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.flow-query-section--filters .flow-option--compact {
+  padding-inline: 5px;
+  font-size: 11px;
+}
+
+#flowView.pinterest-private-mode #flowGridShell {
+  display: none;
+}
+
+.pinterest-private-view {
+  flex: 1 1 0%;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 6px 0 calc(18px + var(--safe-bottom));
+}
+
+.pinterest-private-view.is-hidden {
+  display: none !important;
+}
+
+.pinterest-private-card {
+  margin: 18px 0;
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.09);
+  background: rgba(255,255,255,.035);
+}
+
+.pinterest-private-card h2,
+.pinterest-private-head h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.pinterest-private-card p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.pinterest-private-connect {
+  margin-top: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.pinterest-private-meta {
+  margin-top: 16px !important;
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.pinterest-private-code {
+  display: block;
+  margin-top: 7px;
+  padding: 11px;
+  border-radius: 12px;
+  background: #0b0b0e;
+  border: 1px solid rgba(255,255,255,.08);
+  color: #e7e7eb;
+  font-size: 10px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.pinterest-private-small {
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.pinterest-private-head {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  min-height: 58px;
+  padding: 6px 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: linear-gradient(180deg, #09090b 72%, rgba(9,9,11,0));
+}
+
+.pinterest-private-head h2 {
+  margin-top: 2px;
+}
+
+.pinterest-board-rail {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 5px 0 12px;
+}
+
+.pinterest-board-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.pinterest-board-chip {
+  flex: 0 0 auto;
+  min-height: 40px;
+  max-width: 210px;
+  padding: 0 13px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.045);
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pinterest-board-chip.is-active {
+  border-color: rgba(233,213,255,.52);
+  background: rgba(192,132,252,.16);
+}
+
+.pinterest-pins-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  align-items: start;
+}
+
+.pinterest-pin-card {
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: #111114;
+  color: inherit;
+  text-decoration: none;
+}
+
+.pinterest-pin-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 110px;
+  background: #151519;
+}
+
+.pinterest-pin-card span {
+  display: block;
+  padding: 8px 9px 10px;
+  font-size: 10px;
+  line-height: 1.35;
+  color: #d8d8df;
+}
+
+.pinterest-private-footer {
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  padding: 16px 0 6px;
+}
