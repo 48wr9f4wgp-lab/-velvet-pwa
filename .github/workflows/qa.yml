@@ -296,7 +296,8 @@ jobs:
           for (const forbidden of [
             'access_token',
             'refresh_token',
-            'PINTEREST_APP_SECRET',
+            'pina_',
+            'pinr_',
             'assets.pinterest.com/js/pinit.js',
             'embedBoard',
             'embedUser'
