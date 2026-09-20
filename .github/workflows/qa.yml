@@ -40,7 +40,7 @@ jobs:
           for file in \
             index.html styles.css flow-ux.css touch-polish.css manifest.webmanifest sw.js velvet-content.json \
             icons/icon-180.png icons/icon-192.png icons/icon-512.png \
-            src/app.js src/content.js src/flow-presets.js src/input-guard.js src/image-guard.js src/session-cues.js src/recommender.js src/ui-ja.js; do
+            src/app.js src/content.js src/flow-presets.js src/input-guard.js src/image-guard.js src/recommender.js src/ui-ja.js; do
             test -f "$file"
           done
           echo "PWA files OK"
@@ -57,23 +57,30 @@ jobs:
           for (const token of [
             'id="dragLike" class="drag-cue drag-cue--like">戻る<',
             'id="dragSkip" class="drag-cue drag-cue--skip">進む<',
-            'id="sessionDragBack" class="drag-cue drag-cue--like">戻る<',
-            'id="sessionDragNext" class="drag-cue drag-cue--skip">進む<',
+            './styles.css?v=48',
             './src/image-guard.js?v=44',
-            './src/session-cues.js?v=44',
             './src/flow-presets.js?v=45',
-            './src/input-guard.js?v=47',
-            './src/app.js?v=47'
+            './src/input-guard.js?v=48',
+            './src/app.js?v=48'
           ]) {
             if (!html.includes(token)) throw new Error(`index contract missing: ${token}`);
           }
+          for (const removed of [
+            'id="sessionsButton"',
+            'id="sessionSetupView"',
+            'id="sessionPlayerView"',
+            'id="sessionSummaryView"',
+            './src/session-ux.js',
+            './src/session-cues.js'
+          ]) {
+            if (html.includes(removed)) throw new Error(`Session UI still exposed: ${removed}`);
+          }
           if (!ja.includes('setText("#dragLike", "戻る")') || !ja.includes('setText("#dragSkip", "進む")')) {
-            throw new Error('Japanese swipe navigation labels regressed');
+            throw new Error('Japanese legacy cue labels regressed');
           }
-          if (ja.includes('setText("#dragLike", "保存")') || ja.includes('setText("#dragSkip", "スキップ")')) {
-            throw new Error('Reaction semantics leaked back into swipe navigation');
+          if (input.includes('session') || input.includes('bindFastNavigationGesture')) {
+            throw new Error('Session/gesture runtime leaked into Flow-only input guard');
           }
-          if (!input.includes('gesture.x > 0 ? "back" : "next"')) throw new Error('Swipe direction contract missing');
           const sizes = new Set((manifest.icons || []).map(icon => icon.sizes));
           if (!sizes.has('192x192') || !sizes.has('512x512')) throw new Error('Manifest icons incomplete');
           console.log('UX regression contracts OK');
@@ -143,7 +150,7 @@ jobs:
           console.log('Flow v45 behavior contracts OK');
           NODE
 
-      - name: Flow grid v47 contracts
+      - name: Flow grid v48 contracts
         run: |
           node <<'NODE'
           const fs = require('fs');
@@ -170,21 +177,30 @@ jobs:
           if (app.includes('window.addEventListener("velvet:flow-next"') || app.includes('window.addEventListener("velvet:flow-back"')) {
             throw new Error('Legacy Flow swipe navigation events are still active');
           }
-          if (input.includes('bindFastNavigationGesture({ cardSelector: "#mediaCard"')) {
-            throw new Error('Input guard still binds Flow swipe navigation');
-          }
-          if (!input.includes('bindFastNavigationGesture({ cardSelector: "#sessionMediaCard", scope: "session" })')) {
-            throw new Error('Session swipe navigation was removed');
+          for (const removed of [
+            'buildSessionQueue',
+            'adaptSessionQueue',
+            'recordSession',
+            'sessionSetupView',
+            'sessionPlayerView',
+            'sessionSummaryView',
+            'sessionsButton'
+          ]) {
+            if (app.includes(removed)) throw new Error(`Session runtime still present: ${removed}`);
           }
           for (const token of [
             'grid-template-columns: repeat(2, minmax(0, 1fr))',
             '#flowView .card-stage',
-            '#flowView #skipButton',
-            '#flowView #likeButton'
+            '#flowView.view--active',
+            'flex: 1 1 0%'
           ]) {
             if (!css.includes(token)) throw new Error(`Flow grid CSS contract missing: ${token}`);
           }
-          console.log('Flow grid v47 contracts OK');
+          const baseCss = fs.readFileSync('styles.css','utf8');
+          for (const token of ['height: 100svh','height: 100dvh','max-height: 100dvh']) {
+            if (!baseCss.includes(token)) throw new Error(`iOS PWA viewport contract missing: ${token}`);
+          }
+          console.log('Flow grid v48 contracts OK');
           NODE
 
       - name: Exposure v46.1 contracts

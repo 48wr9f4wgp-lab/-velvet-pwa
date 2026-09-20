@@ -12,7 +12,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png?v=44" />
   <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png?v=44" />
   <link rel="manifest" href="./manifest.webmanifest?v=44" />
-  <link rel="stylesheet" href="./styles.css?v=44" />
+  <link rel="stylesheet" href="./styles.css?v=48" />
   <link rel="stylesheet" href="./touch-polish.css?v=44" />
   <title>Velvet</title>
 </head>
@@ -70,90 +70,8 @@
           </div>
         </div>
 
-        <div class="flow-controls">
-          <button id="skipButton" class="action-button action-button--skip" type="button" aria-label="Skip">×</button>
-          <button id="sessionsButton" class="action-button action-button--session" type="button">Session</button>
-          <button id="likeButton" class="action-button action-button--like" type="button" aria-label="Like">♥</button>
-        </div>
       </section>
 
-      <section id="sessionSetupView" class="view" aria-label="Session setup">
-        <div class="panel panel--top">
-          <button class="back-button" data-back-flow type="button">← Flow</button>
-          <p class="eyebrow">VELVET SESSIONS</p>
-          <h2>Choose a session</h2>
-          <p class="muted">Finite, mood-directed, and locally personalized.</p>
-        </div>
-
-        <form id="sessionForm" class="session-form">
-          <fieldset>
-            <legend>Duration</legend>
-            <div class="segmented" id="durationOptions">
-              <label><input type="radio" name="duration" value="3" checked><span>3 min</span></label>
-              <label><input type="radio" name="duration" value="5"><span>5 min</span></label>
-              <label><input type="radio" name="duration" value="10"><span>10 min</span></label>
-            </div>
-          </fieldset>
-
-          <fieldset>
-            <legend>Mood</legend>
-            <div class="mood-grid">
-              <label><input type="radio" name="mood" value="soft"><span><b>Soft</b><small>low-key</small></span></label>
-              <label><input type="radio" name="mood" value="personal" checked><span><b>Personal</b><small>taste-led</small></span></label>
-              <label><input type="radio" name="mood" value="pro"><span><b>Pro</b><small>polished</small></span></label>
-              <label><input type="radio" name="mood" value="intense"><span><b>Intense</b><small>ramped</small></span></label>
-            </div>
-          </fieldset>
-
-          <button class="button button--primary button--wide" type="submit">Start session</button>
-        </form>
-      </section>
-
-      <section id="sessionPlayerView" class="view" aria-label="Session player">
-        <div class="session-head">
-          <button id="endSessionButton" class="back-button" type="button">End</button>
-          <div class="session-progress-wrap">
-            <div class="session-progress"><span id="sessionProgressBar"></span></div>
-            <p id="sessionProgressText" class="muted">0 / 0</p>
-          </div>
-        </div>
-        <div class="card-stage card-stage--session">
-          <article id="sessionMediaCard" class="media-card" tabindex="0">
-            <div class="media-card__skeleton"></div>
-            <img id="sessionMediaImage" alt="" draggable="false" />
-            <div class="media-card__shade"></div>
-            <div class="media-card__meta">
-              <span id="sessionPhaseLabel" class="pill">START</span>
-              <span id="sessionIntensityLabel" class="pill pill--muted">—</span>
-            </div>
-            <div id="sessionDragBack" class="drag-cue drag-cue--like">戻る</div>
-            <div id="sessionDragNext" class="drag-cue drag-cue--skip">進む</div>
-          </article>
-        </div>
-        <div class="flow-controls">
-          <button id="sessionSkipButton" class="action-button action-button--skip" type="button" aria-label="Skip session item">×</button>
-          <button id="sessionLikeButton" class="action-button action-button--like" type="button" aria-label="Like session item">♥</button>
-        </div>
-      </section>
-
-      <section id="sessionSummaryView" class="view" aria-label="Session summary">
-        <div class="summary-card">
-          <p class="eyebrow">SESSION COMPLETE</p>
-          <h2>Done.</h2>
-          <div class="summary-stats">
-            <div><span id="summaryLikes">0</span><small>Likes</small></div>
-            <div><span id="summarySkips">0</span><small>Skips</small></div>
-            <div><span id="summaryCompletion">0%</span><small>Complete</small></div>
-          </div>
-          <div class="summary-tags">
-            <p class="muted">Strongest signals</p>
-            <div id="summaryTagList" class="tag-list"></div>
-          </div>
-          <p id="summaryRecommendation" class="summary-recommendation"></p>
-          <button id="summaryFlowButton" class="button button--primary button--wide" type="button">Back to Flow</button>
-          <button id="summaryAgainButton" class="button button--ghost button--wide" type="button">Another session</button>
-        </div>
-      </section>
     </section>
 
     <dialog id="settingsDialog" class="settings-dialog">
@@ -216,12 +134,10 @@
   <script type="module" src="./src/privacy-guard.js?v=44"></script>
   <script type="module" src="./src/flow-presets.js?v=45"></script>
   <script type="module" src="./src/loading-guard.js?v=44"></script>
-  <script type="module" src="./src/session-ux.js?v=44"></script>
   <script type="module" src="./src/fx-settings.js?v=44"></script>
   <script type="module" src="./src/effects-force.js?v=44"></script>
   <script type="module" src="./src/image-guard.js?v=44"></script>
-  <script type="module" src="./src/session-cues.js?v=44"></script>
-  <script type="module" src="./src/input-guard.js?v=47"></script>
-  <script type="module" src="./src/app.js?v=47"></script>
+  <script type="module" src="./src/input-guard.js?v=48"></script>
+  <script type="module" src="./src/app.js?v=48"></script>
 </body>
 </html>

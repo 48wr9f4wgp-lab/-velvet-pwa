@@ -28,35 +28,6 @@ function localizeStaticUi() {
   setText("#dragLike", "戻る");
   setText("#dragSkip", "進む");
 
-  setText("#sessionSetupView h2", "Sessionを選ぶ");
-  setText("#sessionSetupView .panel .muted", "時間とムードを選んで、集中して見る。");
-  const legends = document.querySelectorAll("#sessionForm legend");
-  writeText(legends[0], "目安時間");
-  writeText(legends[1], "ムード");
-  document.querySelectorAll('#durationOptions input[name="duration"]').forEach(input => {
-    writeText(input.nextElementSibling, `約${input.value}分`);
-  });
-  const moodNotes = {
-    soft: "穏やか",
-    personal: "好み重視",
-    pro: "プロ寄り",
-    intense: "刺激強め"
-  };
-  document.querySelectorAll('.mood-grid input[name="mood"]').forEach(input => {
-    writeText(input.nextElementSibling?.querySelector("small"), moodNotes[input.value] || "");
-  });
-  setText('#sessionForm button[type="submit"]', "はじめる");
-  setText("#endSessionButton", "終了");
-
-  setText("#sessionSummaryView h2", "完了");
-  const summaryLabels = document.querySelectorAll(".summary-stats small");
-  writeText(summaryLabels[0], "お気に入り");
-  writeText(summaryLabels[1], "スキップ");
-  writeText(summaryLabels[2], "完了率");
-  setText(".summary-tags .muted", "強く出た好み");
-  setText("#summaryFlowButton", "Flowへ戻る");
-  setText("#summaryAgainButton", "もう一度");
-
   setText(".settings-sheet__head h2", "設定");
   const settings = [
     ["#privacyBlurSetting", "起動時に隠す", "開くまで内容を表示しません。"],
@@ -98,11 +69,7 @@ const textMap = new Map([
   ["Taste reset", "好みをリセットしました"],
   ["History cleared", "履歴を消去しました"],
   ["All local Velvet data cleared", "Velvetの端末データを消去しました"],
-  ["No strong signal yet", "まだ強い傾向はありません"],
-  ["Try a shorter 3-minute Personal session.", "次は3分のPersonalがおすすめです。"],
-  ["Strong match. Intense may be worth trying next.", "好みにかなり合っています。次はIntenseも良さそうです。"],
-  ["Low hit rate. Soft or Explore should diversify the next run.", "今回は合いにくめ。次はSoftかExploreで広げるのがおすすめです。"],
-  ["Personal remains the best default for the next session.", "次もPersonalが一番合いそうです。"]
+  ["No strong signal yet", "まだ強い傾向はありません"]
 ]);
 
 function translateDynamic(root = document) {

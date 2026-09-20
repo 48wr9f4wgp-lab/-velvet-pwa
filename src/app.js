@@ -4,7 +4,6 @@ import {
   recordView,
   recordReaction,
   recordModeUse,
-  recordSession,
   clearTaste,
   clearHistory,
   clearAll,
@@ -12,17 +11,12 @@ import {
 } from "./store.js";
 import {
   chooseNext,
-  rankCandidates,
-  buildSessionQueue,
-  adaptSessionQueue,
-  dominantLikedTags,
-  recommendNextMode
+  rankCandidates
 } from "./recommender.js?v=46";
 import { loadCatalog, preloadImages } from "./content.js?v=46";
 
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
-const SESSION_TARGETS = Object.freeze({ 3: 12, 5: 20, 10: 40 });
 
 let state = loadState();
 let catalog = [];
@@ -49,8 +43,6 @@ let flowBackStack = [];
 let flowForwardStack = [];
 const FLOW_NAV_LIMIT = 60;
 const runtimeSeenByMode = new Map();
-let session = null;
-let dragState = null;
 const FLOW_GRID_BATCH = 12;
 const FLOW_GRID_LIMIT = 160;
 let flowGridItems = [];
@@ -96,9 +88,6 @@ const els = {
   flowGrid: $("#flowGrid"),
   flowGridStatus: $("#flowGridStatus"),
   flowGridSentinel: $("#flowGridSentinel"),
-  sessionSetupView: $("#sessionSetupView"),
-  sessionPlayerView: $("#sessionPlayerView"),
-  sessionSummaryView: $("#sessionSummaryView"),
   mediaCard: $("#mediaCard"),
   mediaImage: $("#mediaImage"),
   sourceLabel: $("#sourceLabel"),
@@ -107,26 +96,6 @@ const els = {
   dragSkip: $("#dragSkip"),
   emptyState: $("#emptyState"),
   retryFeedButton: $("#retryFeedButton"),
-  skipButton: $("#skipButton"),
-  likeButton: $("#likeButton"),
-  sessionsButton: $("#sessionsButton"),
-  sessionForm: $("#sessionForm"),
-  endSessionButton: $("#endSessionButton"),
-  sessionMediaCard: $("#sessionMediaCard"),
-  sessionMediaImage: $("#sessionMediaImage"),
-  sessionPhaseLabel: $("#sessionPhaseLabel"),
-  sessionIntensityLabel: $("#sessionIntensityLabel"),
-  sessionProgressBar: $("#sessionProgressBar"),
-  sessionProgressText: $("#sessionProgressText"),
-  sessionSkipButton: $("#sessionSkipButton"),
-  sessionLikeButton: $("#sessionLikeButton"),
-  summaryLikes: $("#summaryLikes"),
-  summarySkips: $("#summarySkips"),
-  summaryCompletion: $("#summaryCompletion"),
-  summaryTagList: $("#summaryTagList"),
-  summaryRecommendation: $("#summaryRecommendation"),
-  summaryFlowButton: $("#summaryFlowButton"),
-  summaryAgainButton: $("#summaryAgainButton"),
   privacyBlurSetting: $("#privacyBlurSetting"),
   resumeSetting: $("#resumeSetting"),
   reducedMotionSetting: $("#reducedMotionSetting"),
@@ -142,9 +111,7 @@ function setHidden(el, hidden) {
 }
 
 function setView(view) {
-  for (const el of [els.flowView, els.sessionSetupView, els.sessionPlayerView, els.sessionSummaryView]) {
-    el.classList.toggle("view--active", el === view);
-  }
+  els.flowView.classList.toggle("view--active", view === els.flowView);
 }
 
 function setModeLabel(label) {
@@ -571,191 +538,7 @@ function undoLastFlowAction() {
   window.dispatchEvent(new CustomEvent("velvet:flow-undone"));
 }
 
-function bindSwipe(card, onBack, onNext) {
-  card.addEventListener("pointerdown", event => {
-    if (event.pointerType === "mouse" && event.button !== 0) return;
-    dragState = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, x: 0 };
-    card.setPointerCapture?.(event.pointerId);
-  });
-
-  card.addEventListener("pointermove", event => {
-    if (!dragState || dragState.pointerId !== event.pointerId) return;
-    const dx = event.clientX - dragState.startX;
-    const dy = event.clientY - dragState.startY;
-    if (Math.abs(dy) > Math.abs(dx) * 1.2 && Math.abs(dy) > 22) return;
-    dragState.x = dx;
-    const pct = Math.max(-1, Math.min(1, dx / 120));
-    if (!state.settings.reducedMotion) card.style.transform = `translateX(${dx * 0.38}px) rotate(${pct * 4}deg)`;
-    if (card === els.mediaCard) {
-      els.dragLike.style.opacity = String(Math.max(0, pct));
-      els.dragSkip.style.opacity = String(Math.max(0, -pct));
-    }
-  });
-
-  const finish = event => {
-    if (!dragState || dragState.pointerId !== event.pointerId) return;
-    const dx = dragState.x;
-    dragState = null;
-    card.releasePointerCapture?.(event.pointerId);
-    if (Math.abs(dx) >= 72) {
-      if (dx > 0) onBack(); else onNext();
-    } else {
-      card.style.transform = "";
-      if (card === els.mediaCard) {
-        els.dragLike.style.opacity = "0";
-        els.dragSkip.style.opacity = "0";
-      }
-    }
-  };
-
-  card.addEventListener("pointerup", finish);
-  card.addEventListener("pointercancel", finish);
-}
-
-function openSessionSetup() {
-  setView(els.sessionSetupView);
-  setModeLabel("Sessions");
-}
-
-function plannedSessionCount(duration, fallback = 0) {
-  return SESSION_TARGETS[Number(duration)] || fallback;
-}
-
-function startSession({ duration, mood }) {
-  const queue = buildSessionQueue(catalog, state, { duration, mood });
-  session = {
-    duration: Number(duration),
-    mood,
-    queue,
-    targetCount: plannedSessionCount(duration, queue.length),
-    index: 0,
-    likedIds: [],
-    skippedIds: [],
-    failedIds: new Set(),
-    startedAt: Date.now(),
-    ended: false
-  };
-  state = recordModeUse(state, `session:${mood}:${duration}`);
-  setView(els.sessionPlayerView);
-  setModeLabel(`${mood} ${duration}m`);
-  renderSessionItem();
-}
-
-function replanSessionTail() {
-  if (!session || session.ended) return;
-  session.queue = adaptSessionQueue(catalog, state, {
-    duration: session.duration,
-    mood: session.mood,
-    queue: session.queue,
-    index: session.index,
-    excludedIds: [...session.failedIds]
-  });
-}
-
-function renderSessionItem() {
-  if (!session || session.ended) return;
-  if (session.index >= session.queue.length) {
-    return finishSession(session.index >= session.targetCount);
-  }
-
-  const item = session.queue[session.index];
-  els.sessionMediaImage.classList.remove("image-failed");
-  els.sessionMediaImage.src = item.image_url;
-  els.sessionMediaImage.alt = "Velvet session item";
-  els.sessionPhaseLabel.textContent = item.session_phase || "SESSION";
-  els.sessionIntensityLabel.textContent = `I${Math.round(Number(item.intensity) || 3)}`;
-  els.sessionMediaCard.style.transform = "";
-  els.sessionMediaCard.style.opacity = "";
-
-  const total = Math.max(1, session.targetCount || session.queue.length);
-  const progress = Math.min(1, session.index / total);
-  els.sessionProgressBar.style.width = `${Math.round(progress * 100)}%`;
-  els.sessionProgressText.textContent = `${Math.min(session.index + 1, total)} / ${total}`;
-  state = recordView(state, item);
-  preloadImages(session.queue.slice(session.index + 1, session.index + 4));
-  window.dispatchEvent(new CustomEvent("velvet:session-item", { detail: { item } }));
-}
-
-function navigateSessionNext() {
-  if (!session || session.ended) return;
-  session.index += 1;
-  renderSessionItem();
-}
-
-function navigateSessionBack() {
-  if (!session || session.ended || session.index <= 0) return;
-  session.index -= 1;
-  renderSessionItem();
-}
-
-function reactSession(reaction) {
-  if (!session || session.ended) return;
-  const item = session.queue[session.index];
-  if (!item) return finishSession(false);
-  if (session.likedIds.includes(item.id) || session.skippedIds.includes(item.id)) {
-    navigateSessionNext();
-    return;
-  }
-  state = recordReaction(state, item, reaction);
-  if (reaction === "like") {
-    session.likedIds.push(item.id);
-    window.dispatchEvent(new CustomEvent("velvet:favorites-changed"));
-  } else session.skippedIds.push(item.id);
-
-  session.index += 1;
-  replanSessionTail();
-  if (state.settings.reducedMotion) return renderSessionItem();
-  els.sessionMediaCard.style.opacity = "0";
-  setTimeout(() => {
-    els.sessionMediaCard.style.opacity = "";
-    renderSessionItem();
-  }, 120);
-}
-
-function finishSession(completed = false) {
-  if (!session || session.ended) return;
-  session.ended = true;
-  const total = Math.max(1, session.targetCount || session.queue.length);
-  const consumed = Math.min(session.index, total);
-  const completion = completed ? 1 : consumed / total;
-  const dominantTags = dominantLikedTags(session.queue, session.likedIds);
-  const summary = {
-    id: `session-${Date.now()}`,
-    at: new Date().toISOString(),
-    duration: session.duration,
-    mood: session.mood,
-    likes: session.likedIds.length,
-    skips: session.skippedIds.length,
-    completion,
-    completed: completed || completion >= 0.95,
-    dominantTags
-  };
-  state = recordSession(state, summary);
-
-  els.summaryLikes.textContent = String(summary.likes);
-  els.summarySkips.textContent = String(summary.skips);
-  els.summaryCompletion.textContent = `${Math.round(summary.completion * 100)}%`;
-  els.summaryTagList.replaceChildren(...dominantTags.map(tag => {
-    const span = document.createElement("span");
-    span.className = "pill";
-    span.textContent = tag;
-    return span;
-  }));
-  if (!dominantTags.length) {
-    const span = document.createElement("span");
-    span.className = "muted";
-    span.textContent = "No strong signal yet";
-    els.summaryTagList.replaceChildren(span);
-  }
-  els.summaryRecommendation.textContent = recommendNextMode(summary);
-  setView(els.sessionSummaryView);
-  setModeLabel("Summary");
-}
-
 function resetActiveExperience() {
-  if (session) session.ended = true;
-  session = null;
-  dragState = null;
   flowExclusions.clear();
   runtimeSeenByMode.clear();
   clearFlowNavigation();
@@ -802,8 +585,6 @@ async function reloadCatalog() {
 
 function bindEvents() {
   window.addEventListener("velvet:flow-undo", undoLastFlowAction);
-  window.addEventListener("velvet:session-next", navigateSessionNext);
-  window.addEventListener("velvet:session-back", navigateSessionBack);
   window.addEventListener("velvet:flow-preset", event => {
     const requested = event.detail?.id;
     flowMode = VALID_FLOW_MODES.has(requested) ? requested : "personal";
@@ -837,34 +618,12 @@ function bindEvents() {
     syncSettingsUi();
     els.settingsDialog.showModal();
   });
-  els.skipButton.addEventListener("click", () => reactFlow("skip"));
-  els.likeButton.addEventListener("click", handleFlowLike);
-  els.sessionsButton.addEventListener("click", openSessionSetup);
   els.retryFeedButton.addEventListener("click", reloadCatalog);
   $$('[data-back-flow]').forEach(button => button.addEventListener("click", () => {
     setView(els.flowView);
     setModeLabel("Flow");
     refreshFlowGrid({ preserveCount: true });
   }));
-
-  els.sessionForm.addEventListener("submit", event => {
-    event.preventDefault();
-    const data = new FormData(els.sessionForm);
-    startSession({ duration: data.get("duration"), mood: data.get("mood") });
-  });
-  els.endSessionButton.addEventListener("click", () => finishSession(false));
-  els.sessionSkipButton.addEventListener("click", () => reactSession("skip"));
-  els.sessionLikeButton.addEventListener("click", () => reactSession("like"));
-  els.summaryFlowButton.addEventListener("click", () => {
-    session = null;
-    setView(els.flowView);
-    setModeLabel("Flow");
-    refreshFlowGrid({ preserveCount: true });
-  });
-  els.summaryAgainButton.addEventListener("click", () => {
-    session = null;
-    openSessionSetup();
-  });
 
   for (const control of [els.privacyBlurSetting, els.resumeSetting, els.reducedMotionSetting, els.historyModeSetting]) {
     control.addEventListener("change", saveSettings);
@@ -894,17 +653,6 @@ function bindEvents() {
     if (currentItem?.id) flowExclusions.add(currentItem.id);
     setTimeout(showNextFlowItem, 80);
   });
-  els.sessionMediaImage.addEventListener("error", () => {
-    imageFailed(els.sessionMediaImage);
-    if (!session || session.ended) return;
-    const failed = session.queue[session.index];
-    if (failed?.id) session.failedIds.add(failed.id);
-    replanSessionTail();
-    if (session.index >= session.queue.length) return finishSession(false);
-    setTimeout(renderSessionItem, 80);
-  });
-
-  bindSwipe(els.sessionMediaCard, navigateSessionBack, navigateSessionNext);
   setupFlowGridObserver();
 }
 
