@@ -40,7 +40,7 @@ jobs:
           for file in \
             index.html styles.css flow-ux.css touch-polish.css manifest.webmanifest sw.js velvet-content.json \
             icons/icon-180.png icons/icon-192.png icons/icon-512.png \
-            src/app.js src/content.js src/flow-presets.js src/input-guard.js src/image-guard.js src/media-viewer.js src/recommender.js src/ui-ja.js; do
+            src/app.js src/content.js src/favorite-archive.js src/flow-presets.js src/input-guard.js src/image-guard.js src/media-viewer.js src/recommender.js src/ui-ja.js; do
             test -f "$file"
           done
           echo "PWA files OK"
@@ -61,7 +61,7 @@ jobs:
             './src/image-guard.js?v=44',
             './src/flow-presets.js?v=49.2',
             './src/input-guard.js?v=49.4.1',
-            './src/app.js?v=49.4.1'
+            './src/app.js?v=49.5'
           ]) {
             if (!html.includes(token)) throw new Error(`index contract missing: ${token}`);
           }
@@ -232,7 +232,7 @@ jobs:
 
           for (const token of [
             './src/input-guard.js?v=49.4.1',
-            './src/app.js?v=49.4.1'
+            './src/app.js?v=49.5'
           ]) {
             if (!html.includes(token)) throw new Error(`v49.3 asset version missing: ${token}`);
           }
@@ -301,6 +301,119 @@ jobs:
           }
 
           console.log('Fullscreen viewer v49.4 contracts OK');
+          NODE
+
+      - name: Favorite archive v49.5 contracts
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const html = fs.readFileSync('index.html','utf8');
+          const app = fs.readFileSync('src/app.js','utf8');
+          const archive = fs.readFileSync('src/favorite-archive.js','utf8');
+          const sw = fs.readFileSync('sw.js','utf8');
+
+          if (!html.includes('./src/app.js?v=49.5')) throw new Error('v49.5 app cache bust missing');
+
+          for (const token of [
+            'archiveFavorite',
+            'backfillFavoriteArchive',
+            'clearFavoriteArchive',
+            'getArchivedFavorites',
+            'removeFavoriteArchive',
+            'archived.get(id) || byId.get(id)',
+            'navigator.serviceWorker.register("./sw.js?v=49.5")'
+          ]) {
+            if (!app.includes(token)) throw new Error(`Favorite archive app contract missing: ${token}`);
+          }
+
+          for (const token of [
+            'velvet_private_v49_5_favorite_archive_meta',
+            'velvet-favorite-media-v1',
+            'archived_favorite: true',
+            'mode: "no-cors"',
+            'cache.put(url, response)',
+            'navigator.storage.persist()',
+            'const MAX_ARCHIVES = 400',
+            'await new Promise(resolve => setTimeout(resolve, 40))'
+          ]) {
+            if (!archive.includes(token)) throw new Error(`Favorite archive storage contract missing: ${token}`);
+          }
+
+          for (const token of [
+            'const FAVORITE_MEDIA_CACHE = "velvet-favorite-media-v1"',
+            'request.destination !== "image"',
+            'cache.match(request, { ignoreVary: true })',
+            'return fetch(request)'
+          ]) {
+            if (!sw.includes(token)) throw new Error(`Favorite archive service worker contract missing: ${token}`);
+          }
+
+          if (sw.includes('request.destination === "script"') || sw.includes('request.destination === "style"')) {
+            throw new Error('Favorite archive service worker must not restore shell cache interception');
+          }
+
+          console.log('Favorite archive v49.5 static contracts OK');
+          NODE
+
+          node --input-type=module <<'NODE'
+          const values = new Map();
+          globalThis.localStorage = {
+            getItem(key) { return values.get(key) ?? null; },
+            setItem(key, value) { values.set(key, String(value)); },
+            removeItem(key) { values.delete(key); }
+          };
+          globalThis.navigator = {
+            storage: {
+              async persisted() { return true; },
+              async persist() { return true; }
+            }
+          };
+          const cached = new Map();
+          globalThis.caches = {
+            async open() {
+              return {
+                async match(url) { return cached.get(String(url)) || undefined; },
+                async put(url, response) { cached.set(String(url), response); },
+                async delete(url) { return cached.delete(String(url)); }
+              };
+            },
+            async delete() { cached.clear(); return true; }
+          };
+          globalThis.fetch = async () => new Response('image-bytes', { status: 200 });
+
+          const {
+            archiveFavorite,
+            getArchivedFavorite,
+            getArchivedFavorites,
+            removeFavoriteArchive,
+            clearFavoriteArchive
+          } = await import('./src/favorite-archive.js');
+
+          const item = {
+            id: 'fav-1',
+            image_url: 'https://example.com/fav.jpg',
+            source: 'test',
+            source_label: 'Test',
+            source_class: 'personal',
+            tags: ['one'],
+            intensity: 3,
+            rank: 1
+          };
+
+          archiveFavorite(item);
+          const archived = getArchivedFavorite('fav-1');
+          if (!archived || archived.image_url !== item.image_url || archived.archived_favorite !== true) {
+            throw new Error('Favorite metadata was not archived');
+          }
+          const rows = getArchivedFavorites(['fav-1']);
+          if (rows.length !== 1 || rows[0].id !== 'fav-1') throw new Error('Archived favorite lookup failed');
+
+          removeFavoriteArchive(item, 0);
+          await new Promise(resolve => setTimeout(resolve, 10));
+          if (getArchivedFavorite('fav-1')) throw new Error('Favorite metadata removal failed');
+
+          await clearFavoriteArchive();
+          console.log('Favorite archive v49.5 behavior contracts OK');
           NODE
 
       - name: Pinterest retirement v49.2 contracts
