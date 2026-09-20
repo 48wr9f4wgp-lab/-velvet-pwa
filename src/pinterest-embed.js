@@ -5,6 +5,7 @@ const PINTEREST_SCRIPT_ID = "velvetPinterestPinit";
 const flowView = document.querySelector("#flowView");
 const panel = document.querySelector("#pinterestPanel");
 const gridShell = document.querySelector("#flowGridShell");
+let renderedHref = "";
 
 function readFilter() {
   try { return localStorage.getItem(SOURCE_FILTER_KEY) || "all"; }
@@ -102,7 +103,7 @@ function buildSetup() {
       return;
     }
     writePinterestUrl(normalized.href);
-    renderPinterest();
+    location.reload();
   });
 
   card.append(title, copy, form, status);
@@ -124,7 +125,7 @@ function buildWidget(normalized) {
   change.textContent = "変更";
   change.addEventListener("click", () => {
     clearPinterestUrl();
-    buildSetup();
+    location.reload();
   });
 
   toolbar.append(label, change);
@@ -142,6 +143,7 @@ function buildWidget(normalized) {
   widgetWrap.append(anchor);
   panel.append(toolbar, widgetWrap);
 
+  renderedHref = normalized.href;
   loadPinterestScript();
 }
 
@@ -149,9 +151,11 @@ function renderPinterest() {
   if (!panel) return;
   const normalized = normalizePinterestUrl(readPinterestUrl());
   if (!normalized) {
+    renderedHref = "";
     buildSetup();
     return;
   }
+  if (renderedHref === normalized.href && panel.childElementCount) return;
   buildWidget(normalized);
 }
 
