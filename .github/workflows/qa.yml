@@ -60,8 +60,8 @@ jobs:
             './styles.css?v=48',
             './src/image-guard.js?v=44',
             './src/flow-presets.js?v=49.2',
-            './src/input-guard.js?v=49.4.1',
-            './src/app.js?v=49.6'
+            './src/input-guard.js?v=49.7',
+            './src/app.js?v=49.7'
           ]) {
             if (!html.includes(token)) throw new Error(`index contract missing: ${token}`);
           }
@@ -220,6 +220,33 @@ jobs:
           console.log('Flow grid v49.4 contracts OK');
           NODE
 
+      - name: Favorites three-column v49.7 contracts
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const html = fs.readFileSync('index.html','utf8');
+          const app = fs.readFileSync('src/app.js','utf8');
+          const css = fs.readFileSync('flow-ux.css','utf8');
+          const input = fs.readFileSync('src/input-guard.js','utf8');
+
+          if (!html.includes('./src/app.js?v=49.7')) throw new Error('v49.7 app cache bust missing');
+          if (!html.includes('./src/input-guard.js?v=49.7')) throw new Error('v49.7 input guard cache bust missing');
+          if (!input.includes('./flow-ux.css?v=49.7')) throw new Error('v49.7 Flow CSS cache bust missing');
+
+          if (!app.includes('els.flowGrid.classList.toggle("flow-grid--favorites", flowMode === "favorites")')) {
+            throw new Error('Favorites-only grid modifier missing');
+          }
+          if (!css.includes('.flow-grid.flow-grid--favorites')) throw new Error('Favorites grid CSS missing');
+          if (!css.includes('grid-template-columns: repeat(3, minmax(0, 1fr))')) throw new Error('Favorites grid is not three columns');
+
+          const base = css.match(/\.flow-grid \{[\s\S]*?\n\}/)?.[0] || '';
+          if (!base.includes('grid-template-columns: repeat(2, minmax(0, 1fr))')) {
+            throw new Error('Normal Flow must remain two columns');
+          }
+
+          console.log('Favorites three-column v49.7 contracts OK');
+          NODE
+
       - name: Feed visibility v49.6 contracts
         run: |
           node <<'NODE'
@@ -227,7 +254,7 @@ jobs:
           const html = fs.readFileSync('index.html','utf8');
           const app = fs.readFileSync('src/app.js','utf8');
 
-          if (!html.includes('./src/app.js?v=49.6')) throw new Error('v49.6 app cache bust missing');
+          if (!html.includes('./src/app.js?v=49.7')) throw new Error('v49.6 app cache bust missing');
           if (app.includes('const FLOW_GRID_LIMIT = 160')) throw new Error('Legacy 160-item Flow cap still present');
 
           for (const token of [
@@ -267,8 +294,8 @@ jobs:
           const css = fs.readFileSync('flow-ux.css','utf8');
 
           for (const token of [
-            './src/input-guard.js?v=49.4.1',
-            './src/app.js?v=49.6'
+            './src/input-guard.js?v=49.7',
+            './src/app.js?v=49.7'
           ]) {
             if (!html.includes(token)) throw new Error(`v49.3 asset version missing: ${token}`);
           }
@@ -332,7 +359,7 @@ jobs:
             if (!app.includes(token)) throw new Error(`Fullscreen swipe app contract missing: ${token}`);
           }
 
-          if (!input.includes('./flow-ux.css?v=49.4.1')) {
+          if (!input.includes('./flow-ux.css?v=49.7')) {
             throw new Error('Fullscreen swipe CSS cache bust missing');
           }
 
@@ -348,7 +375,7 @@ jobs:
           const archive = fs.readFileSync('src/favorite-archive.js','utf8');
           const sw = fs.readFileSync('sw.js','utf8');
 
-          if (!html.includes('./src/app.js?v=49.6')) throw new Error('v49.5 app cache bust missing');
+          if (!html.includes('./src/app.js?v=49.7')) throw new Error('v49.5 app cache bust missing');
 
           for (const token of [
             'archiveFavorite',
@@ -357,7 +384,7 @@ jobs:
             'getArchivedFavorites',
             'removeFavoriteArchive',
             'archived.get(id) || byId.get(id)',
-            'navigator.serviceWorker.register("./sw.js?v=49.5")'
+            'navigator.serviceWorker.register("./sw.js?v=49.7")'
           ]) {
             if (!app.includes(token)) throw new Error(`Favorite archive app contract missing: ${token}`);
           }
@@ -466,7 +493,7 @@ jobs:
               throw new Error(`Public Pinterest runtime still exposed: ${forbidden}`);
             }
           }
-          if (!input.includes('./flow-ux.css?v=49.4.1')) throw new Error('Retirement CSS cache bust missing');
+          if (!input.includes('./flow-ux.css?v=49.7')) throw new Error('Retirement CSS cache bust missing');
           console.log('Pinterest public widget retired');
           NODE
 

@@ -442,6 +442,32 @@ html.media-viewer-open body {
   align-items: start;
 }
 
+.flow-grid.flow-grid--favorites {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.flow-grid--favorites .flow-grid-card {
+  border-radius: 14px;
+}
+
+.flow-grid--favorites .flow-grid-card__favorite {
+  top: 5px;
+  right: 5px;
+  width: 32px;
+  height: 32px;
+  border-radius: 11px;
+  font-size: 16px;
+}
+
+.flow-grid--favorites .flow-grid-card__source {
+  left: 6px;
+  bottom: 6px;
+  min-height: 20px;
+  padding-inline: 6px;
+  font-size: 8px;
+}
+
 .flow-grid-card {
   position: relative;
   min-width: 0;

@@ -279,6 +279,7 @@ function appendFlowGridBatch() {
 
 function refreshFlowGrid({ resetScroll = false, preserveCount = false } = {}) {
   if (!els.flowGrid) return;
+  els.flowGrid.classList.toggle("flow-grid--favorites", flowMode === "favorites");
   const previousCount = flowGridRendered;
   flowGridItems = flowListItems();
   flowGridRendered = 0;
@@ -828,7 +829,7 @@ async function init() {
   }
 
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-    navigator.serviceWorker.register("./sw.js?v=49.5").catch(() => {});
+    navigator.serviceWorker.register("./sw.js?v=49.7").catch(() => {});
   }
 }
 
