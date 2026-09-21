@@ -1,9 +1,11 @@
   async function loadSourceText(source) {
     const sep = source.url.includes("?") ? "&" : "?";
-    const req = new Request(`${source.url}${sep}_velvet=${Date.now()}-${Math.random()}`);
+    // Match the active eros-hub v0.9.9 transport. Some Twiigle routes,
+    // especially /hot.html, reject the dedicated Feed Sync UA with HTTP 403.
+    const req = new Request(`${source.url}${sep}_=${Date.now()}-${Math.random()}`);
     req.timeoutInterval = 18;
     req.headers = {
-      "User-Agent": `VelvetFeedSync/${VERSION}`,
+      "User-Agent": "ErosHub/0.9.9",
       "Accept": "text/html,application/xhtml+xml",
       "Cache-Control": "no-cache",
       "Pragma": "no-cache",
