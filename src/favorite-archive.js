@@ -95,6 +95,13 @@ export function getArchivedFavorites(ids) {
     .filter(Boolean);
 }
 
+export function getAllArchivedFavorites() {
+  return Object.values(loadArchiveMap())
+    .filter(item => item && typeof item === "object" && item.id)
+    .sort((a, b) => String(b.archived_at || "").localeCompare(String(a.archived_at || "")))
+    .slice(0, MAX_ARCHIVES);
+}
+
 export async function requestFavoritePersistence() {
   if (persistenceRequested) return null;
   persistenceRequested = true;

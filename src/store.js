@@ -109,13 +109,9 @@ export function saveState(state) {
 
 export function applyHistoryPolicy(state) {
   const mode = state.settings.historyMode;
-  if (mode === "off") {
-    state.likedItemIds = [];
-    state.skippedItemIds = [];
-    state.viewedItemIds = [];
-    state.recentItemIds = [];
-    state.recentSources = [];
-  } else if (mode === "likes") {
+  // Favorites are user-curated data, not browsing history.
+  // History policy may discard passive view/skip history, but must never erase likes.
+  if (mode === "off" || mode === "likes") {
     state.skippedItemIds = [];
     state.viewedItemIds = [];
     state.recentItemIds = [];
@@ -135,7 +131,7 @@ export function clearTaste(state) {
 }
 
 export function clearHistory(state) {
-  state.likedItemIds = [];
+  // "Clear history" deliberately preserves explicit favorites.
   state.skippedItemIds = [];
   state.viewedItemIds = [];
   state.recentItemIds = [];
@@ -175,7 +171,7 @@ export function recordReaction(state, item, reaction) {
   state.intensityWeights[iKey] = (state.intensityWeights[iKey] || 0) + delta * 0.45;
   state.sourceClassWeights[cKey] = (state.sourceClassWeights[cKey] || 0) + delta * 0.55;
 
-  if (reaction === "like" && state.settings.historyMode !== "off") {
+  if (reaction === "like") {
     state.likedItemIds = [item.id, ...state.likedItemIds.filter(id => id !== item.id)].slice(0, 400);
   }
   if (reaction === "skip" && state.settings.historyMode === "full") {
