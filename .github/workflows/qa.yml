@@ -24,7 +24,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in src/*.js sw.js velvet-feed-sync.js; do
+          for file in src/*.js lib/*.js api/*.js sw.js velvet-feed-sync.js; do
             node --check "$file"
           done
           cat feed-base/part-*.txt > /tmp/velvet-feed-base.js
@@ -32,6 +32,11 @@ jobs:
 
       - name: JSON parse
         run: node -e "for (const f of ['manifest.webmanifest','velvet-content.json','package.json']) JSON.parse(require('fs').readFileSync(f,'utf8')); console.log('JSON OK')"
+
+      - name: Favorite sync core contracts
+        run: |
+          node tests/favorite-sync-core.mjs
+          node -e "const p=require('./package.json'); if(p.dependencies?.['@vercel/blob']!=='2.6.1') throw new Error('Vercel Blob SDK must stay pinned'); console.log('Favorite sync dependency pin OK')"
 
       - name: Required PWA files
         shell: bash
