@@ -74,6 +74,74 @@
       .map(item => ({ ...item, source_snapshot_recovered: true, source_snapshot_age_ms: ageMs }));
   }
 
+  const SCRIPTABLE_BRIDGE_MAX_AGE_MS = 72 * 60 * 60 * 1000;
+  const SCRIPTABLE_BRIDGE_URL = "https://raw.githubusercontent.com/48wr9f4wgp-lab/-velvet-pwa/main/velvet-source-bridge.json";
+
+  async function fetchScriptableBridge(diagnostics) {
+    const req = new Request(`${SCRIPTABLE_BRIDGE_URL}?t=${Date.now()}`);
+    req.timeoutInterval = 18;
+    req.headers = {
+      "User-Agent": `VelvetFeedSync/${VERSION}`,
+      "Accept": "application/json",
+      "Cache-Control": "no-cache",
+      "Pragma": "no-cache"
+    };
+    const payload = JSON.parse(await req.loadString());
+    if (!payload || Number(payload.schema_version) !== 1 || String(payload.mode || "") !== "max") return [];
+
+    const generatedAt = Date.parse(String(payload.generated_at || ""));
+    const ageMs = Number.isFinite(generatedAt) ? Date.now() - generatedAt : Infinity;
+    if (ageMs < 0 || ageMs > SCRIPTABLE_BRIDGE_MAX_AGE_MS) return [];
+
+    const items = [];
+    const seen = new Set();
+    for (const row of Array.isArray(payload.items) ? payload.items : []) {
+      const source = SOURCE_URLS[String(row?.source || "")];
+      const image = String(row?.image_url || "").trim();
+      if (!source || !/^https:\/\/pbs\.twimg\.com\//i.test(image)) continue;
+
+      const meta = sanitizeContext(String(row?.public_meta || "").slice(0, 1400));
+      const rank = Math.max(1, Number(row?.rank) || 1);
+      const profiles = baselineForCard(meta, source.name, rank, diagnostics);
+      if (!Object.keys(profiles).length) continue;
+
+      const pageURL = typeof row?.page_url === "string" && /^https:\/\//i.test(row.page_url) ? row.page_url : source.url;
+      const id = String(row?.id || `bridge:${source.name}:${mediaIdFrom(image, "")}`);
+      const dedupeKey = pageURL.includes("/status/") ? pageURL : image;
+      if (seen.has(dedupeKey)) continue;
+      seen.add(dedupeKey);
+
+      const bestProfile = Object.values(profiles).sort((a, b) => Number(b.score || 0) - Number(a.score || 0))[0];
+      items.push({
+        id,
+        image_url: image,
+        thumb_url: null,
+        title: "",
+        source: source.name,
+        source_label: source.label,
+        source_class: source.sourceClass,
+        tags: itemTags(meta, source, profiles),
+        intensity: Number(bestProfile?.intensity || 3),
+        page_url: pageURL,
+        handle: typeof row?.handle === "string" ? row.handle : null,
+        rank,
+        rights_status: "external-public-source",
+        active: true,
+        source_bridge: {
+          kind: "scriptable-preference-neutral-source-pool",
+          generated_at: payload.generated_at,
+          age_ms: ageMs
+        },
+        baseline: {
+          canonical: CANONICAL_BASELINE,
+          profiles
+        }
+      });
+      if (items.length >= MAX_ITEMS) break;
+    }
+    return items;
+  }
+
   async function buildFeed() {
     const failures = [];
     const diagnostics = { quarantine: emptyCounts(), baseline_rejections: emptyCounts() };
@@ -111,6 +179,22 @@
       }
     }
 
+    let bridgeCount = 0;
+    try {
+      const bridgeItems = await fetchScriptableBridge(diagnostics);
+      bridgeCount = bridgeItems.length;
+      for (const item of bridgeItems) {
+        const existing = byId.get(item.id);
+        const currentBest = Math.max(...Object.values(item.baseline.profiles).map(row => Number(row.score || 0)));
+        const existingBest = existing
+          ? Math.max(...Object.values(existing.baseline.profiles).map(row => Number(row.score || 0)))
+          : -Infinity;
+        if (!existing || currentBest > existingBest) byId.set(item.id, item);
+      }
+    } catch (error) {
+      failures.push(`ScriptableBridge: ${String(error?.message || error).slice(0, 160)}`);
+    }
+
     const seenContent = new Set();
     const items = [...byId.values()]
       .map(item => ({
@@ -138,6 +222,10 @@
       source_recovery: {
         max_age_ms: PUBLIC_SOURCE_SNAPSHOT_MAX_AGE_MS,
         recovered_sources: recoveredSources
+      },
+      scriptable_bridge: {
+        accepted: bridgeCount,
+        max_age_ms: SCRIPTABLE_BRIDGE_MAX_AGE_MS
       }
     };
   }
