@@ -42,10 +42,17 @@
     const result = await publishFeed(token, feed);
     const q = Number(feed.diagnostics?.quarantine?.total || 0);
     const rejected = Number(feed.diagnostics?.baseline_rejections?.total || 0);
+    const recoveredRows = Array.isArray(feed.source_recovery?.recovered_sources)
+      ? feed.source_recovery.recovered_sources
+      : [];
+    const recoveredCount = recoveredRows.reduce((sum, row) => sum + Number(row?.count || 0), 0);
+    const recoveredLabel = recoveredRows.length
+      ? recoveredRows.map(row => `${row.source}:${row.count}`).join(", ")
+      : "なし";
     const status = result.changed ? "更新完了" : "変更なし";
     await showResult(
       `Velvet Feed ${status}`,
-      `基準: ${CANONICAL_BASELINE}\n候補: ${feed.items.length}\nsource失敗: ${feed.failures.length}\n本家基準除外: ${rejected}\nquarantine: ${q}\nbranch: ${TARGET_BRANCH}\n\n${result.changed ? "Pages用JSONを更新しました。" : "実質変更なし。GitHub commitを節約しました。"}`
+      `基準: ${CANONICAL_BASELINE}\n候補: ${feed.items.length}\nsource失敗: ${feed.failures.length}\nsource復旧: ${recoveredCount} (${recoveredLabel})\n本家基準除外: ${rejected}\nquarantine: ${q}\nbranch: ${TARGET_BRANCH}\n\n${result.changed ? "Pages用JSONを更新しました。" : "実質変更なし。GitHub commitを節約しました。"}`
     );
   } catch (error) {
     await showResult("Velvet Feed Sync失敗", String(error?.message || error));
