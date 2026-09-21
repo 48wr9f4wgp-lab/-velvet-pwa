@@ -21,7 +21,7 @@ export default {
   async fetch(request) {
     if (request.method === "GET") {
       let authenticated = false;
-      try { authenticated = isAuthorizedRequest(request); } catch (_) {}
+      try { authenticated = await isAuthorizedRequest(request); } catch (_) {}
       return json({ authenticated });
     }
 
@@ -44,12 +44,14 @@ export default {
 
     const code = typeof body?.code === "string" ? body.code : "";
     let valid = false;
-    try { valid = verifyPairCode(code); } catch (_) {
-      return json({ error: "sync_not_configured" }, 503);
-    }
+    try { valid = await verifyPairCode(code); }
+    catch (_) { return json({ error: "sync_not_configured" }, 503); }
     if (!valid) return json({ error: "unauthorized" }, 401);
 
-    const token = issueSessionToken();
+    let token;
+    try { token = await issueSessionToken(); }
+    catch (_) { return json({ error: "sync_not_configured" }, 503); }
+
     return json({ authenticated: true }, 200, {
       "Set-Cookie": makeSessionCookie(token)
     });
