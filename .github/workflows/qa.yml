@@ -586,7 +586,7 @@ jobs:
           console.log('Feed target contract OK');
           NODE
 
-      - name: Scriptable PWA bridge v49.6.2 contracts
+      - name: Scriptable PWA bridge v49.6.3 contracts
         run: |
           node <<'NODE'
           const fs = require('fs');
@@ -613,6 +613,8 @@ jobs:
             'velvet-source-bridge.json',
             'fetchScriptableBridge',
             'scriptable-preference-neutral-source-pool',
+            'source_kind || "") !== "preference-neutral-source-pool"',
+            '["mix", "personal", "pro", "max"].includes(bridgeMode)',
             'baselineForCard(meta, source.name, rank, diagnostics)',
             'scriptable_bridge:'
           ]) {
@@ -637,5 +639,5 @@ jobs:
             throw new Error('Bridge document schema invalid');
           }
 
-          console.log('Scriptable PWA bridge v49.6.2 contracts OK');
+          console.log('Scriptable PWA bridge v49.6.3 contracts OK');
           NODE
