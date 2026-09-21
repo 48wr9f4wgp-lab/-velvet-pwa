@@ -18,14 +18,30 @@ import {
   archiveFavorite,
   backfillFavoriteArchive,
   clearFavoriteArchive,
+  getAllArchivedFavorites,
   getArchivedFavorites,
   removeFavoriteArchive
-} from "./favorite-archive.js?v=49.5";
+} from "./favorite-archive.js?v=50";
 
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
 
 let state = loadState();
+
+function recoverArchivedFavoriteState() {
+  const archived = getAllArchivedFavorites();
+  if (!archived.length) return 0;
+
+  const current = Array.isArray(state.likedItemIds) ? state.likedItemIds : [];
+  const merged = [...new Set([...archived.map(item => String(item.id)), ...current])].slice(0, 400);
+  if (merged.length === current.length && merged.every((id, index) => id === current[index])) return 0;
+
+  state.likedItemIds = merged;
+  state.counts.liked = merged.length;
+  state = saveState(state);
+  return Math.max(0, merged.length - current.length);
+}
+
 let catalog = [];
 let catalogInfo = null;
 let catalogReady = false;
@@ -628,13 +644,11 @@ function status(message) {
 }
 
 function saveSettings() {
-  const hadFavorites = (state.likedItemIds || []).length > 0;
   state.settings.privacyBlur = els.privacyBlurSetting.checked;
   state.settings.resumeLastItem = els.resumeSetting.checked;
   state.settings.reducedMotion = els.reducedMotionSetting.checked;
   state.settings.historyMode = els.historyModeSetting.value;
   state = saveState(applyHistoryPolicy(state));
-  if (hadFavorites && !(state.likedItemIds || []).length) void clearFavoriteArchive();
   applyMotionPreference();
   window.dispatchEvent(new CustomEvent("velvet:favorites-changed"));
   publishFlowItem();
@@ -767,10 +781,9 @@ function bindEvents() {
   });
   els.clearHistoryButton.addEventListener("click", () => {
     state = clearHistory(state);
-    void clearFavoriteArchive();
     resetActiveExperience();
     window.dispatchEvent(new CustomEvent("velvet:favorites-changed"));
-    status("History cleared");
+    status("History cleared · favorites kept");
   });
   els.clearAllButton.addEventListener("click", () => {
     state = clearAll();
@@ -805,9 +818,16 @@ function bindEvents() {
 }
 
 async function init() {
+  const recoveredFavorites = recoverArchivedFavoriteState();
   applyMotionPreference();
   bindEvents();
   syncSettingsUi();
+
+  if (recoveredFavorites > 0) {
+    window.dispatchEvent(new CustomEvent("velvet:favorites-recovered", {
+      detail: { count: recoveredFavorites }
+    }));
+  }
 
   if (!state.settings.privacyBlur) revealApp();
 
@@ -828,7 +848,7 @@ async function init() {
   }
 
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-    navigator.serviceWorker.register("./sw.js?v=49.5").catch(() => {});
+    navigator.serviceWorker.register("./sw.js?v=50").catch(() => {});
   }
 }
 
