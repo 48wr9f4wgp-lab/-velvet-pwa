@@ -384,7 +384,7 @@ jobs:
             'getArchivedFavorites',
             'removeFavoriteArchive',
             'archived.get(id) || byId.get(id)',
-            'navigator.serviceWorker.register("./sw.js?v=49.5")'
+            'navigator.serviceWorker.register("./sw.js?v=49.7")'
           ]) {
             if (!app.includes(token)) throw new Error(`Favorite archive app contract missing: ${token}`);
           }
