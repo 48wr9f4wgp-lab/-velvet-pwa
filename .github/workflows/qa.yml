@@ -61,7 +61,7 @@ jobs:
             './src/image-guard.js?v=44',
             './src/flow-presets.js?v=49.2',
             './src/input-guard.js?v=49.4.1',
-            './src/app.js?v=49.6'
+            './src/app.js?v=50'
           ]) {
             if (!html.includes(token)) throw new Error(`index contract missing: ${token}`);
           }
@@ -227,7 +227,7 @@ jobs:
           const html = fs.readFileSync('index.html','utf8');
           const app = fs.readFileSync('src/app.js','utf8');
 
-          if (!html.includes('./src/app.js?v=49.6')) throw new Error('v49.6 app cache bust missing');
+          if (!html.includes('./src/app.js?v=50')) throw new Error('v49.6 app cache bust missing');
           if (app.includes('const FLOW_GRID_LIMIT = 160')) throw new Error('Legacy 160-item Flow cap still present');
 
           for (const token of [
@@ -268,7 +268,7 @@ jobs:
 
           for (const token of [
             './src/input-guard.js?v=49.4.1',
-            './src/app.js?v=49.6'
+            './src/app.js?v=50'
           ]) {
             if (!html.includes(token)) throw new Error(`v49.3 asset version missing: ${token}`);
           }
@@ -348,7 +348,7 @@ jobs:
           const archive = fs.readFileSync('src/favorite-archive.js','utf8');
           const sw = fs.readFileSync('sw.js','utf8');
 
-          if (!html.includes('./src/app.js?v=49.6')) throw new Error('v49.5 app cache bust missing');
+          if (!html.includes('./src/app.js?v=50')) throw new Error('v49.5 app cache bust missing');
 
           for (const token of [
             'archiveFavorite',
@@ -551,6 +551,55 @@ jobs:
           const priorScore = scoreItem(prior, state, 'personal', 3);
           if (!(directScore > priorScore)) throw new Error('Low-confidence source prior is not damped');
           console.log('Exposure confidence behavior OK');
+          NODE
+
+      - name: Favorite recovery v50 contracts
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const store = fs.readFileSync('src/store.js','utf8');
+          const archive = fs.readFileSync('src/favorite-archive.js','utf8');
+          const app = fs.readFileSync('src/app.js','utf8');
+          const html = fs.readFileSync('index.html','utf8');
+
+          if (!html.includes('./src/app.js?v=50')) throw new Error('v50 app cache bust missing');
+          if (!archive.includes('export function getAllArchivedFavorites()')) {
+            throw new Error('Archived favorite enumeration missing');
+          }
+          if (!app.includes('function recoverArchivedFavoriteState()')) {
+            throw new Error('Favorite recovery routine missing');
+          }
+          if (!app.includes('getAllArchivedFavorites')) {
+            throw new Error('Favorite recovery does not read archive');
+          }
+          if (!app.includes('History cleared · favorites kept')) {
+            throw new Error('Clear history UX does not preserve favorites');
+          }
+          if (app.includes('state = clearHistory(state);\n    void clearFavoriteArchive();')) {
+            throw new Error('Clear history still destroys favorite archive');
+          }
+
+          const policy = store.match(/export function applyHistoryPolicy\(state\) \{[\s\S]*?\n\}/)?.[0] || '';
+          if (policy.includes('state.likedItemIds = []')) {
+            throw new Error('History policy still clears favorites');
+          }
+          const clearHistory = store.match(/export function clearHistory\(state\) \{[\s\S]*?\n\}/)?.[0] || '';
+          if (clearHistory.includes('state.likedItemIds = []')) {
+            throw new Error('Clear history still clears favorites');
+          }
+          if (!store.includes('if (reaction === "like") {\n    state.likedItemIds =')) {
+            throw new Error('Likes are still gated by history mode');
+          }
+
+          const health = fs.readFileSync('api/favorite-store-health.js','utf8');
+          for (const forbidden of ['process.env.BLOB_READ_WRITE_TOKEN,', 'process.env.KV_REST_API_TOKEN,', 'process.env.SUPABASE_SERVICE_ROLE_KEY,']) {
+            if (health.includes(forbidden)) throw new Error('Health probe may expose secret values');
+          }
+          if (!health.includes('Boolean(process.env.BLOB_READ_WRITE_TOKEN)')) {
+            throw new Error('Health probe does not reduce secrets to booleans');
+          }
+
+          console.log('Favorite recovery v50 contracts OK');
           NODE
 
       - name: Icon dimensions
