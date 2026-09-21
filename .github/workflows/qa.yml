@@ -60,7 +60,7 @@ jobs:
             './styles.css?v=48',
             './src/image-guard.js?v=44',
             './src/flow-presets.js?v=49.2',
-            './src/input-guard.js?v=49.4.1',
+            './src/input-guard.js?v=49.7',
             './src/app.js?v=49.7'
           ]) {
             if (!html.includes(token)) throw new Error(`index contract missing: ${token}`);
@@ -294,7 +294,7 @@ jobs:
           const css = fs.readFileSync('flow-ux.css','utf8');
 
           for (const token of [
-            './src/input-guard.js?v=49.4.1',
+            './src/input-guard.js?v=49.7',
             './src/app.js?v=49.7'
           ]) {
             if (!html.includes(token)) throw new Error(`v49.3 asset version missing: ${token}`);
