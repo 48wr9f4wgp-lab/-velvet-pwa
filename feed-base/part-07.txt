@@ -87,7 +87,11 @@
       "Pragma": "no-cache"
     };
     const payload = JSON.parse(await req.loadString());
-    if (!payload || Number(payload.schema_version) !== 1 || String(payload.mode || "") !== "max") return [];
+    if (!payload || Number(payload.schema_version) !== 1) return [];
+    if (String(payload.source_kind || "") !== "preference-neutral-source-pool") return [];
+
+    const bridgeMode = String(payload.mode || "unknown").toLowerCase();
+    if (!["mix", "personal", "pro", "max"].includes(bridgeMode)) return [];
 
     const generatedAt = Date.parse(String(payload.generated_at || ""));
     const ageMs = Number.isFinite(generatedAt) ? Date.now() - generatedAt : Infinity;
@@ -130,6 +134,7 @@
         source_bridge: {
           kind: "scriptable-preference-neutral-source-pool",
           generated_at: payload.generated_at,
+          mode: bridgeMode,
           age_ms: ageMs
         },
         baseline: {
@@ -225,7 +230,8 @@
       },
       scriptable_bridge: {
         accepted: bridgeCount,
-        max_age_ms: SCRIPTABLE_BRIDGE_MAX_AGE_MS
+        max_age_ms: SCRIPTABLE_BRIDGE_MAX_AGE_MS,
+        accepted_modes: ["mix", "personal", "pro", "max"]
       }
     };
   }
