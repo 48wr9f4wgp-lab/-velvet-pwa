@@ -21,15 +21,72 @@
     return { items, diagnostics };
   }
 
+  const PUBLIC_SOURCE_SNAPSHOT_MAX_AGE_MS = 72 * 60 * 60 * 1000;
+
+  function publicSourceSnapshotPath() {
+    try {
+      const fmLocal = FileManager.local();
+      return { fmLocal, path: fmLocal.joinPath(fmLocal.documentsDirectory(), "velvet-feed-public-source-snapshot-v1.json") };
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function readPublicSourceSnapshots() {
+    try {
+      const target = publicSourceSnapshotPath();
+      if (!target || !target.fmLocal.fileExists(target.path)) return {};
+      const payload = JSON.parse(target.fmLocal.readString(target.path) || "{}");
+      return payload && payload.schema === 1 && payload.sources && typeof payload.sources === "object"
+        ? payload.sources
+        : {};
+    } catch (_) {
+      return {};
+    }
+  }
+
+  function writePublicSourceSnapshots(sources) {
+    try {
+      const target = publicSourceSnapshotPath();
+      if (!target) return;
+      target.fmLocal.writeString(target.path, JSON.stringify({ schema: 1, updatedAt: Date.now(), sources }));
+    } catch (_) {}
+  }
+
+  function rememberPublicSourceSnapshot(sources, sourceName, items) {
+    if (!sourceName || !Array.isArray(items) || !items.length) return;
+    sources[sourceName] = {
+      savedAt: Date.now(),
+      items: items
+        .filter(item => item && item.id && item.image_url && item.baseline?.profiles)
+        .slice(0, 120)
+    };
+    writePublicSourceSnapshots(sources);
+  }
+
+  function recoverPublicSourceSnapshot(sources, sourceName) {
+    const snapshot = sources?.[sourceName];
+    if (!snapshot || !Array.isArray(snapshot.items)) return [];
+    const ageMs = Date.now() - Number(snapshot.savedAt || 0);
+    if (ageMs < 0 || ageMs > PUBLIC_SOURCE_SNAPSHOT_MAX_AGE_MS) return [];
+    return snapshot.items
+      .filter(item => item && item.id && item.image_url && item.baseline?.profiles)
+      .map(item => ({ ...item, source_snapshot_recovered: true, source_snapshot_age_ms: ageMs }));
+  }
+
   async function buildFeed() {
     const failures = [];
     const diagnostics = { quarantine: emptyCounts(), baseline_rejections: emptyCounts() };
     const byId = new Map();
+    const publicSourceSnapshots = readPublicSourceSnapshots();
+    const recoveredSources = [];
 
     for (const source of Object.values(SOURCE_URLS)) {
       try {
         const result = await fetchSource(source);
+        rememberPublicSourceSnapshot(publicSourceSnapshots, source.name, result.items);
         for (const item of result.items) {
+          item.source_snapshot_recovered = false;
           const existing = byId.get(item.id);
           const currentBest = Math.max(...Object.values(item.baseline.profiles).map(row => Number(row.score || 0)));
           const existingBest = existing ? Math.max(...Object.values(existing.baseline.profiles).map(row => Number(row.score || 0))) : -Infinity;
@@ -39,6 +96,18 @@
         mergeCounts(diagnostics.baseline_rejections, result.diagnostics.baseline_rejections);
       } catch (error) {
         failures.push(`${source.name}: ${String(error?.message || error).slice(0, 160)}`);
+        const recovered = recoverPublicSourceSnapshot(publicSourceSnapshots, source.name);
+        if (recovered.length) {
+          recoveredSources.push({ source: source.name, count: recovered.length });
+          for (const item of recovered) {
+            const existing = byId.get(item.id);
+            const currentBest = Math.max(...Object.values(item.baseline.profiles).map(row => Number(row.score || 0)));
+            const existingBest = existing
+              ? Math.max(...Object.values(existing.baseline.profiles).map(row => Number(row.score || 0)))
+              : -Infinity;
+            if (!existing || currentBest > existingBest) byId.set(item.id, item);
+          }
+        }
       }
     }
 
@@ -65,6 +134,10 @@
       canonical_baseline: CANONICAL_BASELINE,
       items,
       failures,
-      diagnostics
+      diagnostics,
+      source_recovery: {
+        max_age_ms: PUBLIC_SOURCE_SNAPSHOT_MAX_AGE_MS,
+        recovered_sources: recoveredSources
+      }
     };
   }

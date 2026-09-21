@@ -51,11 +51,20 @@ let flowForwardStack = [];
 const FLOW_NAV_LIMIT = 60;
 const runtimeSeenByMode = new Map();
 const FLOW_GRID_BATCH = 12;
-const FLOW_GRID_LIMIT = 160;
 let flowGridItems = [];
 let flowViewerItems = [];
 let flowGridRendered = 0;
 let flowGridObserver = null;
+let catalogSignatureValue = "";
+let backgroundedAt = 0;
+let foregroundRefreshTimer = null;
+let foregroundRetryTimer = null;
+
+function catalogSignature(items) {
+  return (Array.isArray(items) ? items : [])
+    .map(item => `${String(item?.id || "")}\u0000${String(item?.image_url || "")}`)
+    .join("\u0001");
+}
 
 function runtimeSeenForMode(mode = flowMode) {
   if (!runtimeSeenByMode.has(mode)) runtimeSeenByMode.set(mode, new Set());
@@ -171,7 +180,7 @@ function flowListItems() {
       .map(id => archived.get(id) || byId.get(id))
       .filter(Boolean);
   }
-  const limit = Math.min(FLOW_GRID_LIMIT, Math.max(1, catalog.length));
+  const limit = Math.max(1, catalog.length);
   return rankCandidates(catalog, state, flowMode, new Set(), null, limit).map(row => row.item);
 }
 
@@ -637,6 +646,7 @@ async function reloadCatalog() {
   setHidden(els.emptyState, true);
   catalogInfo = await loadCatalog();
   catalog = catalogInfo.catalog;
+  catalogSignatureValue = catalogSignature(catalog);
   catalogReady = true;
   backfillFavoriteArchive(state.likedItemIds, catalog);
   flowViewerItems = [];
@@ -645,6 +655,49 @@ async function reloadCatalog() {
   clearFlowNavigation();
   currentItem = null;
   if (appUnlocked) refreshFlowGrid({ resetScroll: true });
+}
+
+async function refreshCatalogIfChanged() {
+  if (!catalogReady) return false;
+  try {
+    const nextInfo = await loadCatalog();
+    const nextCatalog = nextInfo.catalog;
+    const nextSignature = catalogSignature(nextCatalog);
+    if (!nextSignature || nextSignature === catalogSignatureValue) return false;
+
+    catalogInfo = nextInfo;
+    catalog = nextCatalog;
+    catalogSignatureValue = nextSignature;
+    backfillFavoriteArchive(state.likedItemIds, catalog);
+    flowViewerItems = [];
+    flowExclusions.clear();
+    runtimeSeenByMode.clear();
+    clearFlowNavigation();
+    currentItem = null;
+
+    if (appUnlocked) refreshFlowGrid({ preserveCount: true });
+    window.dispatchEvent(new CustomEvent("velvet:feed-refreshed", {
+      detail: { count: catalog.length }
+    }));
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
+function scheduleForegroundFeedRefresh() {
+  clearTimeout(foregroundRefreshTimer);
+  clearTimeout(foregroundRetryTimer);
+
+  foregroundRefreshTimer = setTimeout(() => {
+    void refreshCatalogIfChanged();
+  }, 1200);
+
+  // GitHub publish can finish slightly before the Vercel production alias switches.
+  // A second quiet check catches that handoff without requiring a manual app restart.
+  foregroundRetryTimer = setTimeout(() => {
+    void refreshCatalogIfChanged();
+  }, 7000);
 }
 
 function bindEvents() {
@@ -734,6 +787,20 @@ function bindEvents() {
     if (currentItem?.id) flowExclusions.add(currentItem.id);
     setTimeout(showNextFlowItem, 80);
   });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      backgroundedAt = Date.now();
+      clearTimeout(foregroundRefreshTimer);
+      clearTimeout(foregroundRetryTimer);
+      return;
+    }
+
+    const awayMs = backgroundedAt ? Date.now() - backgroundedAt : 0;
+    backgroundedAt = 0;
+    if (awayMs >= 1200) scheduleForegroundFeedRefresh();
+  });
+
   setupFlowGridObserver();
 }
 
@@ -746,6 +813,7 @@ async function init() {
 
   catalogInfo = await loadCatalog();
   catalog = catalogInfo.catalog;
+  catalogSignatureValue = catalogSignature(catalog);
   catalogReady = true;
   backfillFavoriteArchive(state.likedItemIds, catalog);
   state = recordModeUse(state, "flow");
