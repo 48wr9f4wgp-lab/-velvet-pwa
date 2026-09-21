@@ -11,6 +11,7 @@ on:
       - "scripts/run-feed-sync.mjs"
       - "velvet-feed-sync.js"
       - "feed-base/**"
+      - "velvet-source-bridge.json"
       - ".github/workflows/feed-sync.yml"
 
 permissions:
