@@ -10,7 +10,7 @@
   const TARGET_BRANCH = "velvet-pages";
   const TARGET_PATH = "velvet-content.json";
   const TOKEN_KEY = "velvet_feed_sync_github_token_v1";
-  const MAX_ITEMS = 240;
+  const MAX_ITEMS = 320;
   const MIN_PUBLISH_ITEMS = 20;
 
   const SOURCE_URLS = Object.freeze({
