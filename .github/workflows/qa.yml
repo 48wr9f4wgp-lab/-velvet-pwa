@@ -61,7 +61,7 @@ jobs:
             './src/image-guard.js?v=44',
             './src/flow-presets.js?v=49.2',
             './src/input-guard.js?v=49.4.1',
-            './src/app.js?v=49.5'
+            './src/app.js?v=49.6'
           ]) {
             if (!html.includes(token)) throw new Error(`index contract missing: ${token}`);
           }
@@ -220,6 +220,42 @@ jobs:
           console.log('Flow grid v49.4 contracts OK');
           NODE
 
+      - name: Feed visibility v49.6 contracts
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const html = fs.readFileSync('index.html','utf8');
+          const app = fs.readFileSync('src/app.js','utf8');
+
+          if (!html.includes('./src/app.js?v=49.6')) throw new Error('v49.6 app cache bust missing');
+          if (app.includes('const FLOW_GRID_LIMIT = 160')) throw new Error('Legacy 160-item Flow cap still present');
+
+          for (const token of [
+            'const limit = Math.max(1, catalog.length)',
+            'function catalogSignature(items)',
+            'function refreshCatalogIfChanged()',
+            'function scheduleForegroundFeedRefresh()',
+            'document.addEventListener("visibilitychange"',
+            'awayMs >= 1200',
+            '}, 1200);',
+            '}, 7000);',
+            'catalogSignatureValue = catalogSignature(catalog)',
+            'refreshFlowGrid({ preserveCount: true })',
+            'velvet:feed-refreshed'
+          ]) {
+            if (!app.includes(token)) throw new Error(`Feed visibility contract missing: ${token}`);
+          }
+
+          const feed = JSON.parse(fs.readFileSync('velvet-content.json','utf8'));
+          if ((feed.items || []).length <= 160) {
+            console.log('Feed currently <=160 items; cap-removal contract still validated statically');
+          } else {
+            console.log('Feed exceeds old cap:', feed.items.length);
+          }
+
+          console.log('Feed visibility v49.6 contracts OK');
+          NODE
+
       - name: Fullscreen viewer v49.4 contracts
         run: |
           node <<'NODE'
@@ -232,7 +268,7 @@ jobs:
 
           for (const token of [
             './src/input-guard.js?v=49.4.1',
-            './src/app.js?v=49.5'
+            './src/app.js?v=49.6'
           ]) {
             if (!html.includes(token)) throw new Error(`v49.3 asset version missing: ${token}`);
           }
@@ -312,7 +348,7 @@ jobs:
           const archive = fs.readFileSync('src/favorite-archive.js','utf8');
           const sw = fs.readFileSync('sw.js','utf8');
 
-          if (!html.includes('./src/app.js?v=49.5')) throw new Error('v49.5 app cache bust missing');
+          if (!html.includes('./src/app.js?v=49.6')) throw new Error('v49.5 app cache bust missing');
 
           for (const token of [
             'archiveFavorite',
