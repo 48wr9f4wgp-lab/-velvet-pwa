@@ -5,6 +5,11 @@ assert.equal(
   canonicalizeUrlForIdentity("https://EXAMPLE.com/a/?utm_source=x&b=2&a=1#frag"),
   "https://example.com/a?a=1&b=2"
 );
+assert.equal(
+  canonicalizeUrlForIdentity("https://example.com/post?source=edition&ref=42"),
+  "https://example.com/post?ref=42&source=edition",
+  "generic query keys must remain because they may be content identity"
+);
 
 const pwa = {
   id: "pwa-1",
