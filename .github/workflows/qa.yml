@@ -585,3 +585,42 @@ jobs:
           if (!content.includes('hostname.endsWith("github.io")')) throw new Error('GitHub Pages feed mode missing');
           console.log('Feed target contract OK');
           NODE
+
+      - name: Scriptable candidate parity v49.6.1 contracts
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const p1 = fs.readFileSync('feed-base/part-01.txt','utf8');
+          const p6 = fs.readFileSync('feed-base/part-06.txt','utf8');
+          const p7 = fs.readFileSync('feed-base/part-07.txt','utf8');
+          const p9 = fs.readFileSync('feed-base/part-09.txt','utf8');
+
+          if (!p1.includes('const MAX_ITEMS = 320')) throw new Error('Expanded public feed capacity missing');
+
+          for (const token of [
+            'new Request(`${source.url}${sep}_=${Date.now()}-${Math.random()}`)',
+            '"User-Agent": "ErosHub/0.9.9"',
+            '"Referer": source.site + "/"'
+          ]) {
+            if (!p6.includes(token)) throw new Error(`v0.9.9 source transport parity missing: ${token}`);
+          }
+          if (p6.includes('_velvet=')) throw new Error('Legacy Feed Sync source query marker still present');
+
+          for (const token of [
+            'PUBLIC_SOURCE_SNAPSHOT_MAX_AGE_MS = 72 * 60 * 60 * 1000',
+            'velvet-feed-public-source-snapshot-v1.json',
+            'rememberPublicSourceSnapshot',
+            'recoverPublicSourceSnapshot',
+            'source_snapshot_recovered: true',
+            'recovered_sources: recoveredSources'
+          ]) {
+            if (!p7.includes(token)) throw new Error(`Public source recovery contract missing: ${token}`);
+          }
+
+          for (const forbidden of ['tasteScore', 'likedIds', 'skippedIds', 'viewedIds', 'velvet-unified-v2-widget-feed-v2']) {
+            if (p7.includes(forbidden)) throw new Error(`Personal widget state leaked into public feed bridge: ${forbidden}`);
+          }
+
+          if (!p9.includes('source復旧:')) throw new Error('Feed Sync recovery result reporting missing');
+          console.log('Scriptable candidate parity v49.6.1 contracts OK');
+          NODE
