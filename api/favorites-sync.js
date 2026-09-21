@@ -22,7 +22,7 @@ function sourceHint(request, body) {
 export default {
   async fetch(request) {
     let authorized = false;
-    try { authorized = isAuthorizedRequest(request); }
+    try { authorized = await isAuthorizedRequest(request); }
     catch (_) { return json({ error: "sync_not_configured" }, 503); }
     if (!authorized) return json({ error: "unauthorized" }, 401);
 
@@ -30,7 +30,7 @@ export default {
       try {
         const state = await readFavoriteLibrary();
         return json(state);
-      } catch (error) {
+      } catch (_) {
         return json({ error: "read_failed" }, 500);
       }
     }
