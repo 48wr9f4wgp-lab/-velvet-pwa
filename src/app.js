@@ -295,6 +295,7 @@ function appendFlowGridBatch() {
 
 function refreshFlowGrid({ resetScroll = false, preserveCount = false } = {}) {
   if (!els.flowGrid) return;
+  els.flowGrid.classList.toggle("flow-grid--favorites", flowMode === "favorites");
   const previousCount = flowGridRendered;
   flowGridItems = flowListItems();
   flowGridRendered = 0;
