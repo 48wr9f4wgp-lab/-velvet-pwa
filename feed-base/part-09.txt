@@ -56,6 +56,7 @@
     );
   } catch (error) {
     await showResult("Velvet Feed Sync失敗", String(error?.message || error));
+    if (typeof process !== "undefined" && process?.versions?.node) throw error;
   }
 
   Script.complete();

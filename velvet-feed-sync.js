@@ -26,6 +26,10 @@
   let code = chunks.join("\n");
   if (code.length < 10000) throw new Error("Velvet Feed Sync base incomplete");
 
+  const engineIife = "(async () => {";
+  if (!code.includes(engineIife)) throw new Error("Velvet Feed Sync engine IIFE missing");
+  code = code.replace(engineIife, "return await (async () => {");
+
   const oldSourceTail = '    TGAV2: { name: "TGAV2", label: "TGAV2", sourceClass: "pro", site: "https://twiigle.com", url: "https://twiigle.com/trend.html" }\n  });';
   const newSourceTail = '    TGAV2: { name: "TGAV2", label: "TGAV2", sourceClass: "pro", site: "https://twiigle.com", url: "https://twiigle.com/trend.html" },\n    TG1W: { name: "TG1W", label: "TG1週間", sourceClass: "mixed", site: "https://twiigle.com", url: "https://twiigle.com/1w.html" }\n  });';
 

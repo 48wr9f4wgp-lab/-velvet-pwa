@@ -586,7 +586,7 @@ jobs:
           console.log('Feed target contract OK');
           NODE
 
-      - name: Scriptable candidate parity v49.6.1 contracts
+      - name: Scriptable PWA bridge v49.6.2 contracts
         run: |
           node <<'NODE'
           const fs = require('fs');
@@ -594,33 +594,48 @@ jobs:
           const p6 = fs.readFileSync('feed-base/part-06.txt','utf8');
           const p7 = fs.readFileSync('feed-base/part-07.txt','utf8');
           const p9 = fs.readFileSync('feed-base/part-09.txt','utf8');
+          const sync = fs.readFileSync('velvet-feed-sync.js','utf8');
+          const workflow = fs.readFileSync('.github/workflows/feed-sync.yml','utf8');
+          const bridge = JSON.parse(fs.readFileSync('velvet-source-bridge.json','utf8'));
 
           if (!p1.includes('const MAX_ITEMS = 320')) throw new Error('Expanded public feed capacity missing');
 
           for (const token of [
-            'new Request(`${source.url}${sep}_=${Date.now()}-${Math.random()}`)',
-            '"User-Agent": "ErosHub/0.9.9"',
+            'new Request(`${source.url}${sep}_velvet=${Date.now()}-${Math.random()}`)',
+            '"User-Agent": `VelvetFeedSync/${VERSION}`',
             '"Referer": source.site + "/"'
           ]) {
-            if (!p6.includes(token)) throw new Error(`v0.9.9 source transport parity missing: ${token}`);
+            if (!p6.includes(token)) throw new Error(`Stable cloud source transport missing: ${token}`);
           }
-          if (p6.includes('_velvet=')) throw new Error('Legacy Feed Sync source query marker still present');
 
           for (const token of [
-            'PUBLIC_SOURCE_SNAPSHOT_MAX_AGE_MS = 72 * 60 * 60 * 1000',
-            'velvet-feed-public-source-snapshot-v1.json',
-            'rememberPublicSourceSnapshot',
-            'recoverPublicSourceSnapshot',
-            'source_snapshot_recovered: true',
-            'recovered_sources: recoveredSources'
+            'SCRIPTABLE_BRIDGE_MAX_AGE_MS = 72 * 60 * 60 * 1000',
+            'velvet-source-bridge.json',
+            'fetchScriptableBridge',
+            'scriptable-preference-neutral-source-pool',
+            'baselineForCard(meta, source.name, rank, diagnostics)',
+            'scriptable_bridge:'
           ]) {
-            if (!p7.includes(token)) throw new Error(`Public source recovery contract missing: ${token}`);
+            if (!p7.includes(token)) throw new Error(`Scriptable bridge feed contract missing: ${token}`);
           }
 
           for (const forbidden of ['tasteScore', 'likedIds', 'skippedIds', 'viewedIds', 'velvet-unified-v2-widget-feed-v2']) {
             if (p7.includes(forbidden)) throw new Error(`Personal widget state leaked into public feed bridge: ${forbidden}`);
           }
 
-          if (!p9.includes('source復旧:')) throw new Error('Feed Sync recovery result reporting missing');
-          console.log('Scriptable candidate parity v49.6.1 contracts OK');
+          if (!sync.includes('code = code.replace(engineIife, "return await (async () => {");')) {
+            throw new Error('Feed Sync does not await engine completion');
+          }
+          if (!p9.includes('typeof process !== "undefined"') || !p9.includes('throw error')) {
+            throw new Error('Actions failure propagation missing');
+          }
+          if (!workflow.includes('"velvet-source-bridge.json"')) {
+            throw new Error('Bridge update does not trigger feed sync');
+          }
+
+          if (bridge.schema_version !== 1 || bridge.mode !== 'max' || !Array.isArray(bridge.items)) {
+            throw new Error('Bridge document schema invalid');
+          }
+
+          console.log('Scriptable PWA bridge v49.6.2 contracts OK');
           NODE
