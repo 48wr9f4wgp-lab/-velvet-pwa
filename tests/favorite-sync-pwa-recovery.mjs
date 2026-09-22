@@ -3,6 +3,7 @@ import {
   normalizeRecoveryPairCode,
   planSharedFavoriteRecovery
 } from "../src/favorite-sync-recovery.js";
+import { mergeFavoriteDisplayRows } from "../src/favorite-live-sync.js";
 
 const code = "ABCD-ef12-GH34-ij56-KL78-mn90-OP12-qr34";
 assert.equal(code.length, 39);
@@ -57,5 +58,32 @@ const dedupePlan = planSharedFavoriteRecovery({
 });
 assert.deepEqual(dedupePlan.likedIds, ["catalog-same"]);
 assert.equal(dedupePlan.archiveItems.length, 1);
+
+const displayRows = mergeFavoriteDisplayRows(
+  [
+    {
+      id: "local-1",
+      image_url: "https://cdn.example.com/local.jpg",
+      page_url: "https://example.com/local"
+    }
+  ],
+  [
+    {
+      uid: "p:https://example.com/script",
+      id: "script-1",
+      image_url: "https://cdn.example.com/script.jpg?token=abc",
+      page_url: "https://example.com/script?utm_source=x"
+    },
+    {
+      id: "local-alias",
+      image_url: "https://cdn.example.com/local.jpg?token=def",
+      page_url: "https://example.com/local?utm_source=y"
+    }
+  ]
+);
+assert.equal(displayRows.length, 2, "shared-only favorites must render even when absent from local liked IDs");
+assert.equal(displayRows[0].id, "script-1", "shared union should be a first-class display source");
+assert.ok(displayRows.some(row => row.id === "local-alias" || row.id === "local-1"), "local favorite should remain present");
+assert.equal(displayRows.filter(row => row.page_url?.includes("/local")).length, 1, "same favorite must not duplicate across local/shared identities");
 
 console.log("Velvet PWA shared favorite recovery tests OK");
