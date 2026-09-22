@@ -122,3 +122,80 @@ export function loadSharedFavoriteView() {
     return [];
   }
 }
+
+
+function canonicalFavoriteDisplayUrl(value) {
+  const raw = typeof value === "string" ? value.trim() : "";
+  if (!raw) return "";
+  try {
+    const url = new URL(raw);
+    if (!["http:", "https:"].includes(url.protocol)) return "";
+    url.hash = "";
+    url.hostname = url.hostname.toLowerCase();
+    const kept = [];
+    for (const [key, val] of url.searchParams.entries()) {
+      const lower = key.toLowerCase();
+      if (lower.startsWith("utm_") || lower.startsWith("x-amz-")) continue;
+      if (["fbclid","gclid","dclid","msclkid","mc_cid","mc_eid","igshid","token","access_token","signature","sig","expires","policy","key-pair-id"].includes(lower)) continue;
+      kept.push([key, val]);
+    }
+    kept.sort((a,b) => a[0].localeCompare(b[0]) || a[1].localeCompare(b[1]));
+    url.search = "";
+    for (const [key, val] of kept) url.searchParams.append(key, val);
+    const path = url.pathname.replace(/\/{2,}/g, "/");
+    url.pathname = path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path;
+    return url.toString();
+  } catch (_) {
+    return "";
+  }
+}
+
+function favoriteDisplayKeys(item) {
+  const keys = new Set();
+  const uid = typeof item?.uid === "string" ? item.uid.trim() : "";
+  if (uid) keys.add("u:" + uid);
+
+  for (const fp of Array.isArray(item?.aliases?.fingerprints) ? item.aliases.fingerprints : []) {
+    const value = String(fp || "").trim();
+    if (value) keys.add("f:" + value);
+  }
+
+  const page = canonicalFavoriteDisplayUrl(item?.page_url ?? item?.pageURL);
+  if (page) keys.add("p:" + page);
+
+  const image = canonicalFavoriteDisplayUrl(item?.image_url ?? item?.imageURL ?? item?.thumb_url ?? item?.thumbURL);
+  if (image) keys.add("m:" + image);
+
+  const id = String(item?.id || "").trim();
+  const source = String(item?.source || "").trim().toLowerCase();
+  if (id && source) keys.add("s:" + source + ":" + id);
+  if (id) keys.add("i:" + id);
+  return [...keys];
+}
+
+export function mergeFavoriteDisplayRows(localRows, sharedRows, max = 400) {
+  const rows = [
+    ...(Array.isArray(sharedRows) ? sharedRows : []),
+    ...(Array.isArray(localRows) ? localRows : [])
+  ];
+  const seen = new Set();
+  const out = [];
+
+  for (const item of rows) {
+    if (!item || !item.id) continue;
+    const image = String(item.image_url ?? item.imageURL ?? item.thumb_url ?? item.thumbURL ?? "").trim();
+    if (!image) continue;
+    const keys = favoriteDisplayKeys(item);
+    if (keys.some(key => seen.has(key))) continue;
+    for (const key of keys) seen.add(key);
+    out.push({
+      ...item,
+      id: String(item.id),
+      image_url: String(item.image_url ?? item.imageURL ?? item.thumb_url ?? item.thumbURL ?? ""),
+      thumb_url: typeof (item.thumb_url ?? item.thumbURL) === "string" ? (item.thumb_url ?? item.thumbURL) : null,
+      page_url: typeof (item.page_url ?? item.pageURL) === "string" ? (item.page_url ?? item.pageURL) : null
+    });
+    if (out.length >= Math.max(1, Number(max) || 400)) break;
+  }
+  return out;
+}
