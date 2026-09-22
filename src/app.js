@@ -22,6 +22,11 @@ import {
   getArchivedFavorites,
   removeFavoriteArchive
 } from "./favorite-archive.js?v=50";
+import {
+  SHARED_FAVORITE_RECOVERY_KEY,
+  planSharedFavoriteRecovery,
+  unionSharedFavorites
+} from "./favorite-sync-recovery.js?v=51";
 
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
@@ -49,6 +54,27 @@ let appUnlocked = false;
 let currentItem = null;
 const FLOW_PRESET_KEY = "velvet_private_v2_flow_preset";
 const VALID_FLOW_MODES = new Set(["soft", "personal", "pro", "intense", "favorites", "explore", "popular", "latest"]);
+
+function sharedFavoriteRecoveryDone() {
+  try {
+    const raw = localStorage.getItem(SHARED_FAVORITE_RECOVERY_KEY);
+    if (!raw) return false;
+    const parsed = JSON.parse(raw);
+    return parsed?.ok === true;
+  } catch (_) {
+    return false;
+  }
+}
+
+function writeSharedFavoriteRecoveryMarker(details) {
+  try {
+    localStorage.setItem(SHARED_FAVORITE_RECOVERY_KEY, JSON.stringify({
+      ok: true,
+      recovered_at: new Date().toISOString(),
+      ...details
+    }));
+  } catch (_) {}
+}
 function readFlowMode() {
   try {
     const value = localStorage.getItem(FLOW_PRESET_KEY);
@@ -644,6 +670,103 @@ function status(message) {
   }, 2200);
 }
 
+async function maybeRecoverSharedFavorites() {
+  if (sharedFavoriteRecoveryDone()) return { attempted: false, recovered: false };
+
+  const code = window.prompt(
+    "Velvet お気に入り復元\n\nScriptableから救出済みの共有お気に入りを、このPWAへ追加します。\n既存のお気に入りは削除しません。\n\n復旧コードを貼り付けてください。"
+  );
+  if (code === null) return { attempted: false, recovered: false };
+
+  try {
+    const localArchives = getAllArchivedFavorites();
+    const payload = await unionSharedFavorites(code, {
+      favorites: localArchives,
+      likedIds: state.likedItemIds || []
+    });
+
+    const plan = planSharedFavoriteRecovery({
+      payload,
+      currentLikedIds: state.likedItemIds || [],
+      catalog
+    });
+
+    for (const item of plan.archiveItems) archiveFavorite(item);
+
+    state.likedItemIds = plan.likedIds;
+    state.counts.liked = plan.likedIds.length;
+    state = saveState(applyHistoryPolicy(state));
+    backfillFavoriteArchive(state.likedItemIds, catalog);
+
+    const persistedState = loadState();
+    const persistedLiked = new Set(persistedState.likedItemIds || []);
+    const missingLiked = plan.likedIds.filter(id => !persistedLiked.has(id));
+    if (missingLiked.length) {
+      throw new Error("PWAのお気に入り保存確認に失敗しました (" + missingLiked.length + "件)");
+    }
+
+    const persistedArchives = new Set(getAllArchivedFavorites().map(item => String(item.id)));
+    const missingArchives = plan.archiveItems
+      .map(item => String(item.id || ""))
+      .filter(Boolean)
+      .filter(id => !persistedArchives.has(id));
+    if (missingArchives.length) {
+      throw new Error("PWAのArchive保存確認に失敗しました (" + missingArchives.length + "件)");
+    }
+
+    state = persistedState;
+
+    writeSharedFavoriteRecoveryMarker({
+      remote_revision: Number(payload.revision || 0),
+      remote_items: plan.remoteItemCount,
+      remote_orphans: plan.remoteOrphanCount,
+      remote_ids_represented: plan.representedRemoteIdCount,
+      local_favorites_after: state.likedItemIds.length,
+      visible_archives: plan.recoveredVisibleCount
+    });
+
+    try { localStorage.setItem(FLOW_PRESET_KEY, "favorites"); } catch (_) {}
+    flowMode = "favorites";
+    flowViewerItems = [];
+    flowExclusions.clear();
+    runtimeSeenByMode.clear();
+    clearFlowNavigation();
+    currentItem = null;
+
+    window.dispatchEvent(new CustomEvent("velvet:favorites-changed"));
+    window.dispatchEvent(new CustomEvent("velvet:favorites-recovered", {
+      detail: {
+        count: plan.addedLocalIds,
+        total: state.likedItemIds.length,
+        remoteRepresented: plan.representedRemoteIdCount
+      }
+    }));
+
+    if (catalogReady && appUnlocked) refreshFlowGrid({ resetScroll: true });
+
+    window.alert(
+      "お気に入り復元完了\n\n" +
+      "共有側で確認できたID: " + plan.representedRemoteIdCount + "\n" +
+      "PWAのお気に入りID: " + state.likedItemIds.length + "\n" +
+      "既存PWAデータは残したまま統合しました。"
+    );
+
+    return {
+      attempted: true,
+      recovered: true,
+      total: state.likedItemIds.length,
+      remoteRepresented: plan.representedRemoteIdCount
+    };
+  } catch (error) {
+    window.alert(
+      "お気に入り復元エラー\n\n" +
+      String(error?.message || error).slice(0, 500) +
+      "\n\nPWA側の既存お気に入りは変更していません。"
+    );
+    return { attempted: true, recovered: false, error };
+  }
+}
+
 function saveSettings() {
   state.settings.privacyBlur = els.privacyBlurSetting.checked;
   state.settings.resumeLastItem = els.resumeSetting.checked;
@@ -837,6 +960,7 @@ async function init() {
   catalogSignatureValue = catalogSignature(catalog);
   catalogReady = true;
   backfillFavoriteArchive(state.likedItemIds, catalog);
+  await maybeRecoverSharedFavorites();
   state = recordModeUse(state, "flow");
 
   if (appUnlocked) {
