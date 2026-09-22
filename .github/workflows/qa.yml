@@ -84,6 +84,25 @@ jobs:
           console.log('Add-only favorite sync contracts OK');
           NODE
 
+      - name: Shared favorite display contracts
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const app = fs.readFileSync('src/app.js','utf8');
+          const live = fs.readFileSync('src/favorite-live-sync.js','utf8');
+          for (const token of [
+            'saveSharedFavoriteView(plan.archiveItems)',
+            'loadSharedFavoriteView()',
+            'archived.get(id) || shared.get(String(id)) || byId.get(id)'
+          ]) if (!app.includes(token)) throw new Error('Shared favorite display app contract missing: '+token);
+          for (const token of [
+            'SHARED_FAVORITE_VIEW_KEY',
+            'saveSharedFavoriteView',
+            'loadSharedFavoriteView'
+          ]) if (!live.includes(token)) throw new Error('Shared favorite view persistence contract missing: '+token);
+          console.log('Shared favorite display contracts OK');
+          NODE
+
       - name: Required PWA files
         shell: bash
         run: |
@@ -112,7 +131,7 @@ jobs:
             './src/image-guard.js?v=44',
             './src/flow-presets.js?v=49.2',
             './src/input-guard.js?v=50',
-            './src/app.js?v=52'
+            './src/app.js?v=52.1'
           ]) {
             if (!html.includes(token)) throw new Error(`index contract missing: ${token}`);
           }
@@ -278,7 +297,7 @@ jobs:
           const html = fs.readFileSync('index.html','utf8');
           const app = fs.readFileSync('src/app.js','utf8');
 
-          if (!html.includes('./src/app.js?v=52')) throw new Error('v49.6 app cache bust missing');
+          if (!html.includes('./src/app.js?v=52.1')) throw new Error('v49.6 app cache bust missing');
           if (app.includes('const FLOW_GRID_LIMIT = 160')) throw new Error('Legacy 160-item Flow cap still present');
 
           for (const token of [
@@ -319,7 +338,7 @@ jobs:
 
           for (const token of [
             './src/input-guard.js?v=50',
-            './src/app.js?v=52'
+            './src/app.js?v=52.1'
           ]) {
             if (!html.includes(token)) throw new Error(`v49.3 asset version missing: ${token}`);
           }
@@ -399,7 +418,7 @@ jobs:
           const archive = fs.readFileSync('src/favorite-archive.js','utf8');
           const sw = fs.readFileSync('sw.js','utf8');
 
-          if (!html.includes('./src/app.js?v=52')) throw new Error('v49.5 app cache bust missing');
+          if (!html.includes('./src/app.js?v=52.1')) throw new Error('v49.5 app cache bust missing');
 
           for (const token of [
             'archiveFavorite',
@@ -613,7 +632,7 @@ jobs:
           const app = fs.readFileSync('src/app.js','utf8');
           const html = fs.readFileSync('index.html','utf8');
 
-          if (!html.includes('./src/app.js?v=52')) throw new Error('v50 app cache bust missing');
+          if (!html.includes('./src/app.js?v=52.1')) throw new Error('v50 app cache bust missing');
           if (!archive.includes('export function getAllArchivedFavorites()')) {
             throw new Error('Archived favorite enumeration missing');
           }
