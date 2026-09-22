@@ -8,7 +8,7 @@ import {
   clearHistory,
   clearAll,
   applyHistoryPolicy
-} from "./store.js";
+} from "./store.js?v=53";
 import {
   chooseNext,
   rankCandidates
@@ -21,12 +21,12 @@ import {
   getAllArchivedFavorites,
   getArchivedFavorites,
   removeFavoriteArchive
-} from "./favorite-archive.js?v=50";
+} from "./favorite-archive.js?v=53";
 import {
   SHARED_FAVORITE_RECOVERY_KEY,
   planSharedFavoriteRecovery,
   readSharedFavorites
-} from "./favorite-sync-recovery.js?v=51";
+} from "./favorite-sync-recovery.js?v=53";
 import {
   connectSharedFavoriteSession,
   loadSharedFavoriteView,
@@ -34,8 +34,9 @@ import {
   saveSharedFavoriteView,
   sharedFavoriteSessionStatus,
   sharedFavoriteSyncEnabled,
+  setSharedFavoriteSyncEnabled,
   syncSharedFavoriteUnion
-} from "./favorite-live-sync.js?v=52.2";
+} from "./favorite-live-sync.js?v=53";
 
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
@@ -47,7 +48,7 @@ function recoverArchivedFavoriteState() {
   if (!archived.length) return 0;
 
   const current = Array.isArray(state.likedItemIds) ? state.likedItemIds : [];
-  const merged = [...new Set([...archived.map(item => String(item.id)), ...current])].slice(0, 400);
+  const merged = [...new Set([...current, ...archived.map(item => String(item.id))])];
   if (merged.length === current.length && merged.every((id, index) => id === current[index])) return 0;
 
   state.likedItemIds = merged;
@@ -111,6 +112,7 @@ let backgroundedAt = 0;
 let foregroundRefreshTimer = null;
 let foregroundRetryTimer = null;
 let sharedFavoriteSyncBusy = false;
+let sharedFavoriteSyncQueued = false;
 let sharedFavoriteSyncTimer = null;
 
 function catalogSignature(items) {
@@ -256,6 +258,7 @@ function updateFlowGridStatus() {
 }
 
 function gridSourceLabel(item) {
+  if (flowMode === "favorites") return String(item?.source_label || item?.source || "保存済み");
   if (item?.source_class === "pro") return "プロ";
   if (item?.source_class === "personal") return "素人";
   return "";
@@ -277,7 +280,15 @@ function buildFlowGridCard(item, index) {
   img.decoding = "async";
   img.loading = index < 6 ? "eager" : "lazy";
   if ("fetchPriority" in img && index < 4) img.fetchPriority = "high";
-  img.src = item.image_url;
+  const mediaUrl = item.image_url || item.thumb_url || "";
+  if (mediaUrl) img.src = mediaUrl;
+  else {
+    const missing = document.createElement("span");
+    missing.textContent = "画像情報なし・保存は維持";
+    missing.style.cssText = "display:flex;align-items:center;justify-content:center;min-height:120px;padding:12px;font-size:12px";
+    media.append(missing);
+    img.hidden = true;
+  }
 
   img.addEventListener("error", () => {
     const fallback = typeof item.thumb_url === "string" ? item.thumb_url.trim() : "";
@@ -341,9 +352,7 @@ function refreshFlowGrid({ resetScroll = false, preserveCount = false } = {}) {
   flowGridRendered = 0;
   els.flowGrid.replaceChildren();
 
-  const target = preserveCount
-    ? Math.max(FLOW_GRID_BATCH, Math.min(previousCount || FLOW_GRID_BATCH, flowGridItems.length))
-    : Math.min(FLOW_GRID_BATCH, flowGridItems.length);
+  const target = Math.min(flowGridItems.length, preserveCount ? Math.max(FLOW_GRID_BATCH, previousCount || FLOW_GRID_BATCH) : FLOW_GRID_BATCH);
   while (flowGridRendered < target) appendFlowGridBatch();
   if (!target) updateFlowGridStatus();
 
@@ -689,69 +698,41 @@ function status(message) {
 }
 
 function applySharedFavoritePayload(payload, { recoveryMarker = false } = {}) {
-  const plan = planSharedFavoriteRecovery({
-    payload,
-    currentLikedIds: state.likedItemIds || [],
-    catalog
-  });
-
-  for (const item of plan.archiveItems) archiveFavorite(item);
-  saveSharedFavoriteView(payload.items);
-
-  state.likedItemIds = plan.likedIds;
-  state.counts.liked = plan.likedIds.length;
-  state = saveState(applyHistoryPolicy(state));
-  backfillFavoriteArchive(state.likedItemIds, catalog);
-
-  const persistedState = loadState();
-  const persistedLiked = new Set(persistedState.likedItemIds || []);
-  const missingLiked = plan.likedIds.filter(id => !persistedLiked.has(id));
-  if (missingLiked.length) {
-    throw new Error("PWAのお気に入り保存確認に失敗しました (" + missingLiked.length + "件)");
+  const keys = ["velvet_private_v2_state", "velvet_private_v49_5_favorite_archive_meta", "velvet_shared_favorites_v2_view", SHARED_FAVORITE_RECOVERY_KEY];
+  const before = keys.map(key => [key, localStorage.getItem(key)]);
+  const latest = loadState();
+  const plan = planSharedFavoriteRecovery({ payload, currentLikedIds: latest.likedItemIds || [], catalog });
+  const backupKey = "velvet_favorites_pre_identity_v3";
+  if (!localStorage.getItem(backupKey)) localStorage.setItem(backupKey, JSON.stringify({ saved_at: new Date().toISOString(), entries: before }));
+  try {
+    for (const item of plan.archiveItems) archiveFavorite(item);
+    saveSharedFavoriteView(payload.items);
+    latest.likedItemIds = plan.likedIds;
+    latest.counts.liked = plan.likedIds.length;
+    state = saveState(applyHistoryPolicy(latest));
+    const persisted = loadState();
+    const saved = new Set(persisted.likedItemIds);
+    if (!plan.likedIds.every(id => saved.has(id))) throw new Error("お気に入りIDの保存確認に失敗しました");
+    const archived = new Set(getAllArchivedFavorites().map(x => String(x.id)));
+    if (!plan.archiveItems.every(x => archived.has(String(x.id)))) throw new Error("お気に入り情報の保存確認に失敗しました");
+    state = persisted;
+    if (recoveryMarker) writeSharedFavoriteRecoveryMarker({ remote_revision: payload.revision, remote_items: plan.remoteItemCount, visible_archives: plan.recoveredVisibleCount, local_favorites_after: state.likedItemIds.length });
+  } catch (error) {
+    let restored = true;
+    for (const [key, raw] of before) {
+      try { if (raw === null) localStorage.removeItem(key); else localStorage.setItem(key, raw); }
+      catch (_) { restored = false; }
+    }
+    state = loadState();
+    throw new Error(String(error?.message || error) + (restored ? "。変更前の保存状態へ戻しました。" : "。変更前バックアップは端末内に保持しています。"));
   }
-
-  const persistedArchives = new Set(getAllArchivedFavorites().map(item => String(item.id)));
-  const missingArchives = plan.archiveItems
-    .map(item => String(item.id || ""))
-    .filter(Boolean)
-    .filter(id => !persistedArchives.has(id));
-  if (missingArchives.length) {
-    throw new Error("PWAのArchive保存確認に失敗しました (" + missingArchives.length + "件)");
-  }
-
-  state = persistedState;
-
-  if (recoveryMarker) {
-    writeSharedFavoriteRecoveryMarker({
-      remote_revision: Number(payload.revision || 0),
-      remote_items: plan.remoteItemCount,
-      remote_orphans: plan.remoteOrphanCount,
-      remote_ids_represented: plan.representedRemoteIdCount,
-      local_favorites_after: state.likedItemIds.length,
-      visible_archives: plan.recoveredVisibleCount
-    });
-  }
-
-  flowViewerItems = [];
-  flowExclusions.clear();
-  runtimeSeenByMode.clear();
-  clearFlowNavigation();
-  currentItem = null;
-
-  window.dispatchEvent(new CustomEvent("velvet:favorites-changed", {
-    detail: { origin: "shared-sync", total: state.likedItemIds.length }
-  }));
-
+  window.dispatchEvent(new CustomEvent("velvet:favorites-changed", { detail: { origin: "shared-sync", total: state.likedItemIds.length } }));
   if (catalogReady && appUnlocked) refreshFlowGrid({ preserveCount: true });
-
-  return {
-    ...plan,
-    total: state.likedItemIds.length
-  };
+  return { ...plan, total: state.likedItemIds.length };
 }
 
 async function ensureSharedFavoriteSession({ interactive = false } = {}) {
-  if (await sharedFavoriteSessionStatus()) return true;
+  if (await sharedFavoriteSessionStatus()) { setSharedFavoriteSyncEnabled(true); return true; }
   if (!interactive) return false;
 
   const code = window.prompt(
@@ -764,7 +745,7 @@ async function ensureSharedFavoriteSession({ interactive = false } = {}) {
 }
 
 async function runSharedFavoriteSync({ interactive = false, announce = false } = {}) {
-  if (sharedFavoriteSyncBusy) return null;
+  if (sharedFavoriteSyncBusy) { sharedFavoriteSyncQueued = true; return null; }
   sharedFavoriteSyncBusy = true;
 
   try {
@@ -793,6 +774,7 @@ async function runSharedFavoriteSync({ interactive = false, announce = false } =
     return null;
   } finally {
     sharedFavoriteSyncBusy = false;
+    if (sharedFavoriteSyncQueued) { sharedFavoriteSyncQueued = false; scheduleSharedFavoriteSync(); }
   }
 }
 
