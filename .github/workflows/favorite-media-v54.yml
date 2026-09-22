@@ -1,0 +1,37 @@
+name: Private media V54 safety
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  media-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax and isolated byte-storage tests
+        run: |
+          set -eu
+          node --check lib/velvet-private-media.js
+          node --check api/favorite-media.js
+          node --test tests/favorite-identity-regression.test.mjs tests/favorite-v53-safety.test.mjs tests/favorite-media-v54.test.mjs > favorite-v54-results.tap
+          cat favorite-v54-results.tap
+      - uses: actions/upload-artifact@v4
+        with:
+          name: favorite-v54-tested-source
+          retention-days: 7
+          path: |
+            lib/
+            api/
+            src/
+            tests/
+            sw.js
+            package.json
+            favorite-v54-results.tap

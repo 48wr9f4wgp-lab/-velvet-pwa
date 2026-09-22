@@ -22,7 +22,8 @@ async function storeHarness() {
   const code = fs.readFileSync(new URL('../lib/velvet-sync-journal.js', import.meta.url), 'utf8')
     .replace('import { get, put, list } from "@vercel/blob";', 'const {get, put, list} = globalThis.__v53Mock;')
     .replace('"./velvet-sync-core.js"', JSON.stringify(new URL('../lib/velvet-sync-core.js', import.meta.url).href));
-  const module = await import('data:text/javascript;base64,' + Buffer.from(code + '\n// case ' + sequence++).toString('base64'));
+  const fixed = code.replace('"./velvet-private-media.js"', JSON.stringify(new URL('../lib/velvet-private-media.js', import.meta.url).href));
+  const module = await import('data:text/javascript;base64,' + Buffer.from(fixed + '\n// case ' + sequence++).toString('base64'));
   delete globalThis.__v53Mock;
   return { ...module, data, writes };
 }

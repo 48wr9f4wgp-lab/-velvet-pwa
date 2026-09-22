@@ -54,6 +54,10 @@ function urlsFor(item) {
 }
 
 async function cacheMediaUrl(url) {
+  // Protected media is delivered with an HttpOnly session and must not enter a public/no-cors cache.
+  try {
+    if (new URL(url).pathname === "/api/favorite-media") return false;
+  } catch (_) {}
   if (!url || typeof caches === "undefined") return false;
   try {
     const cache = await caches.open(FAVORITE_MEDIA_CACHE);
