@@ -29,10 +29,12 @@ import {
 } from "./favorite-sync-recovery.js?v=51";
 import {
   connectSharedFavoriteSession,
+  loadSharedFavoriteView,
+  saveSharedFavoriteView,
   sharedFavoriteSessionStatus,
   sharedFavoriteSyncEnabled,
   syncSharedFavoriteUnion
-} from "./favorite-live-sync.js?v=52";
+} from "./favorite-live-sync.js?v=52.1";
 
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
@@ -226,8 +228,9 @@ function flowListItems() {
   if (flowMode === "favorites") {
     const byId = new Map(catalog.map(item => [item.id, item]));
     const archived = new Map(getArchivedFavorites(state.likedItemIds).map(item => [item.id, item]));
+    const shared = new Map(loadSharedFavoriteView().map(item => [String(item.id), item]));
     return (state.likedItemIds || [])
-      .map(id => archived.get(id) || byId.get(id))
+      .map(id => archived.get(id) || shared.get(String(id)) || byId.get(id))
       .filter(Boolean);
   }
   const limit = Math.max(1, catalog.length);
@@ -690,6 +693,7 @@ function applySharedFavoritePayload(payload, { recoveryMarker = false } = {}) {
   });
 
   for (const item of plan.archiveItems) archiveFavorite(item);
+  saveSharedFavoriteView(plan.archiveItems);
 
   state.likedItemIds = plan.likedIds;
   state.counts.liked = plan.likedIds.length;
