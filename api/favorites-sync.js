@@ -53,8 +53,10 @@ export default {
       const state = await unionFavoriteLibrary(body, sourceHint(request, body));
       return json(state);
     } catch (error) {
-      const status = Number(error?.statusCode) === 409 ? 409 : 500;
-      return json({ error: status === 409 ? "sync_conflict" : "write_failed" }, status);
+      const statusCode = Number(error?.statusCode || 0);
+      const status = statusCode === 400 ? 400 : statusCode === 409 ? 409 : 500;
+      const errorCode = status === 400 ? "invalid_source" : status === 409 ? "sync_conflict" : "write_failed";
+      return json({ error: errorCode }, status);
     }
   }
 };

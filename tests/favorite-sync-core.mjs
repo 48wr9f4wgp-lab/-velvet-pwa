@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { canonicalizeUrlForIdentity, mergeSyncLibrary, unionFavorites } from "../lib/velvet-sync-core.js";
+import { canonicalizeUrlForIdentity, combineSyncStates, mergeSyncLibrary, unionFavorites } from "../lib/velvet-sync-core.js";
 
 assert.equal(
   canonicalizeUrlForIdentity("https://EXAMPLE.com/a/?utm_source=x&b=2&a=1#frag"),
@@ -66,5 +66,47 @@ const noDelete = mergeSyncLibrary(
   "pwa"
 );
 assert.equal(noDelete.items.length, 1, "phase A sync must never delete existing favorites");
+
+const combined = combineSyncStates([
+  {
+    source: "legacy",
+    state: {
+      revision: 1,
+      updated_at: "2026-09-20T00:00:00.000Z",
+      items: [pwa],
+      orphan_ids: ["legacy-only"]
+    }
+  },
+  {
+    source: "scriptable",
+    state: {
+      revision: 2,
+      updated_at: "2026-09-21T00:00:00.000Z",
+      items: [scriptable],
+      orphan_ids: ["script-orphan"]
+    }
+  },
+  {
+    source: "pwa",
+    state: {
+      revision: 3,
+      updated_at: "2026-09-22T00:00:00.000Z",
+      items: [{
+        id: "pwa-2",
+        page_url: "https://example.com/post/99",
+        image_url: "https://cdn.example.com/99.jpg",
+        source: "TGAV2"
+      }],
+      orphan_ids: ["pwa-orphan"]
+    }
+  }
+]);
+
+assert.equal(combined.schema_version, 2);
+assert.equal(combined.add_only, true);
+assert.equal(combined.revision, 6);
+assert.equal(combined.updated_at, "2026-09-22T00:00:00.000Z");
+assert.equal(combined.items.length, 2, "legacy and Scriptable aliases should collapse while distinct PWA item remains");
+assert.deepEqual(new Set(combined.orphan_ids), new Set(["legacy-only", "script-orphan", "pwa-orphan"]));
 
 console.log("Velvet favorite sync core tests OK");
