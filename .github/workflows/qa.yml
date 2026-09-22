@@ -91,7 +91,7 @@ jobs:
           const app = fs.readFileSync('src/app.js','utf8');
           const live = fs.readFileSync('src/favorite-live-sync.js','utf8');
           for (const token of [
-            'saveSharedFavoriteView(plan.archiveItems)',
+            'saveSharedFavoriteView(payload.items)',
             'loadSharedFavoriteView()',
             'return mergeFavoriteDisplayRows(localRows, sharedRows)'
           ]) if (!app.includes(token)) throw new Error('Shared favorite display app contract missing: '+token);
@@ -426,7 +426,8 @@ jobs:
             'clearFavoriteArchive',
             'getArchivedFavorites',
             'removeFavoriteArchive',
-            'archived.get(id) || shared.get(String(id)) || byId.get(id)',
+            'archived.get(id) || sharedById.get(String(id)) || byId.get(id)',
+            'return mergeFavoriteDisplayRows(localRows, sharedRows)',
             'navigator.serviceWorker.register("./sw.js?v=50")'
           ]) {
             if (!app.includes(token)) throw new Error(`Favorite archive app contract missing: ${token}`);
