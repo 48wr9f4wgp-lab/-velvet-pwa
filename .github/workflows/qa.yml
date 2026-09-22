@@ -426,7 +426,7 @@ jobs:
             'clearFavoriteArchive',
             'getArchivedFavorites',
             'removeFavoriteArchive',
-            'archived.get(id) || byId.get(id)',
+            'archived.get(id) || shared.get(String(id)) || byId.get(id)',
             'navigator.serviceWorker.register("./sw.js?v=50")'
           ]) {
             if (!app.includes(token)) throw new Error(`Favorite archive app contract missing: ${token}`);
