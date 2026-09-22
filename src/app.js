@@ -25,7 +25,7 @@ import {
 import {
   SHARED_FAVORITE_RECOVERY_KEY,
   planSharedFavoriteRecovery,
-  unionSharedFavorites
+  readSharedFavorites
 } from "./favorite-sync-recovery.js?v=51";
 
 const $ = selector => document.querySelector(selector);
@@ -679,11 +679,7 @@ async function maybeRecoverSharedFavorites() {
   if (code === null) return { attempted: false, recovered: false };
 
   try {
-    const localArchives = getAllArchivedFavorites();
-    const payload = await unionSharedFavorites(code, {
-      favorites: localArchives,
-      likedIds: state.likedItemIds || []
-    });
+    const payload = await readSharedFavorites(code);
 
     const plan = planSharedFavoriteRecovery({
       payload,
