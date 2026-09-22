@@ -1,4 +1,4 @@
-import { authDebugShape, isAuthorizedRequest } from "../lib/velvet-sync-auth.js";
+import { isAuthorizedRequest } from "../lib/velvet-sync-auth.js";
 import { readFavoriteLibrary, unionFavoriteLibrary } from "../lib/velvet-sync-store.js";
 
 const MAX_BODY_BYTES = 2 * 1024 * 1024;
@@ -24,11 +24,7 @@ export default {
     let authorized = false;
     try { authorized = await isAuthorizedRequest(request); }
     catch (_) { return json({ error: "sync_not_configured" }, 503); }
-    if (!authorized) {
-      const debug = authDebugShape(request);
-      console.log("[Velvet Sync Auth] unauthorized " + JSON.stringify(debug));
-      return json({ error: "unauthorized" }, 401);
-    }
+    if (!authorized) return json({ error: "unauthorized" }, 401);
 
     if (request.method === "GET") {
       try {
