@@ -698,6 +698,24 @@ async function maybeRecoverSharedFavorites() {
     state = saveState(applyHistoryPolicy(state));
     backfillFavoriteArchive(state.likedItemIds, catalog);
 
+    const persistedState = loadState();
+    const persistedLiked = new Set(persistedState.likedItemIds || []);
+    const missingLiked = plan.likedIds.filter(id => !persistedLiked.has(id));
+    if (missingLiked.length) {
+      throw new Error("PWAのお気に入り保存確認に失敗しました (" + missingLiked.length + "件)");
+    }
+
+    const persistedArchives = new Set(getAllArchivedFavorites().map(item => String(item.id)));
+    const missingArchives = plan.archiveItems
+      .map(item => String(item.id || ""))
+      .filter(Boolean)
+      .filter(id => !persistedArchives.has(id));
+    if (missingArchives.length) {
+      throw new Error("PWAのArchive保存確認に失敗しました (" + missingArchives.length + "件)");
+    }
+
+    state = persistedState;
+
     writeSharedFavoriteRecoveryMarker({
       remote_revision: Number(payload.revision || 0),
       remote_items: plan.remoteItemCount,
