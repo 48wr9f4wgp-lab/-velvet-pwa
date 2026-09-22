@@ -427,6 +427,7 @@ function toggleFlowGridFavorite(item) {
   }
 
   window.dispatchEvent(new CustomEvent("velvet:favorites-changed"));
+  if (!wasSaved) scheduleSharedFavoriteSync();
   if (flowMode === "favorites") refreshFlowGrid({ preserveCount: true });
   else syncFlowGridFavoriteStates();
 }
@@ -584,7 +585,10 @@ function reactFlow(reaction) {
   state = recordReaction(state, reactedItem, reaction);
   lastFlowAction = { item: reactedItem, stateBefore, kind: reaction, modeBefore };
   const saved = reaction === "like" && isFavorite(reactedItem);
-  if (reaction === "like") window.dispatchEvent(new CustomEvent("velvet:favorites-changed"));
+  if (reaction === "like") {
+    window.dispatchEvent(new CustomEvent("velvet:favorites-changed"));
+    scheduleSharedFavoriteSync();
+  }
   window.dispatchEvent(new CustomEvent("velvet:flow-feedback", { detail: { reaction, saved } }));
   const nextItem = selectNextFlowItem();
   if (nextItem) preloadImages([nextItem]);
@@ -921,10 +925,6 @@ function scheduleForegroundFeedRefresh() {
 }
 
 function bindEvents() {
-  window.addEventListener("velvet:favorites-changed", event => {
-    if (event.detail?.origin === "shared-sync") return;
-    scheduleSharedFavoriteSync();
-  });
   window.addEventListener("velvet:flow-undo", undoLastFlowAction);
   window.addEventListener("velvet:flow-toggle-favorite", event => {
     const requestedId = String(event.detail?.id || "");
@@ -1021,7 +1021,10 @@ function bindEvents() {
 
     const awayMs = backgroundedAt ? Date.now() - backgroundedAt : 0;
     backgroundedAt = 0;
-    if (awayMs >= 1200) scheduleForegroundFeedRefresh();
+    if (awayMs >= 1200) {
+      scheduleForegroundFeedRefresh();
+      if (sharedFavoriteSyncEnabled()) void runSharedFavoriteSync();
+    }
   });
 
   setupFlowGridObserver();
@@ -1048,7 +1051,7 @@ async function init() {
   backfillFavoriteArchive(state.likedItemIds, catalog);
   await maybeRecoverSharedFavorites();
   await runSharedFavoriteSync({
-    interactive: !sharedFavoriteSyncEnabled(),
+    interactive: true,
     announce: sharedFavoriteSyncEnabled()
   });
   state = recordModeUse(state, "flow");
