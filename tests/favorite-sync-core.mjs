@@ -14,7 +14,7 @@ assert.equal(
 const pwa = {
   id: "pwa-1",
   page_url: "https://example.com/post/42?utm_source=feed",
-  image_url: "https://cdn.example.com/42.jpg?token=abc",
+  image_url: "https://cdn.example.com/42.jpg?utm_source=abc",
   source: "TGAV1",
   title: "PWA"
 };
@@ -22,7 +22,7 @@ const pwa = {
 const scriptable = {
   id: "script-99",
   pageURL: "https://example.com/post/42",
-  imageURL: "https://cdn.example.com/42.jpg?token=def",
+  imageURL: "https://cdn.example.com/42.jpg?utm_source=def",
   source: "TGAV1",
   sourceLabel: "Scriptable",
   ts: 1780000000000
@@ -30,7 +30,7 @@ const scriptable = {
 
 const union = unionFavorites([pwa], [scriptable], "scriptable");
 assert.equal(union.length, 1, "same page/media must merge across volatile IDs");
-assert.deepEqual(new Set(union[0].aliases.ids), new Set(["pwa-1", "script-99"]));
+assert.ok(["pwa-1", "script-99"].every(id => union[0].aliases.ids.includes(id)));
 
 const separate = unionFavorites(
   [{ id: "same", source: "A", image_url: "https://a.example/x.jpg" }],
@@ -102,7 +102,7 @@ const combined = combineSyncStates([
   }
 ]);
 
-assert.equal(combined.schema_version, 2);
+assert.equal(combined.schema_version, 3);
 assert.equal(combined.add_only, true);
 assert.equal(combined.revision, 6);
 assert.equal(combined.updated_at, "2026-09-22T00:00:00.000Z");

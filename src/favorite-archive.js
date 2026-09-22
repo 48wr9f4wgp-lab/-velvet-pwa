@@ -1,6 +1,5 @@
 const META_KEY = "velvet_private_v49_5_favorite_archive_meta";
 export const FAVORITE_MEDIA_CACHE = "velvet-favorite-media-v1";
-const MAX_ARCHIVES = 400;
 const pendingCacheDeletes = new Map();
 let persistenceRequested = false;
 
@@ -44,9 +43,7 @@ function loadArchiveMap() {
 }
 
 function saveArchiveMap(map) {
-  try {
-    localStorage.setItem(META_KEY, JSON.stringify(map));
-  } catch (_) {}
+  localStorage.setItem(META_KEY, JSON.stringify(map));
 }
 
 function urlsFor(item) {
@@ -98,8 +95,7 @@ export function getArchivedFavorites(ids) {
 export function getAllArchivedFavorites() {
   return Object.values(loadArchiveMap())
     .filter(item => item && typeof item === "object" && item.id)
-    .sort((a, b) => String(b.archived_at || "").localeCompare(String(a.archived_at || "")))
-    .slice(0, MAX_ARCHIVES);
+    .sort((a, b) => String(b.archived_at || "").localeCompare(String(a.archived_at || "")));
 }
 
 export async function requestFavoritePersistence() {
@@ -128,7 +124,7 @@ export function archiveFavorite(item) {
   const map = loadArchiveMap();
   delete map[snapshot.id];
   const next = { [snapshot.id]: snapshot, ...map };
-  const entries = Object.entries(next).slice(0, MAX_ARCHIVES);
+  const entries = Object.entries(next);
   saveArchiveMap(Object.fromEntries(entries));
 
   void requestFavoritePersistence();

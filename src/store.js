@@ -72,7 +72,7 @@ export function normalizeState(raw) {
     sourceWeights: normalizeWeightMap(raw.sourceWeights),
     intensityWeights: normalizeWeightMap(raw.intensityWeights),
     sourceClassWeights: normalizeWeightMap(raw.sourceClassWeights),
-    likedItemIds: normalizeStringArray(raw.likedItemIds),
+    likedItemIds: normalizeStringArray(raw.likedItemIds, Infinity),
     skippedItemIds: normalizeStringArray(raw.skippedItemIds),
     viewedItemIds: normalizeStringArray(raw.viewedItemIds),
     recentItemIds: normalizeStringArray(raw.recentItemIds, 80),
@@ -101,9 +101,7 @@ export function loadState() {
 
 export function saveState(state) {
   const normalized = normalizeState(state);
-  try {
-    localStorage.setItem(STORE_KEY, JSON.stringify(normalized));
-  } catch (_) {}
+  localStorage.setItem(STORE_KEY, JSON.stringify(normalized));
   return normalized;
 }
 
@@ -172,7 +170,7 @@ export function recordReaction(state, item, reaction) {
   state.sourceClassWeights[cKey] = (state.sourceClassWeights[cKey] || 0) + delta * 0.55;
 
   if (reaction === "like") {
-    state.likedItemIds = [item.id, ...state.likedItemIds.filter(id => id !== item.id)].slice(0, 400);
+    state.likedItemIds = [item.id, ...state.likedItemIds.filter(id => id !== item.id)];
   }
   if (reaction === "skip" && state.settings.historyMode === "full") {
     state.skippedItemIds = [item.id, ...state.skippedItemIds.filter(id => id !== item.id)].slice(0, 400);

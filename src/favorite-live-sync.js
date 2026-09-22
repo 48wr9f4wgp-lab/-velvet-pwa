@@ -1,4 +1,6 @@
-import { normalizeRecoveryPairCode } from "./favorite-sync-recovery.js?v=51.1";
+import { unionMediaFavorites } from "./favorite-identity-v3.js?v=53";
+export { mergeFavoriteDisplayRows } from "./favorite-identity-v3.js?v=53";
+import { normalizeRecoveryPairCode } from "./favorite-sync-recovery.js?v=53";
 
 export const SHARED_FAVORITE_SYNC_ENABLED_KEY = "velvet_shared_favorites_v2_sync_enabled";
 export const SHARED_FAVORITE_VIEW_KEY = "velvet_shared_favorites_v2_view";
@@ -91,111 +93,18 @@ export async function syncSharedFavoriteUnion({ favorites = [], likedIds = [] } 
 }
 
 export function saveSharedFavoriteView(items) {
-  const rows = (Array.isArray(items) ? items : [])
-    .filter(item => item && item.id)
-    .map(item => ({
-      ...item,
-      id: String(item.id),
-      image_url: String(item.image_url || ""),
-      thumb_url: typeof item.thumb_url === "string" ? item.thumb_url : null,
-      page_url: typeof item.page_url === "string" ? item.page_url : null,
-      source: String(item.source || "shared"),
-      source_label: String(item.source_label || item.source || "Shared"),
-      source_class: ["personal", "pro", "mixed"].includes(item.source_class) ? item.source_class : "mixed",
-      tags: Array.isArray(item.tags) ? item.tags.slice(0, 24) : [],
-      intensity: Math.max(1, Math.min(5, Number(item.intensity) || 3)),
-      rank: Math.max(1, Number(item.rank) || 1),
-      archived_favorite: true
-    }))
-    .filter(item => item.image_url || item.thumb_url)
-    .slice(0, 400);
-
-  try { localStorage.setItem(SHARED_FAVORITE_VIEW_KEY, JSON.stringify(rows)); } catch (_) {}
+  const raw = localStorage.getItem(SHARED_FAVORITE_VIEW_KEY);
+  const old = raw ? JSON.parse(raw) : [];
+  if (!Array.isArray(old)) throw new Error("共有お気に入りの保存形式が不正です。上書きしていません。");
+  const rows = unionMediaFavorites(old, items, "existing");
+  const encoded = JSON.stringify(rows);
+  localStorage.setItem(SHARED_FAVORITE_VIEW_KEY, encoded);
+  if (localStorage.getItem(SHARED_FAVORITE_VIEW_KEY) !== encoded) throw new Error("共有お気に入りの保存確認に失敗しました");
   return rows;
 }
-
 export function loadSharedFavoriteView() {
   try {
     const parsed = JSON.parse(localStorage.getItem(SHARED_FAVORITE_VIEW_KEY) || "[]");
-    return Array.isArray(parsed) ? parsed.filter(item => item && item.id).slice(0, 400) : [];
-  } catch (_) {
-    return [];
-  }
-}
-
-
-function canonicalFavoriteDisplayUrl(value) {
-  const raw = typeof value === "string" ? value.trim() : "";
-  if (!raw) return "";
-  try {
-    const url = new URL(raw);
-    if (!["http:", "https:"].includes(url.protocol)) return "";
-    url.hash = "";
-    url.hostname = url.hostname.toLowerCase();
-    const kept = [];
-    for (const [key, val] of url.searchParams.entries()) {
-      const lower = key.toLowerCase();
-      if (lower.startsWith("utm_") || lower.startsWith("x-amz-")) continue;
-      if (["fbclid","gclid","dclid","msclkid","mc_cid","mc_eid","igshid","token","access_token","signature","sig","expires","policy","key-pair-id"].includes(lower)) continue;
-      kept.push([key, val]);
-    }
-    kept.sort((a,b) => a[0].localeCompare(b[0]) || a[1].localeCompare(b[1]));
-    url.search = "";
-    for (const [key, val] of kept) url.searchParams.append(key, val);
-    const path = url.pathname.replace(/\/{2,}/g, "/");
-    url.pathname = path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path;
-    return url.toString();
-  } catch (_) {
-    return "";
-  }
-}
-
-function favoriteDisplayKeys(item) {
-  const keys = new Set();
-  const uid = typeof item?.uid === "string" ? item.uid.trim() : "";
-  if (uid) keys.add("u:" + uid);
-
-  for (const fp of Array.isArray(item?.aliases?.fingerprints) ? item.aliases.fingerprints : []) {
-    const value = String(fp || "").trim();
-    if (value) keys.add("f:" + value);
-  }
-
-  const page = canonicalFavoriteDisplayUrl(item?.page_url ?? item?.pageURL);
-  if (page) keys.add("p:" + page);
-
-  const image = canonicalFavoriteDisplayUrl(item?.image_url ?? item?.imageURL ?? item?.thumb_url ?? item?.thumbURL);
-  if (image) keys.add("m:" + image);
-
-  const id = String(item?.id || "").trim();
-  const source = String(item?.source || "").trim().toLowerCase();
-  if (id && source) keys.add("s:" + source + ":" + id);
-  if (id) keys.add("i:" + id);
-  return [...keys];
-}
-
-export function mergeFavoriteDisplayRows(localRows, sharedRows, max = 400) {
-  const rows = [
-    ...(Array.isArray(sharedRows) ? sharedRows : []),
-    ...(Array.isArray(localRows) ? localRows : [])
-  ];
-  const seen = new Set();
-  const out = [];
-
-  for (const item of rows) {
-    if (!item || !item.id) continue;
-    const image = String(item.image_url ?? item.imageURL ?? item.thumb_url ?? item.thumbURL ?? "").trim();
-    if (!image) continue;
-    const keys = favoriteDisplayKeys(item);
-    if (keys.some(key => seen.has(key))) continue;
-    for (const key of keys) seen.add(key);
-    out.push({
-      ...item,
-      id: String(item.id),
-      image_url: String(item.image_url ?? item.imageURL ?? item.thumb_url ?? item.thumbURL ?? ""),
-      thumb_url: typeof (item.thumb_url ?? item.thumbURL) === "string" ? (item.thumb_url ?? item.thumbURL) : null,
-      page_url: typeof (item.page_url ?? item.pageURL) === "string" ? (item.page_url ?? item.pageURL) : null
-    });
-    if (out.length >= Math.max(1, Number(max) || 400)) break;
-  }
-  return out;
+    return Array.isArray(parsed) ? unionMediaFavorites([], parsed, "existing") : [];
+  } catch (_) { return []; }
 }
