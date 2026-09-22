@@ -37,6 +37,7 @@ jobs:
         run: |
           node tests/favorite-sync-core.mjs
           node -e "const p=require('./package.json'); if(p.dependencies?.['@vercel/blob']!=='2.6.1') throw new Error('Vercel Blob SDK must stay pinned'); console.log('Favorite sync dependency pin OK')"
+          node -e "const s=require('fs').readFileSync('lib/velvet-sync-auth.js','utf8'); if(!s.includes('header.match(/^Bearer\\s+(.+)$/i)')) throw new Error('Bearer whitespace parser contract missing'); if(s.includes('header.match(/^Bearer\\\\s+')) throw new Error('Bearer parser contains escaped-backslash regression'); console.log('Bearer parser contract OK')"
 
       - name: Required PWA files
         shell: bash
