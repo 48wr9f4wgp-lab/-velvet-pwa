@@ -2,7 +2,7 @@ name: Apply reviewed favorite identity repair
 on:
   push:
     branches: [fix/favorite-media-identity-audit-v3]
-    paths: [repair/apply-pwa-v3.mjs]
+    paths: [repair/apply-pwa-v3.mjs, .github/workflows/favorite-identity-repair.yml]
 permissions:
   contents: write
 jobs:
@@ -23,12 +23,14 @@ jobs:
           node --test tests/favorite-identity-v3.mjs
           node tests/favorite-sync-core.mjs
           for file in src/*.js lib/*.js api/*.js; do node --check "$file"; done
-      - name: Commit only reviewed branch changes and remove one-time machinery
+      - name: Commit reviewed source changes without editing workflows
         run: |
           set -euo pipefail
           test "$GITHUB_REF" = 'refs/heads/fix/favorite-media-identity-audit-v3'
-          git rm repair/apply-pwa-v3.mjs .github/workflows/favorite-identity-repair.yml
-          git add src/app.js src/store.js src/favorite-archive.js src/favorite-live-sync.js index.html tests/favorite-sync-core.mjs tests/favorite-sync-pwa-recovery.mjs .github/workflows/qa.yml
+          cp .github/workflows/qa.yml repair/qa-v3.yml
+          git restore .github/workflows/qa.yml
+          git rm repair/apply-pwa-v3.mjs
+          git add src/app.js src/store.js src/favorite-archive.js src/favorite-live-sync.js index.html tests/favorite-sync-core.mjs tests/favorite-sync-pwa-recovery.mjs repair/qa-v3.yml
           git diff --cached --check
           git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Apply audited media identity repair to PWA integration'
           git push origin HEAD:refs/heads/fix/favorite-media-identity-audit-v3
