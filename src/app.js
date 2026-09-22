@@ -30,11 +30,12 @@ import {
 import {
   connectSharedFavoriteSession,
   loadSharedFavoriteView,
+  mergeFavoriteDisplayRows,
   saveSharedFavoriteView,
   sharedFavoriteSessionStatus,
   sharedFavoriteSyncEnabled,
   syncSharedFavoriteUnion
-} from "./favorite-live-sync.js?v=52.1";
+} from "./favorite-live-sync.js?v=52.2";
 
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
@@ -224,15 +225,17 @@ function imageFailed(img) {
 }
 
 function flowListItems() {
-  if (!catalog.length) return [];
   if (flowMode === "favorites") {
+    const sharedRows = loadSharedFavoriteView();
+    const sharedById = new Map(sharedRows.map(item => [String(item.id), item]));
     const byId = new Map(catalog.map(item => [item.id, item]));
     const archived = new Map(getArchivedFavorites(state.likedItemIds).map(item => [item.id, item]));
-    const shared = new Map(loadSharedFavoriteView().map(item => [String(item.id), item]));
-    return (state.likedItemIds || [])
-      .map(id => archived.get(id) || shared.get(String(id)) || byId.get(id))
+    const localRows = (state.likedItemIds || [])
+      .map(id => archived.get(id) || sharedById.get(String(id)) || byId.get(id))
       .filter(Boolean);
+    return mergeFavoriteDisplayRows(localRows, sharedRows);
   }
+  if (!catalog.length) return [];
   const limit = Math.max(1, catalog.length);
   return rankCandidates(catalog, state, flowMode, new Set(), null, limit).map(row => row.item);
 }
@@ -693,7 +696,7 @@ function applySharedFavoritePayload(payload, { recoveryMarker = false } = {}) {
   });
 
   for (const item of plan.archiveItems) archiveFavorite(item);
-  saveSharedFavoriteView(plan.archiveItems);
+  saveSharedFavoriteView(payload.items);
 
   state.likedItemIds = plan.likedIds;
   state.counts.liked = plan.likedIds.length;
