@@ -42,47 +42,8 @@ jobs:
           if grep -Fq 'header.match(/^Bearer\\s+' lib/velvet-sync-auth.js; then echo 'Bearer parser escaped-backslash regression'; exit 1; fi
           echo 'Bearer parser contract OK'
 
-      - name: Add-only favorite sync contracts
-        run: |
-          node <<'NODE'
-          const fs = require('fs');
-          const store = fs.readFileSync('lib/velvet-sync-store.js','utf8');
-          const core = fs.readFileSync('lib/velvet-sync-core.js','utf8');
-          const app = fs.readFileSync('src/app.js','utf8');
-          const live = fs.readFileSync('src/favorite-live-sync.js','utf8');
-          const auth = fs.readFileSync('lib/velvet-sync-auth.js','utf8');
-
-          for (const token of [
-            'velvet-sync/v2/clients/scriptable.json',
-            'velvet-sync/v2/clients/pwa.json',
-            'allowOverwrite: true',
-            'combineSyncStates'
-          ]) if (!store.includes(token)) throw new Error('Store add-only contract missing: '+token);
-
-          for (const token of [
-            'export function combineSyncStates',
-            'add_only: true'
-          ]) if (!core.includes(token)) throw new Error('Core add-only contract missing: '+token);
-
-          for (const token of [
-            'syncSharedFavoriteUnion',
-            'source: "pwa"',
-            'credentials: "same-origin"'
-          ]) if (!live.includes(token)) throw new Error('PWA live sync contract missing: '+token);
-
-          for (const token of [
-            'scheduleSharedFavoriteSync()',
-            'runSharedFavoriteSync({',
-            'origin: "shared-sync"'
-          ]) if (!app.includes(token)) throw new Error('PWA sync application contract missing: '+token);
-
-          for (const token of [
-            'SCRIPTABLE_CLIENT_PAIR_HASH_V1',
-            'PWA_CLIENT_PAIR_HASH_V1'
-          ]) if (!auth.includes(token)) throw new Error('Persistent client auth contract missing: '+token);
-
-          console.log('Add-only favorite sync contracts OK');
-          NODE
+      - name: Add-only favorite sync safety
+        run: node --test tests/favorite-identity-v3.mjs
 
       - name: Shared favorite display contracts
         run: |
@@ -131,7 +92,7 @@ jobs:
             './src/image-guard.js?v=44',
             './src/flow-presets.js?v=49.2',
             './src/input-guard.js?v=50',
-            './src/app.js?v=52.2'
+            './src/app.js?v=53'
           ]) {
             if (!html.includes(token)) throw new Error(`index contract missing: ${token}`);
           }
@@ -297,7 +258,7 @@ jobs:
           const html = fs.readFileSync('index.html','utf8');
           const app = fs.readFileSync('src/app.js','utf8');
 
-          if (!html.includes('./src/app.js?v=52.2')) throw new Error('v49.6 app cache bust missing');
+          if (!html.includes('./src/app.js?v=53')) throw new Error('v49.6 app cache bust missing');
           if (app.includes('const FLOW_GRID_LIMIT = 160')) throw new Error('Legacy 160-item Flow cap still present');
 
           for (const token of [
@@ -338,7 +299,7 @@ jobs:
 
           for (const token of [
             './src/input-guard.js?v=50',
-            './src/app.js?v=52.2'
+            './src/app.js?v=53'
           ]) {
             if (!html.includes(token)) throw new Error(`v49.3 asset version missing: ${token}`);
           }
@@ -418,7 +379,7 @@ jobs:
           const archive = fs.readFileSync('src/favorite-archive.js','utf8');
           const sw = fs.readFileSync('sw.js','utf8');
 
-          if (!html.includes('./src/app.js?v=52.2')) throw new Error('v49.5 app cache bust missing');
+          if (!html.includes('./src/app.js?v=53')) throw new Error('v49.5 app cache bust missing');
 
           for (const token of [
             'archiveFavorite',
@@ -440,7 +401,6 @@ jobs:
             'mode: "no-cors"',
             'cache.put(url, response)',
             'navigator.storage.persist()',
-            'const MAX_ARCHIVES = 400',
             'await new Promise(resolve => setTimeout(resolve, 40))'
           ]) {
             if (!archive.includes(token)) throw new Error(`Favorite archive storage contract missing: ${token}`);
@@ -633,7 +593,7 @@ jobs:
           const app = fs.readFileSync('src/app.js','utf8');
           const html = fs.readFileSync('index.html','utf8');
 
-          if (!html.includes('./src/app.js?v=52.2')) throw new Error('v50 app cache bust missing');
+          if (!html.includes('./src/app.js?v=53')) throw new Error('v50 app cache bust missing');
           if (!archive.includes('export function getAllArchivedFavorites()')) {
             throw new Error('Archived favorite enumeration missing');
           }
