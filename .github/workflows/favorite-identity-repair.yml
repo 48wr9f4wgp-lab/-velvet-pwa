@@ -1,0 +1,34 @@
+name: Apply reviewed favorite identity repair
+on:
+  push:
+    branches: [fix/favorite-media-identity-audit-v3]
+    paths: [repair/apply-pwa-v3.mjs]
+permissions:
+  contents: write
+jobs:
+  repair:
+    if: github.repository == '48wr9f4wgp-lab/-velvet-pwa' && github.ref == 'refs/heads/fix/favorite-media-identity-audit-v3'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Apply hash-guarded source changes
+        run: node repair/apply-pwa-v3.mjs
+      - name: Execute behavior and syntax checks
+        run: |
+          set -euo pipefail
+          node --test tests/favorite-identity-v3.mjs
+          node tests/favorite-sync-core.mjs
+          for file in src/*.js lib/*.js api/*.js; do node --check "$file"; done
+      - name: Commit only reviewed branch changes and remove one-time machinery
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = 'refs/heads/fix/favorite-media-identity-audit-v3'
+          git rm repair/apply-pwa-v3.mjs .github/workflows/favorite-identity-repair.yml
+          git add src/app.js src/store.js src/favorite-archive.js src/favorite-live-sync.js index.html tests/favorite-sync-core.mjs tests/favorite-sync-pwa-recovery.mjs .github/workflows/qa.yml
+          git diff --cached --check
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Apply audited media identity repair to PWA integration'
+          git push origin HEAD:refs/heads/fix/favorite-media-identity-audit-v3
