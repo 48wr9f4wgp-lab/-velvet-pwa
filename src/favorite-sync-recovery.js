@@ -147,27 +147,21 @@ export function planSharedFavoriteRecovery({ payload, currentLikedIds = [], cata
   };
 }
 
-export async function unionSharedFavorites(pairCode, { favorites = [], likedIds = [] } = {}) {
+export async function readSharedFavorites(pairCode) {
   const normalizedPairCode = normalizeRecoveryPairCode(pairCode);
   if (normalizedPairCode.length !== 39) {
     throw new Error("復旧コードの形式が正しくありません");
   }
 
   const response = await fetch("/api/favorites-sync", {
-    method: "POST",
+    method: "GET",
     credentials: "same-origin",
     cache: "no-store",
     headers: {
       "Authorization": "Bearer " + normalizedPairCode,
-      "Content-Type": "application/json",
       "Accept": "application/json",
       "X-Velvet-Client": "pwa"
-    },
-    body: JSON.stringify({
-      source: "pwa",
-      favorites: Array.isArray(favorites) ? favorites : [],
-      likedIds: Array.isArray(likedIds) ? likedIds : []
-    })
+    }
   });
 
   let payload = null;
