@@ -1,0 +1,6 @@
+{
+  "headers": [
+    { "source": "/src/(.*)", "headers": [{ "key": "Cache-Control", "value": "no-store, max-age=0" }, { "key": "X-Velvet-Identity", "value": "53" }] },
+    { "source": "/", "headers": [{ "key": "Cache-Control", "value": "no-store, max-age=0" }] }
+  ]
+}
