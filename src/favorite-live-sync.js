@@ -188,7 +188,13 @@ export function mergeFavoriteDisplayRows(localRows, sharedRows, max = 400) {
     const keys = favoriteDisplayKeys(item);
     if (keys.some(key => seen.has(key))) continue;
     for (const key of keys) seen.add(key);
-    out.push(item);
+    out.push({
+      ...item,
+      id: String(item.id),
+      image_url: String(item.image_url ?? item.imageURL ?? item.thumb_url ?? item.thumbURL ?? ""),
+      thumb_url: typeof (item.thumb_url ?? item.thumbURL) === "string" ? (item.thumb_url ?? item.thumbURL) : null,
+      page_url: typeof (item.page_url ?? item.pageURL) === "string" ? (item.page_url ?? item.pageURL) : null
+    });
     if (out.length >= Math.max(1, Number(max) || 400)) break;
   }
   return out;
