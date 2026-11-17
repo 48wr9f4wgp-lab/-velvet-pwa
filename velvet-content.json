@@ -1,12 +1,12 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-16T19:37:36.822Z",
+  "generated_at": "2026-11-17T03:55:08.448Z",
   "generated_by": "Velvet Feed Sync/1.2.3-public",
   "canonical_baseline": "Velvet v0.9.6 + Exposure Compatibility 2026-09-19",
   "items": [
     {
-      "id": "xrank:TGAV1:1588539123136360448",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1588539123136360448/pu/img/Ld3ZZC2EkUjuIZKR.jpg",
+      "id": "xrank:TGAV1:status:1953743782652129338:24314624/pu/img/Wk2wuDVZh8vbp-pu.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1878395628524314624/pu/img/Wk2wuDVZh8vbp-pu.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -18,8 +18,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_aka_labo/status/1953743782652129338",
+      "handle": "ura_aka_labo",
       "rank": 1,
       "rights_status": "external-public-source",
       "active": true,
@@ -76,8 +76,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1431236304117768194",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1431236304117768194/pu/img/e2dG5ajPFGJQStIU.jpg",
+      "id": "xrank:TGAV1:status:1628394178567708672:44508426241/img/uRJ94XqdBjyk8DqN.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1516589244508426241/img/uRJ94XqdBjyk8DqN.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -89,8 +89,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1628394178567708672",
+      "handle": "ura_video_",
       "rank": 2,
       "rights_status": "external-public-source",
       "active": true,
@@ -147,8 +147,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1644987253314445312",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1644987253314445312/pu/img/WIAwSDrBORbet1i3.jpg",
+      "id": "xrank:TGAV1:status:2047694730591658390:83524923393/img/C900x1HyrRBZGQgW.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2041497483524923393/img/C900x1HyrRBZGQgW.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -160,8 +160,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_aka_labo/status/2047694730591658390",
+      "handle": "ura_aka_labo",
       "rank": 3,
       "rights_status": "external-public-source",
       "active": true,
@@ -218,8 +218,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1583239696385048576",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1583239696385048576/img/UJp50piXHz6ULDUB.jpg",
+      "id": "xrank:TGAV1:status:1459491239233994757:60673269766/img/-MWAIoVp2NvcdoaW.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1435924860673269766/img/-MWAIoVp2NvcdoaW.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -231,8 +231,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1459491239233994757",
+      "handle": "ura_video_",
       "rank": 4,
       "rights_status": "external-public-source",
       "active": true,
@@ -289,8 +289,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1534453228183900160",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1534453228183900160/pu/img/OEsbatvC7gigJS24.jpg",
+      "id": "xrank:TGAV1:status:2021185213087482137:37005336576/img/H2gOmLCO9DArmhOe.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2018278237005336576/img/H2gOmLCO9DArmhOe.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -302,8 +302,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_aka_labo/status/2021185213087482137",
+      "handle": "ura_aka_labo",
       "rank": 5,
       "rights_status": "external-public-source",
       "active": true,
@@ -360,8 +360,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1612012291578564609",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1612012291578564609/pu/img/Mb6io_BHTLhh0r_i.jpg",
+      "id": "xrank:TGAV1:status:1495367638532321281:62171904000/img/YZYr5UNRexuES2u1.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1494884962171904000/img/YZYr5UNRexuES2u1.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -373,8 +373,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1495367638532321281",
+      "handle": "ura_video_",
       "rank": 6,
       "rights_status": "external-public-source",
       "active": true,
@@ -431,8 +431,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1630842819182235651",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1630842819182235651/pu/img/uJHELDRSqeSAeRzM.jpg",
+      "id": "xrank:TGAV1:status:1553545986093481987:65110581248/img/rnA-FQnx6kIxm5LY.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1530859065110581248/img/rnA-FQnx6kIxm5LY.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -444,8 +444,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1553545986093481987",
+      "handle": "ura_video_",
       "rank": 7,
       "rights_status": "external-public-source",
       "active": true,
@@ -502,8 +502,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1504354670231228416",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1504354670231228416/pu/img/hoFYhSS4qggvbLZC.jpg",
+      "id": "xrank:TGAV1:status:2021894902624530817:23011751936/img/MV-NMNtMYI6V9lTQ.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1783119723011751936/img/MV-NMNtMYI6V9lTQ.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -515,8 +515,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_aka_labo/status/2021894902624530817",
+      "handle": "ura_aka_labo",
       "rank": 8,
       "rights_status": "external-public-source",
       "active": true,
@@ -573,8 +573,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1626945636171120640",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1626945636171120640/pu/img/Qa-OESvNAhm4Kqeo.jpg",
+      "id": "xrank:TGAV1:status:1407307381525057539:82047211521/img/1LLsO0xDLK4m8317.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1406944582047211521/img/1LLsO0xDLK4m8317.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -586,8 +586,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1407307381525057539",
+      "handle": "ura_video_",
       "rank": 9,
       "rights_status": "external-public-source",
       "active": true,
@@ -644,8 +644,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1385094227680391171",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1385094227680391171/pu/img/thTRdYXfTp6i2uCi.jpg",
+      "id": "xrank:TGAV1:status:1394472812325351427:44323923973/img/0IixNa7qVXr5dl7P.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1394275144323923973/img/0IixNa7qVXr5dl7P.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -657,8 +657,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1394472812325351427",
+      "handle": "ura_video_",
       "rank": 10,
       "rights_status": "external-public-source",
       "active": true,
@@ -715,8 +715,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1555397632448954368",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1555397632448954368/pu/img/V1mxPrDIcoq_PZkh.jpg",
+      "id": "xrank:TGAV1:status:2100916244493013145:28829714432/img/KR9rwdbcWjFJ22Nt.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2100915928829714432/img/KR9rwdbcWjFJ22Nt.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -728,8 +728,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/shinosuke_bee/status/2100916244493013145",
+      "handle": "shinosuke_bee",
       "rank": 11,
       "rights_status": "external-public-source",
       "active": true,
@@ -786,8 +786,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1527911026892886017",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1527911026892886017/pu/img/nihTdHUpQf61zr04.jpg",
+      "id": "xrank:TGAV1:status:1401146793212088328:62513778691/img/Ceta8jpIcIeOsJ3r.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1401003862513778691/img/Ceta8jpIcIeOsJ3r.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -799,8 +799,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1401146793212088328",
+      "handle": "ura_video_",
       "rank": 12,
       "rights_status": "external-public-source",
       "active": true,
@@ -857,8 +857,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1557302370693918722",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1557302370693918722/pu/img/UQu4Ixt5zrrZFo_D.jpg",
+      "id": "xrank:TGAV1:status:1434863967969550343:37004591107/img/6CpJm_rHwE4-3nW1.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1434442637004591107/img/6CpJm_rHwE4-3nW1.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -870,8 +870,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1434863967969550343",
+      "handle": "ura_video_",
       "rank": 13,
       "rights_status": "external-public-source",
       "active": true,
@@ -928,8 +928,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1580712002774712320",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1580712002774712320/img/12gdy-GP0HnB9pj4.jpg",
+      "id": "xrank:TGAV1:status:1455867356719292418:32529612806/img/_N9f_YGCdPAfJxgw.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1455525832529612806/img/_N9f_YGCdPAfJxgw.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -941,8 +941,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1455867356719292418",
+      "handle": "ura_video_",
       "rank": 14,
       "rights_status": "external-public-source",
       "active": true,
@@ -999,8 +999,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1504257618130644997",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1504257618130644997/pu/img/Qk0Aai19t-TYoS8C.jpg",
+      "id": "xrank:TGAV1:status:1414811827515662336:92472932360/img/TZpBTCjkX0XQ-WvN.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1414562792472932360/img/TZpBTCjkX0XQ-WvN.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -1012,8 +1012,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1414811827515662336",
+      "handle": "ura_video_",
       "rank": 15,
       "rights_status": "external-public-source",
       "active": true,
@@ -1070,8 +1070,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:httpspbstwimgcommediaFcOT1NPaIAU7mlIjpg",
-      "image_url": "https://pbs.twimg.com/media/FcOT1NPaIAU7mlI.jpg",
+      "id": "xrank:TGAV1:status:1809150484936360012:99790336/pu/img/pA8r_rx4c4rjnZ6h.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1806228318699790336/pu/img/pA8r_rx4c4rjnZ6h.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -1083,8 +1083,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_aka_labo/status/1809150484936360012",
+      "handle": "ura_aka_labo",
       "rank": 16,
       "rights_status": "external-public-source",
       "active": true,
@@ -1141,8 +1141,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1639900230983495680",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1639900230983495680/pu/img/owSgO6_xEruv_M4c.jpg",
+      "id": "xrank:TGAV1:status:1393189359495438341:03128076291/img/XwRR9_SO2L4D8BRg.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1392821903128076291/img/XwRR9_SO2L4D8BRg.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -1154,8 +1154,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1393189359495438341",
+      "handle": "ura_video_",
       "rank": 17,
       "rights_status": "external-public-source",
       "active": true,
@@ -1212,8 +1212,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1565240245699809280",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1565240245699809280/pu/img/TfYrMu_mlO_-zhff.jpg",
+      "id": "xrank:TGAV1:status:1517865884471152642:50565042180/img/C7EEY_APfEMykKjx.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1515179650565042180/img/C7EEY_APfEMykKjx.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -1225,8 +1225,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1517865884471152642",
+      "handle": "ura_video_",
       "rank": 18,
       "rights_status": "external-public-source",
       "active": true,
@@ -1283,8 +1283,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1488462737789562882",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1488462737789562882/pu/img/chFulWW_AXWYN8E4.jpg",
+      "id": "xrank:TGAV1:status:1972227459224600982:56477503488/img/Xho2mgz_YnZlIpvk.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1969689656477503488/img/Xho2mgz_YnZlIpvk.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -1296,8 +1296,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_aka_labo/status/1972227459224600982",
+      "handle": "ura_aka_labo",
       "rank": 19,
       "rights_status": "external-public-source",
       "active": true,
@@ -1354,8 +1354,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:httpspbstwimgcommediaFazQqNiaUAE9kbOpng",
-      "image_url": "https://pbs.twimg.com/media/FazQqNiaUAE9kbO.png",
+      "id": "xrank:TGAV1:status:1825450226960003497:40694904832/img/nvScK848UM4qKSQT.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1725829940694904832/img/nvScK848UM4qKSQT.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -1367,8 +1367,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_aka_labo/status/1825450226960003497",
+      "handle": "ura_aka_labo",
       "rank": 20,
       "rights_status": "external-public-source",
       "active": true,
@@ -1425,8 +1425,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1598241248435113985",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1598241248435113985/pu/img/NPaPaLDg-ZPjwG06.jpg",
+      "id": "xrank:TGAV1:status:1388735000313573377:41345030/pu/img/90XEqUf1Mv6VeWO-.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1387703080041345030/pu/img/90XEqUf1Mv6VeWO-.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -1438,8 +1438,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1388735000313573377",
+      "handle": "ura_video_",
       "rank": 21,
       "rights_status": "external-public-source",
       "active": true,
@@ -1496,8 +1496,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1340620738416427008",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1340620738416427008/pu/img/WKLxgMeSdRLibqZJ.jpg",
+      "id": "xrank:TGAV1:status:1437279876499722245:06345490434/img/cd5GGeZDEP6XimRN.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1436972206345490434/img/cd5GGeZDEP6XimRN.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -1509,8 +1509,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1437279876499722245",
+      "handle": "ura_video_",
       "rank": 22,
       "rights_status": "external-public-source",
       "active": true,
@@ -1567,8 +1567,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1601583713078620160",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1601583713078620160/pu/img/bcTyuGC6u6kDbCPa.jpg",
+      "id": "xrank:TGAV1:status:1369603949024657413:44791043/pu/img/djAcdd3IDrIQ_zcq.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1369602412344791043/pu/img/djAcdd3IDrIQ_zcq.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -1580,8 +1580,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1369603949024657413",
+      "handle": "ura_video_",
       "rank": 23,
       "rights_status": "external-public-source",
       "active": true,
@@ -1638,8 +1638,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1424281436278820864",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1424281436278820864/pu/img/gB-A9wmrNcJkwopc.jpg",
+      "id": "xrank:TGAV1:status:1393430944787353602:33527134210/img/OOrOTgs0N-I1T98E.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1393399533527134210/img/OOrOTgs0N-I1T98E.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -1651,8 +1651,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1393430944787353602",
+      "handle": "ura_video_",
       "rank": 24,
       "rights_status": "external-public-source",
       "active": true,
@@ -1709,8 +1709,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1558391825693831169",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1558391825693831169/img/rhH6v18Dy4zwZk5Y.jpg",
+      "id": "xrank:TGAV1:status:1622565779571986434:51844472835/img/Kee01w21NYviPgPT.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1621142851844472835/img/Kee01w21NYviPgPT.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -1722,8 +1722,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1622565779571986434",
+      "handle": "ura_video_",
       "rank": 25,
       "rights_status": "external-public-source",
       "active": true,
@@ -1780,8 +1780,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1544410178614833152",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1544410178614833152/img/HFKhRTc1Pe8UohdS.jpg",
+      "id": "xrank:TGAV1:status:1816745435241005494:30735360/pu/img/VQI9UvNYr7N5EeAj.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1744322075630735360/pu/img/VQI9UvNYr7N5EeAj.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -1793,8 +1793,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_aka_labo/status/1816745435241005494",
+      "handle": "ura_aka_labo",
       "rank": 26,
       "rights_status": "external-public-source",
       "active": true,
@@ -1851,8 +1851,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1608450486293745670",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1608450486293745670/img/9EXzy6UPFaTG1Khs.jpg",
+      "id": "xrank:TGAV1:status:1809865241980989609:.twimg.com/media/GM7K75QaYAAWNuG.jpg",
+      "image_url": "https://pbs.twimg.com/media/GM7K75QaYAAWNuG.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -1864,8 +1864,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_ura_ch/status/1809865241980989609",
+      "handle": "ura_ura_ch",
       "rank": 27,
       "rights_status": "external-public-source",
       "active": true,
@@ -1922,8 +1922,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1507990627791048711",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1507990627791048711/pu/img/hME7cvqaS-lCiE5E.jpg",
+      "id": "xrank:TGAV1:status:1482910555383873537:83656181760/img/UnxS_iu9SiEvqdzT.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1482688583656181760/img/UnxS_iu9SiEvqdzT.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -1935,8 +1935,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1482910555383873537",
+      "handle": "ura_video_",
       "rank": 28,
       "rights_status": "external-public-source",
       "active": true,
@@ -1993,8 +1993,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1620751035211091970",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1620751035211091970/pu/img/LhhV5_t3lEbLVtZZ.jpg",
+      "id": "xrank:TGAV1:status:1386666374924181505:86032385/pu/img/dgpChL2b72GoB917.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1386644443286032385/pu/img/dgpChL2b72GoB917.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2006,8 +2006,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1386666374924181505",
+      "handle": "ura_video_",
       "rank": 29,
       "rights_status": "external-public-source",
       "active": true,
@@ -2064,8 +2064,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1637431479381946369",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1637431479381946369/pu/img/sbmvJ2dSSdMXtPXR.jpg",
+      "id": "xrank:TGAV1:status:1345687600594522113:59639808/pu/img/1jI6_PuALBb2GJsc.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1345640812059639808/pu/img/1jI6_PuALBb2GJsc.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2077,8 +2077,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1345687600594522113",
+      "handle": "ura_video_",
       "rank": 30,
       "rights_status": "external-public-source",
       "active": true,
@@ -2135,8 +2135,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1374219170011746305",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1374219170011746305/pu/img/OER6qhGHg0k7X-p1.jpg",
+      "id": "xrank:TGAV1:status:1514815778851213320:83323330562/img/LYw2AT0m2g6vhRr_.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1512634883323330562/img/LYw2AT0m2g6vhRr_.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2148,8 +2148,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1514815778851213320",
+      "handle": "ura_video_",
       "rank": 31,
       "rights_status": "external-public-source",
       "active": true,
@@ -2176,8 +2176,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1638818509684883458",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1638818509684883458/pu/img/9XPyZE-x6ad-Z35W.jpg",
+      "id": "xrank:TGAV1:status:1454644304392048641:39887075331/img/j9myZIEDkrhCgRcC.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1454351339887075331/img/j9myZIEDkrhCgRcC.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2189,8 +2189,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1454644304392048641",
+      "handle": "ura_video_",
       "rank": 32,
       "rights_status": "external-public-source",
       "active": true,
@@ -2217,8 +2217,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1641763635973476352",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1641763635973476352/pu/img/e7D8gBSwmE9ICylG.jpg",
+      "id": "xrank:TGAV1:status:1468430134713536512:79397236737/img/1dUw3pjTKE9tWOcH.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1457260079397236737/img/1dUw3pjTKE9tWOcH.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2230,8 +2230,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1468430134713536512",
+      "handle": "ura_video_",
       "rank": 33,
       "rights_status": "external-public-source",
       "active": true,
@@ -2258,8 +2258,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1612171987622973441",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1612171987622973441/img/kAt0IpTqYo9xATTm.jpg",
+      "id": "xrank:TGAV1:status:1526532986300116992:17933518850/img/UFStJIF19L78jRVv.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1526189517933518850/img/UFStJIF19L78jRVv.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2271,8 +2271,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1526532986300116992",
+      "handle": "ura_video_",
       "rank": 34,
       "rights_status": "external-public-source",
       "active": true,
@@ -2299,8 +2299,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1493575960582447105",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1493575960582447105/pu/img/J6w0IHfhF9HA_0Dz.jpg",
+      "id": "xrank:TGAV1:status:1811238219587215511:05741312/pu/img/H2Gd3V6UMEBuMtrS.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1749296486905741312/pu/img/H2Gd3V6UMEBuMtrS.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2312,8 +2312,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_ura_ch/status/1811238219587215511",
+      "handle": "ura_ura_ch",
       "rank": 35,
       "rights_status": "external-public-source",
       "active": true,
@@ -2340,8 +2340,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1542167223950786560",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1542167223950786560/pu/img/zKiUa_xsWNtxCmNQ.jpg",
+      "id": "xrank:TGAV1:status:1410583969695879176:06726473732/img/hYYh8cylVWnHaaxY.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1410222106726473732/img/hYYh8cylVWnHaaxY.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2353,8 +2353,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1410583969695879176",
+      "handle": "ura_video_",
       "rank": 36,
       "rights_status": "external-public-source",
       "active": true,
@@ -2381,8 +2381,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1639014194908635136",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1639014194908635136/img/Z_FCr9NP9d-MxUyE.jpg",
+      "id": "xrank:TGAV1:status:1778725077842116865:25242990592/img/tHiWUtaColYxLwrt.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1777275525242990592/img/tHiWUtaColYxLwrt.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2394,8 +2394,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_aka_labo/status/1778725077842116865",
+      "handle": "ura_aka_labo",
       "rank": 37,
       "rights_status": "external-public-source",
       "active": true,
@@ -2422,8 +2422,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1604083513514676226",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1604083513514676226/pu/img/RBtbeDzGFip4ZFEE.jpg",
+      "id": "xrank:TGAV1:status:1490324401132163073:80811440131/img/85S-7AE_SNs2HvBw.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1487280580811440131/img/85S-7AE_SNs2HvBw.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2435,8 +2435,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1490324401132163073",
+      "handle": "ura_video_",
       "rank": 38,
       "rights_status": "external-public-source",
       "active": true,
@@ -2463,8 +2463,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1557402677684113409",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1557402677684113409/pu/img/QdqpJVNywqYgcw-t.jpg",
+      "id": "xrank:TGAV1:status:1794674657565823190:16380416/pu/img/xfkO8pAR8vJgZhSz.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1637654068616380416/pu/img/xfkO8pAR8vJgZhSz.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2476,8 +2476,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_ura_ch/status/1794674657565823190",
+      "handle": "ura_ura_ch",
       "rank": 39,
       "rights_status": "external-public-source",
       "active": true,
@@ -2504,8 +2504,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1596542492648050688",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1596542492648050688/pu/img/PeQpeYkib7FJolLc.jpg",
+      "id": "xrank:TGAV1:status:1451865994624790535:01362216963/img/auZkbtJRpMhSJIHF.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1442048501362216963/img/auZkbtJRpMhSJIHF.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2517,8 +2517,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1451865994624790535",
+      "handle": "ura_video_",
       "rank": 40,
       "rights_status": "external-public-source",
       "active": true,
@@ -2545,8 +2545,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1098123717031342080",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1098123717031342080/pu/img/fB4e9utLRqGZBXkI.jpg",
+      "id": "xrank:TGAV1:status:1665176549685960704:98171983873/img/BnNpZ6Nux3P5gBDB.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1663640198171983873/img/BnNpZ6Nux3P5gBDB.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2558,8 +2558,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1665176549685960704",
+      "handle": "ura_video_",
       "rank": 41,
       "rights_status": "external-public-source",
       "active": true,
@@ -2586,8 +2586,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1629114597851508742",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1629114597851508742/pu/img/Ja9xDwMq7kE2gcEq.jpg",
+      "id": "xrank:TGAV1:status:1536528852192833536:88400570368/img/inRqjn912X2Ykvny.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1535570788400570368/img/inRqjn912X2Ykvny.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2599,8 +2599,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1536528852192833536",
+      "handle": "ura_video_",
       "rank": 42,
       "rights_status": "external-public-source",
       "active": true,
@@ -2627,8 +2627,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1649804500025110528",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1649804500025110528/pu/img/Q8aanW8l0gfH2oxO.jpg",
+      "id": "xrank:TGAV1:status:1527982544964182017:42677678080/img/5i-ryIXuscDa7k0-.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1526538242677678080/img/5i-ryIXuscDa7k0-.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2640,8 +2640,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1527982544964182017",
+      "handle": "ura_video_",
       "rank": 43,
       "rights_status": "external-public-source",
       "active": true,
@@ -2668,8 +2668,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1103842553386823680",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1103842553386823680/pu/img/MdOi945VFEwqKcV2.jpg?name=large",
+      "id": "xrank:TGAV1:status:1421289510718029826:26953310211/img/5iLUGVuCcVZfPvV2.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1418205426953310211/img/5iLUGVuCcVZfPvV2.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2681,8 +2681,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1421289510718029826",
+      "handle": "ura_video_",
       "rank": 44,
       "rights_status": "external-public-source",
       "active": true,
@@ -2709,8 +2709,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1524864108532617216",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1524864108532617216/pu/img/RhohcobVcGjSyG31.jpg",
+      "id": "xrank:TGAV1:status:1392857169641369602:93017470981/img/BKkUJ9JzFdiTHS_8.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1392466793017470981/img/BKkUJ9JzFdiTHS_8.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2722,8 +2722,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1392857169641369602",
+      "handle": "ura_video_",
       "rank": 45,
       "rights_status": "external-public-source",
       "active": true,
@@ -2750,8 +2750,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1632959647585046528",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1632959647585046528/pu/img/UZKMbYsaa9EYqDmr.jpg",
+      "id": "xrank:TGAV1:status:2037149054141161782:97534818304/img/scuuTKoZuFIrxY-q.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2037148997534818304/img/scuuTKoZuFIrxY-q.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2763,8 +2763,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/shinosuke_bee/status/2037149054141161782",
+      "handle": "shinosuke_bee",
       "rank": 46,
       "rights_status": "external-public-source",
       "active": true,
@@ -2791,8 +2791,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1626583170580881408",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1626583170580881408/pu/img/uL5EyNe6lbR5vZmy.jpg",
+      "id": "xrank:TGAV1:status:1823638426845110291:96154484737/img/pq7PnOkBG9kjxAid.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1822150496154484737/img/pq7PnOkBG9kjxAid.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2804,8 +2804,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_aka_labo/status/1823638426845110291",
+      "handle": "ura_aka_labo",
       "rank": 47,
       "rights_status": "external-public-source",
       "active": true,
@@ -2832,8 +2832,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1369174075730358272",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1369174075730358272/pu/img/-Osp6Ecn_pkKNq8F.jpg",
+      "id": "xrank:TGAV1:status:1358415218502754311:99686658/pu/img/WINV6QJCEBDvgfaw.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1358293075999686658/pu/img/WINV6QJCEBDvgfaw.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2845,8 +2845,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1358415218502754311",
+      "handle": "ura_video_",
       "rank": 48,
       "rights_status": "external-public-source",
       "active": true,
@@ -2873,8 +2873,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2040313365080506418:49673742336/img/-GB1VIhZFpKU0S4V.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1926825149673742336/img/-GB1VIhZFpKU0S4V.jpg",
+      "id": "xrank:TG1W:status:2104369787547897910:62214356992/img/-QYDTyTL7tkNiZtd.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1914273862214356992/img/-QYDTyTL7tkNiZtd.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -2886,7 +2886,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2040313365080506418",
+      "page_url": "https://x.com/100yenAVshop/status/2104369787547897910",
       "handle": "100yenAVshop",
       "rank": 1,
       "rights_status": "external-public-source",
@@ -2914,8 +2914,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1469136113952432128",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1469136113952432128/pu/img/tCVjsoIVmE7VR8v1.jpg",
+      "id": "xrank:TGAV1:status:1405133052410433543:00363034631/img/zr2zM-4R7ZbqpSSk.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1404434100363034631/img/zr2zM-4R7ZbqpSSk.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2927,8 +2927,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1405133052410433543",
+      "handle": "ura_video_",
       "rank": 49,
       "rights_status": "external-public-source",
       "active": true,
@@ -2955,8 +2955,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1633793163344355328",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1633793163344355328/pu/img/9NpIx8VE2jB54FAf.jpg",
+      "id": "xrank:TGAV1:status:1409466609383534593:24610988033/img/MGGyTtGDzDzWdENa.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1409141824610988033/img/MGGyTtGDzDzWdENa.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -2968,8 +2968,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1409466609383534593",
+      "handle": "ura_video_",
       "rank": 50,
       "rights_status": "external-public-source",
       "active": true,
@@ -2996,8 +2996,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1611287434746277889",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1611287434746277889/pu/img/UmxiCXd0c5MkbDPM.jpg",
+      "id": "xrank:TGAV1:status:1559874259971096576:23147046912/img/NMbfU24uVtigCYJJ.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1554563123147046912/img/NMbfU24uVtigCYJJ.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -3009,8 +3009,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1559874259971096576",
+      "handle": "ura_video_",
       "rank": 51,
       "rights_status": "external-public-source",
       "active": true,
@@ -3037,8 +3037,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1633711654709125120",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1633711654709125120/pu/img/wFgKBKhCSScs8uP1.jpg",
+      "id": "xrank:TGAV1:status:1660495701455904768:94421765/pu/img/uo7UJ98SlNITODnZ.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1660123417394421765/pu/img/uo7UJ98SlNITODnZ.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -3050,8 +3050,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1660495701455904768",
+      "handle": "ura_video_",
       "rank": 52,
       "rights_status": "external-public-source",
       "active": true,
@@ -3078,8 +3078,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1538785675021262848",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1538785675021262848/pu/img/CaX9UV_EvNgxep80.jpg",
+      "id": "xrank:TGAV1:status:1547173998873776138:21712850946/img/OG_uO_flj0JoLcmT.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1513855821712850946/img/OG_uO_flj0JoLcmT.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -3091,8 +3091,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1547173998873776138",
+      "handle": "ura_video_",
       "rank": 53,
       "rights_status": "external-public-source",
       "active": true,
@@ -3119,8 +3119,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1576905801704169472",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1576905801704169472/pu/img/u4t-8VcQ2hzrTgum.jpg",
+      "id": "xrank:TGAV1:status:1377576475050696706:87950339/pu/img/PZ06MrZwq2Fx4fK7.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1377568558087950339/pu/img/PZ06MrZwq2Fx4fK7.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -3132,8 +3132,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1377576475050696706",
+      "handle": "ura_video_",
       "rank": 54,
       "rights_status": "external-public-source",
       "active": true,
@@ -3160,8 +3160,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1507575545231736838",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1507575545231736838/pu/img/itfNVhmXBQ8DBcdF.jpg",
+      "id": "xrank:TGAV1:status:1572088165342453760:72886525960/img/TvwRaTk3E6M9IFHg.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1497783472886525960/img/TvwRaTk3E6M9IFHg.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -3173,8 +3173,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1572088165342453760",
+      "handle": "ura_video_",
       "rank": 55,
       "rights_status": "external-public-source",
       "active": true,
@@ -3201,8 +3201,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:httpspbstwimgcommediaFgQjEuaYAA0rBjpg",
-      "image_url": "https://pbs.twimg.com/media/FgQjEu-aYAA0rB_.jpg",
+      "id": "xrank:TGAV1:status:1485960647519006720:79052570627/img/bACLvm4Yc6mywGAn.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1479078479052570627/img/bACLvm4Yc6mywGAn.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -3214,8 +3214,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1485960647519006720",
+      "handle": "ura_video_",
       "rank": 56,
       "rights_status": "external-public-source",
       "active": true,
@@ -3242,8 +3242,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1622979109008842755",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1622979109008842755/img/euLTj6wtoo9wdTOf.jpg",
+      "id": "xrank:TGAV1:status:1626174549883494401:41953980418/img/ODdzsXUKT-HORSRf.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1624764441953980418/img/ODdzsXUKT-HORSRf.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -3255,8 +3255,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1626174549883494401",
+      "handle": "ura_video_",
       "rank": 57,
       "rights_status": "external-public-source",
       "active": true,
@@ -3283,8 +3283,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1574372126207135751",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1574372126207135751/pu/img/gwHc7N29sFD9whrx.jpg",
+      "id": "xrank:TGAV1:status:2029157613217431604:21203969/pu/img/zDQITkr8r6B7zi0D.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/2028274986021203969/pu/img/zDQITkr8r6B7zi0D.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -3296,8 +3296,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_aka_labo/status/2029157613217431604",
+      "handle": "ura_aka_labo",
       "rank": 58,
       "rights_status": "external-public-source",
       "active": true,
@@ -3324,8 +3324,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:httpspbstwimgcomtweetvideothumbEsu9sPsUYAMpVmBjpg",
-      "image_url": "https://pbs.twimg.com/tweet_video_thumb/Esu9sPsUYAMpVmB.jpg",
+      "id": "xrank:TGAV1:status:1343211283714244608:07280897/pu/img/W3vmOUTv3O1yliFa.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1340662410307280897/pu/img/W3vmOUTv3O1yliFa.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -3337,8 +3337,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1343211283714244608",
+      "handle": "ura_video_",
       "rank": 59,
       "rights_status": "external-public-source",
       "active": true,
@@ -3365,8 +3365,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1437360180656685056",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1437360180656685056/pu/img/LODZLS2BAinHWM6g.jpg",
+      "id": "xrank:TGAV1:status:1402249053233160198:83689938945/img/U4q1E_7TaLgXvaNz.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1401868683689938945/img/U4q1E_7TaLgXvaNz.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -3378,8 +3378,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1402249053233160198",
+      "handle": "ura_video_",
       "rank": 60,
       "rights_status": "external-public-source",
       "active": true,
@@ -3406,8 +3406,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1960938794032750593",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1960938794032750593/img/NFzvZcmHl1S3BfCj.jpg",
+      "id": "xrank:TGAma:1946162058577248257",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1946162058577248257/img/RcJdBCbRtLok1S3W.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -3462,8 +3462,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1504823063732690945",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1504823063732690945/img/vG0mVDSUXy28J2LH.jpg",
+      "id": "xrank:TGAV1:status:1444286040286584832:20711903232/img/exEf0SVnJsyjCPN4.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1971520020711903232/img/exEf0SVnJsyjCPN4.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -3475,8 +3475,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1444286040286584832",
+      "handle": "ura_video_",
       "rank": 61,
       "rights_status": "external-public-source",
       "active": true,
@@ -3503,8 +3503,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1835276753817960448",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1835276753817960448/img/y3VKsPsqdR2ePGXp.jpg",
+      "id": "xrank:TGAma:1789107866475151360",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1789107866475151360/pu/img/moXSGMs_btw1g-CH.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -3559,8 +3559,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1639195498409246720",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1639195498409246720/img/dng6GE6b0sonydYR.jpg",
+      "id": "xrank:TGAV1:status:1401720569188425728:38772166660/img/PIhHRw9Kj_75uE1M.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1395008038772166660/img/PIhHRw9Kj_75uE1M.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -3572,8 +3572,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1401720569188425728",
+      "handle": "ura_video_",
       "rank": 62,
       "rights_status": "external-public-source",
       "active": true,
@@ -3600,8 +3600,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1760611033134297088",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1760611033134297088/img/WiQ2V__vaIGxbzqh.jpg:small",
+      "id": "xrank:TGAma:1802143372293160960",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1802143372293160960/pu/img/K8T69nN4ifff5JCd.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -3656,49 +3656,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1608160923457585152",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1608160923457585152/pu/img/IVi29QSfMpBVUkMJ.jpg",
-      "thumb_url": null,
-      "title": "",
-      "source": "TGAV1",
-      "source_label": "TGAV1",
-      "source_class": "pro",
-      "tags": [
-        "pro",
-        "tgav1",
-        "mid"
-      ],
-      "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
-      "rank": 63,
-      "rights_status": "external-public-source",
-      "active": true,
-      "baseline": {
-        "canonical": "Velvet v0.9.6 + Exposure Compatibility 2026-09-19",
-        "profiles": {
-          "max": {
-            "eligible": true,
-            "score": 2.2692,
-            "run_cap": 5,
-            "target_share": 0,
-            "max_rank": 100,
-            "exposure_tier": "unknown",
-            "exposure_estimate_tier": "high",
-            "exposure_basis": "source-prior",
-            "exposure_confidence": 0.35,
-            "intensity": 4,
-            "post_jp": false,
-            "post_female": false,
-            "age_target": false
-          }
-        }
-      },
-      "source_snapshot_recovered": false
-    },
-    {
-      "id": "xrank:TGAma:1717876172913340416",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1717876172913340416/pu/img/2NJhDOanp7jnLe0_.jpg:small",
+      "id": "xrank:TGAma:2075812670956347392",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2075812670956347392/img/yU-lXZrUkFtXNa9G.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -3753,8 +3712,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1587538046702215168",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1587538046702215168/img/t9t0xocz5o-eCgAA.jpg",
+      "id": "xrank:TGAV1:status:1536679850538373122:56529252355/img/Aus6r5VA9El4GhMV.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1435924856529252355/img/Aus6r5VA9El4GhMV.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -3766,8 +3725,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1536679850538373122",
+      "handle": "ura_video_",
       "rank": 64,
       "rights_status": "external-public-source",
       "active": true,
@@ -3794,8 +3753,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1801601626547097600",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1801601626547097600/img/yAxNDnEn8Z1HEzV-.jpg",
+      "id": "xrank:TGAma:1724934055316094976",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1724934055316094976/pu/img/lpQZKeaYHgTdzY3c.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -3850,8 +3809,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:httpspbstwimgcommediaFkYgPzaaUAAoqlyjpg",
-      "image_url": "https://pbs.twimg.com/media/FkYgPzaaUAAoqly.jpg",
+      "id": "xrank:TGAV1:status:1389927865404116992:72409047043/img/Y4m8dlZHSGsqlPro.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1401531872409047043/img/Y4m8dlZHSGsqlPro.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -3863,8 +3822,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1389927865404116992",
+      "handle": "ura_video_",
       "rank": 65,
       "rights_status": "external-public-source",
       "active": true,
@@ -3891,8 +3850,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1833082266429640705",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1833082266429640705/img/xyaNz-1z74OE0qd3.jpg",
+      "id": "xrank:TGAma:1717180005137235968",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1717180005137235968/pu/img/sTpC08FGmNXbwW39.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -3947,8 +3906,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1599842884144205824",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1599842884144205824/pu/img/VtOeaC8_pj1vjUlR.jpg",
+      "id": "xrank:TGAV1:status:1459868720789086214:32593453056/img/73ntIBxoP4xHIGx_.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1425427432593453056/img/73ntIBxoP4xHIGx_.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -3960,8 +3919,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1459868720789086214",
+      "handle": "ura_video_",
       "rank": 66,
       "rights_status": "external-public-source",
       "active": true,
@@ -3988,8 +3947,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1944029706522603520",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1944029706522603520/img/LAI1N1UwBi-BFZaT.jpg",
+      "id": "xrank:TGAma:2060642751063236608",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/2060642751063236608/pu/img/pOrgHoi93tJcEXri.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -4044,8 +4003,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1609115065109868545",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1609115065109868545/pu/img/8Ibdgi_Ta8d58lYD.jpg",
+      "id": "xrank:TGAV1:status:1351318453378928642:03516172289/img/jXMFn-dOWR5pAq9P.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1535570703516172289/img/jXMFn-dOWR5pAq9P.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -4057,8 +4016,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1351318453378928642",
+      "handle": "ura_video_",
       "rank": 67,
       "rights_status": "external-public-source",
       "active": true,
@@ -4085,8 +4044,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1801947726948806656",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1801947726948806656/img/GL0RKKfBJXwjZZcP.jpg:small",
+      "id": "xrank:TGAma:1832012435999621120",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1832012435999621120/img/7beTnn6wED35awrf.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -4141,8 +4100,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1561488261629243392",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1561488261629243392/pu/img/kOpWZUiiPs6yy2vP.jpg",
+      "id": "xrank:TGAV1:status:1681121611343069184:87862017/pu/img/IcR_tbeJNrdjHn7G.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1388774133387862017/pu/img/IcR_tbeJNrdjHn7G.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -4154,8 +4113,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1681121611343069184",
+      "handle": "ura_video_",
       "rank": 68,
       "rights_status": "external-public-source",
       "active": true,
@@ -4182,8 +4141,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1952377451839119360",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1952377451839119360/img/iIOb5fDtAivFQNLo.jpg",
+      "id": "xrank:TGAma:1740031870421934080",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1740031870421934080/pu/img/yzT-wTRTcwylFR3m.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -4238,8 +4197,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1610563863157833730",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1610563863157833730/pu/img/T4_YzYzUhm5mNq3q.jpg",
+      "id": "xrank:TGAV1:status:1402596342493483015:68692344833/img/zFl3M_txPX9_pOTD.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1459389468692344833/img/zFl3M_txPX9_pOTD.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -4251,8 +4210,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1402596342493483015",
+      "handle": "ura_video_",
       "rank": 69,
       "rights_status": "external-public-source",
       "active": true,
@@ -4279,8 +4238,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1934903830979989507",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1934903830979989507/img/AuF4pINC_qzFGsNz.jpg",
+      "id": "xrank:TGAma:1958387571945598976",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1958387571945598976/img/QHvNxc3txIlzoltB.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -4335,8 +4294,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1245748403402731526",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1245748403402731526/pu/img/zJQPzNaf9-1d5gU7.jpg",
+      "id": "xrank:TGAV1:status:1410946365820063747:55950849/pu/img/sT4K7VPjWrSgNNH_.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1351279792255950849/pu/img/sT4K7VPjWrSgNNH_.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -4348,8 +4307,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1410946365820063747",
+      "handle": "ura_video_",
       "rank": 70,
       "rights_status": "external-public-source",
       "active": true,
@@ -4376,8 +4335,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1760650038030811136",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1760650038030811136/pu/img/1Ln7xq8U8UI18MSN.jpg",
+      "id": "xrank:TGAma:1781830370704703488",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1781830370704703488/pu/img/ADeQPo_P7XkgFIKZ.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -4432,8 +4391,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1540330542750920704",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1540330542750920704/pu/img/Mxg6QmaTMg8psbhP.jpg",
+      "id": "xrank:TGAV1:status:1409708200383897600:15552913410/img/a2-aSe3cei-kIpLy.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1680759615552913410/img/a2-aSe3cei-kIpLy.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -4445,8 +4404,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1409708200383897600",
+      "handle": "ura_video_",
       "rank": 71,
       "rights_status": "external-public-source",
       "active": true,
@@ -4473,8 +4432,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1975954630732652544",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1975954630732652544/img/A_tsqILPn12ySmD6.jpg",
+      "id": "xrank:TGAma:1650091196868603904",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1650091196868603904/pu/img/K0Q-qFA4cGdGvD3u.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -4529,8 +4488,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1126543999538384896",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1126543999538384896/pu/img/DijQAzIauv-uky4c.jpg",
+      "id": "xrank:TGAV1:status:1423629936477147141:72881618949/img/LaQv4I26UUEK0oLq.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1402229072881618949/img/LaQv4I26UUEK0oLq.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -4542,8 +4501,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1423629936477147141",
+      "handle": "ura_video_",
       "rank": 72,
       "rights_status": "external-public-source",
       "active": true,
@@ -4570,8 +4529,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1819702198504419328",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1819702198504419328/img/JCgkdFRed9ktCkPk.jpg",
+      "id": "xrank:TGAma:1813514868450029569",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1813514868450029569/img/mknsOaKKvbCILfNj.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -4626,8 +4585,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1611171563445039104",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1611171563445039104/pu/img/5xumy25hfOMdzwhS.jpg",
+      "id": "xrank:TGAV1:status:1770421125149061436:16605329414/img/60VNfsCsbOAsM8N1.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1410591116605329414/img/60VNfsCsbOAsM8N1.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -4639,8 +4598,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_aka_labo/status/1770421125149061436",
+      "handle": "ura_aka_labo",
       "rank": 73,
       "rights_status": "external-public-source",
       "active": true,
@@ -4667,8 +4626,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1970460010586275840",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1970460010586275840/img/tWNS-UmJ0qrUCih6.jpg",
+      "id": "xrank:TGAma:1808466576498466816",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1808466576498466816/img/7WCwW5YMm7VBJxLc.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -4723,8 +4682,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1607150917455077377",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1607150917455077377/pu/img/gHBFkVsROVTzPw2v.jpg",
+      "id": "xrank:TGAV1:status:1427102823162941440:21574103048/img/UqRTtdbNErm2IIRg.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1409500021574103048/img/UqRTtdbNErm2IIRg.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -4736,8 +4695,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1427102823162941440",
+      "handle": "ura_video_",
       "rank": 74,
       "rights_status": "external-public-source",
       "active": true,
@@ -4764,8 +4723,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1978324790449704960",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1978324790449704960/img/sPW4anMQXxScC9f7.jpg",
+      "id": "xrank:TGAma:1985894726193856513",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1985894726193856513/img/MSpqYg1Gv3xIjl9G.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -4820,8 +4779,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1610278576762523648",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1610278576762523648/pu/img/EgEyBjVh_UkeLZV3.jpg",
+      "id": "xrank:TGAV1:status:1356074796245725185:51543775239/img/GU-6Qgq_hbbdPLsC.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1421840351543775239/img/GU-6Qgq_hbbdPLsC.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -4833,8 +4792,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1356074796245725185",
+      "handle": "ura_video_",
       "rank": 75,
       "rights_status": "external-public-source",
       "active": true,
@@ -4861,8 +4820,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1973702361249132544",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1973702361249132544/img/QK_yNEzGI6Vle2-p.jpg",
+      "id": "xrank:TGAma:1979864185681940480",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1979864185681940480/img/ICzQw-rv5YkuCCLq.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -4917,8 +4876,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1635607420809641992",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1635607420809641992/pu/img/X4iGwnK7YpQUO_c7.jpg",
+      "id": "xrank:TGAV1:status:1986360788999938219:13317750784/img/kyci5RHqDAD7XyW_.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1768979213317750784/img/kyci5RHqDAD7XyW_.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -4930,8 +4889,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_aka_labo/status/1986360788999938219",
+      "handle": "ura_aka_labo",
       "rank": 76,
       "rights_status": "external-public-source",
       "active": true,
@@ -4958,8 +4917,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1967891642742198272",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1967891642742198272/img/myH9FMK5wB5IEGcK.jpg",
+      "id": "xrank:TGAma:1726745994702749696",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1726745994702749696/pu/img/6votnG6-NJNs56lL.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -5014,8 +4973,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:httpspbstwimgcommediaFGmBCtSaMAAPT2jpg",
-      "image_url": "https://pbs.twimg.com/media/FGmBCtSaMAAP_T2.jpg",
+      "id": "xrank:TGAV1:status:1393763134528184326:08839921666/img/RyzM9GjMfm4cb2es.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1426806608839921666/img/RyzM9GjMfm4cb2es.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -5027,8 +4986,8 @@
         "mid"
       ],
       "intensity": 4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ura_video_/status/1393763134528184326",
+      "handle": "ura_video_",
       "rank": 77,
       "rights_status": "external-public-source",
       "active": true,
@@ -5055,8 +5014,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1741439105593176064",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1741439105593176064/img/ORif_esQpaIro0Yn.jpg",
+      "id": "xrank:TGAma:2060685119577640960",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2060685119577640960/img/QznpaplbnQGXfqTd.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -5111,8 +5070,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1435549672328740867",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1435549672328740867/pu/img/ZMDM8lTCJ5XWoVBS.jpg",
+      "id": "xrank:TGAV1:1355993079275159552",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1355993079275159552/pu/img/zcxryKZzvfw5-SU4.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -5152,8 +5111,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1790392508587110400",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1790392508587110400/img/5Hpb7bYvf6JrxFNC.jpg",
+      "id": "xrank:TGAma:1773974199037841409",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1773974199037841409/pu/img/SxPrYhNVdaJO83IK.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -5208,8 +5167,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1332519936254611462",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1332519936254611462/pu/img/QCDGghlCc6olR0yj.jpg",
+      "id": "xrank:TGAV1:1985284851407400960",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1985284851407400960/img/iW-YBFntEx9Zz_8K.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -5249,8 +5208,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1723991082390949888",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1723991082390949888/img/ZhLyahMC-1M7tzN0.jpg",
+      "id": "xrank:TGAma:1778636747385237505",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1778636747385237505/pu/img/DGY1yYnlchuRKFt3.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -5305,8 +5264,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV1:1618422021808947206",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1618422021808947206/img/tM9LpnX35L50Ha1Y.jpg",
+      "id": "xrank:TGAV1:1393756657591586821",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1393756657591586821/img/SIT-cNxGtLdHwvXS.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV1",
@@ -5346,8 +5305,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1779684926935506944",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1779684926935506944/pu/img/P-doLv6CSkjRBjUW.jpg:small",
+      "id": "xrank:TGAma:1805519892285894656",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1805519892285894656/img/NaTBpahyD4UtydbD.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -5402,8 +5361,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1789273421647585281",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1789273421647585281/img/0PH4lzbLtnkap-MI.jpg:small",
+      "id": "xrank:TGAma:1756259836487200768",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1756259836487200768/img/rbFWALjV2N7zfE3P.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -5458,8 +5417,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1964323469568692225",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1964323469568692225/img/b4N7rvxlx5meOT2J.jpg",
+      "id": "xrank:TGAma:2039578447337644032",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2039578447337644032/img/UqED8z5-mQeQPr0v.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -5514,8 +5473,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1827680741515223041",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1827680741515223041/img/CblyGYWbQO5ezPcL.jpg",
+      "id": "xrank:TGAma:1672519604281954304",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1672519604281954304/pu/img/ZYKf3-pBK61i113s.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -5570,8 +5529,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1761174397019459584",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1761174397019459584/pu/img/FR8r4NbnJ0Ui05F2.jpg",
+      "id": "xrank:TGAma:1817177419041898497",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1817177419041898497/pu/img/hpg-M1p1NS8kSLU-.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -5626,8 +5585,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1739264108904775680",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1739264108904775680/img/DayoNffyhvzqvVyz.jpg",
+      "id": "xrank:TGAma:1809966180058451968",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1809966180058451968/pu/img/oV7g3hGSDwyvbM6G.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -5682,8 +5641,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1831188482083221504",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1831188482083221504/pu/img/5gjSDg0--GN78FGL.jpg:small",
+      "id": "xrank:TGAma:2039842592121360384",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2039842592121360384/img/Vb4adP24bHndrRAK.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -5738,8 +5697,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1639601279759704064",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1639601279759704064/pu/img/MBbMyAn3OcIVYTwY.jpg",
+      "id": "xrank:TGAma:1935238220633251840",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1935238220633251840/img/seySQfHQUD69PRfW.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -5794,8 +5753,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1788922432709079040",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1788922432709079040/img/PYbvXLTFPL_rLk1T.jpg",
+      "id": "xrank:TGAma:1808842201499381763",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1808842201499381763/img/7tnXM8XE5secQAtc.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -5850,8 +5809,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:2070856104700243968",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2070856104700243968/img/RqdPiB03FmnugFMV.jpg",
+      "id": "xrank:TGAma:1747951778791088128",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1747951778791088128/img/oHeOZcerf-EcKgm2.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -5906,8 +5865,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1946175714010791936",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1946175714010791936/img/aMGO75b-FK2RiyTL.jpg:small",
+      "id": "xrank:TGAma:1772511326902034432",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1772511326902034432/pu/img/6jTGJPCig_6Jee8q.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -5962,8 +5921,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1780952335600283649",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1780952335600283649/img/dyh6KfUahMQu0avt.jpg:small",
+      "id": "xrank:TGAma:1775362804830375936",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1775362804830375936/pu/img/ggZCZHJnHlFWdCSb.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -6018,8 +5977,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1730025969610850304",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1730025969610850304/img/2sMGUEOTqn13QMC1.jpg",
+      "id": "xrank:TGAma:1754737910262407168",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1754737910262407168/pu/img/nLDpMCAYZ4p8VdiN.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -6074,8 +6033,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1780418598252748800",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1780418598252748800/img/DRGTKOSPCjThp3Jo.jpg",
+      "id": "xrank:TGAma:1717830967426260992",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1717830967426260992/pu/img/NNYO6DEaWNVnATMx.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -6130,8 +6089,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1727524200217518080",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1727524200217518080/pu/img/skIiSJcctRaaeca8.jpg",
+      "id": "xrank:TGAma:1945772344783310848",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1945772344783310848/img/8EC-a-tXdXpM2-rY.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -6186,8 +6145,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:2005164334801104896",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2005164334801104896/img/EovfqQTBfdCQLxpc.jpg",
+      "id": "xrank:TGAma:1836012278757347328",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1836012278757347328/pu/img/b7eb34-F9mF9j8KZ.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -6242,8 +6201,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1728066634764693504",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1728066634764693504/img/3tHKSfW88dvh_c8h.jpg",
+      "id": "xrank:TGAma:1637454683060183041",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1637454683060183041/pu/img/iGmZVBvT5QzCzaQH.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -6298,8 +6257,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:2009529394315055104",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2009529394315055104/img/TZNL7jcYgMGDFET9.jpg",
+      "id": "xrank:TGAma:1626192869794144257",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1626192869794144257/pu/img/NQOY5pPx-OmvCMS0.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -6354,8 +6313,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1943152542428327936",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1943152542428327936/img/G_LQqRhdSokVyRXK.jpg",
+      "id": "xrank:TGAma:1623988587485356034",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1623988587485356034/pu/img/bwenj5omP86Wmh8f.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -6410,8 +6369,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1778403212359573504",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1778403212359573504/img/vcerHs5JZ_yK6Crv.jpg",
+      "id": "xrank:TGAma:1787423965872640000",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1787423965872640000/img/hV9hH6FG7CeOmgAZ.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -6466,8 +6425,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:2001582459495071744",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2001582459495071744/img/BVIChKsW8dqI8dbh.jpg",
+      "id": "xrank:TGAma:1988489342621569024",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1988489342621569024/img/ybIabpPWQ_RbMd-c.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -6522,8 +6481,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1999389506232025093",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1999389506232025093/img/PxoqLv-z7wmi7lFA.jpg",
+      "id": "xrank:TGAma:1813879179584434176",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1813879179584434176/img/yyuDgAMcVdOPngDs.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -6578,8 +6537,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:1849078553004183963:28453638144/img/ULJG-0KrzbuvD2hL.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1501485628453638144/img/ULJG-0KrzbuvD2hL.jpg",
+      "id": "xrank:TGAV2:status:1982087584122798294:10145683456/img/WixzHCXko7FQu7Po.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1899361310145683456/img/WixzHCXko7FQu7Po.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -6591,8 +6550,8 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/1849078553004183963",
-      "handle": "r18movies2021",
+      "page_url": "https://x.com/sljafdosuahb01/status/1982087584122798294",
+      "handle": "sljafdosuahb01",
       "rank": 2,
       "rights_status": "external-public-source",
       "active": true,
@@ -6634,8 +6593,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1724770807161958400",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1724770807161958400/pu/img/-GJGqoBGrx9WNw8c.jpg",
+      "id": "xrank:TGAma:1816693854600593410",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1816693854600593410/pu/img/qUXsTeNNmtx-4AXE.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -6690,8 +6649,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:2019068661554893040:39379431424/img/G_HsUmKCqSN3KZeV.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2009246639379431424/img/G_HsUmKCqSN3KZeV.jpg",
+      "id": "xrank:TGAV2:status:1655181646792933379:65669120/pu/img/nahb3yW069RuI5Ag.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1654116695265669120/pu/img/nahb3yW069RuI5Ag.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -6703,7 +6662,7 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/2019068661554893040",
+      "page_url": "https://x.com/r18movies2021/status/1655181646792933379",
       "handle": "r18movies2021",
       "rank": 3,
       "rights_status": "external-public-source",
@@ -6746,64 +6705,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1578514815181787136",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1578514815181787136/pu/img/fJFzeSD7U65W9iBT.jpg:small",
-      "thumb_url": null,
-      "title": "",
-      "source": "TGAma",
-      "source_label": "TG素人",
-      "source_class": "personal",
-      "tags": [
-        "personal",
-        "tgama",
-        "mid"
-      ],
-      "intensity": 3.4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
-      "rank": 45,
-      "rights_status": "external-public-source",
-      "active": true,
-      "baseline": {
-        "canonical": "Velvet v0.9.6 + Exposure Compatibility 2026-09-19",
-        "profiles": {
-          "personal": {
-            "eligible": true,
-            "score": 1.9504,
-            "run_cap": 4,
-            "target_share": 0,
-            "max_rank": 100,
-            "exposure_tier": "unknown",
-            "exposure_estimate_tier": "low",
-            "exposure_basis": "source-prior",
-            "exposure_confidence": 0.35,
-            "intensity": 2.4,
-            "post_jp": false,
-            "post_female": false,
-            "age_target": false
-          },
-          "max": {
-            "eligible": true,
-            "score": 2.1304,
-            "run_cap": 2,
-            "target_share": 0,
-            "max_rank": 100,
-            "exposure_tier": "unknown",
-            "exposure_estimate_tier": "medium",
-            "exposure_basis": "source-prior",
-            "exposure_confidence": 0.35,
-            "intensity": 3.4,
-            "post_jp": false,
-            "post_female": false,
-            "age_target": false
-          }
-        }
-      },
-      "source_snapshot_recovered": false
-    },
-    {
-      "id": "xrank:TGAV2:status:1971946243070087236:71970560/pu/img/A66cAd696WUcZWNG.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1472015464171970560/pu/img/A66cAd696WUcZWNG.jpg",
+      "id": "xrank:TGAV2:status:2014307208595640749:77427986432/img/BO1EEm8lA2jlaNTI.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2013622477427986432/img/BO1EEm8lA2jlaNTI.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -6815,7 +6718,7 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/1971946243070087236",
+      "page_url": "https://x.com/r18movies2021/status/2014307208595640749",
       "handle": "r18movies2021",
       "rank": 4,
       "rights_status": "external-public-source",
@@ -6858,8 +6761,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1867467519084441600",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1867467519084441600/pu/img/tEcX16qwpZtek0Eu.jpg:small",
+      "id": "xrank:TGAma:1944029706522603520",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1944029706522603520/img/LAI1N1UwBi-BFZaT.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -6914,8 +6817,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:1926297358305763601:79834126341/img/EB1EUeqYV2IVgrsZ.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1925482179834126341/img/EB1EUeqYV2IVgrsZ.jpg",
+      "id": "xrank:TGAV2:status:2041549269036118065:53185280/pu/img/uIm3dvppEW7FdJIV.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/2040680182953185280/pu/img/uIm3dvppEW7FdJIV.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -6927,7 +6830,7 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/1926297358305763601",
+      "page_url": "https://x.com/r18movies2021/status/2041549269036118065",
       "handle": "r18movies2021",
       "rank": 5,
       "rights_status": "external-public-source",
@@ -6970,64 +6873,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1937481006774386689",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1937481006774386689/img/TCIm0w-QwO8gUmQB.jpg:small",
-      "thumb_url": null,
-      "title": "",
-      "source": "TGAma",
-      "source_label": "TG素人",
-      "source_class": "personal",
-      "tags": [
-        "personal",
-        "tgama",
-        "mid"
-      ],
-      "intensity": 3.4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
-      "rank": 47,
-      "rights_status": "external-public-source",
-      "active": true,
-      "baseline": {
-        "canonical": "Velvet v0.9.6 + Exposure Compatibility 2026-09-19",
-        "profiles": {
-          "personal": {
-            "eligible": true,
-            "score": 1.9436,
-            "run_cap": 4,
-            "target_share": 0,
-            "max_rank": 100,
-            "exposure_tier": "unknown",
-            "exposure_estimate_tier": "low",
-            "exposure_basis": "source-prior",
-            "exposure_confidence": 0.35,
-            "intensity": 2.4,
-            "post_jp": false,
-            "post_female": false,
-            "age_target": false
-          },
-          "max": {
-            "eligible": true,
-            "score": 2.1236,
-            "run_cap": 2,
-            "target_share": 0,
-            "max_rank": 100,
-            "exposure_tier": "unknown",
-            "exposure_estimate_tier": "medium",
-            "exposure_basis": "source-prior",
-            "exposure_confidence": 0.35,
-            "intensity": 3.4,
-            "post_jp": false,
-            "post_female": false,
-            "age_target": false
-          }
-        }
-      },
-      "source_snapshot_recovered": false
-    },
-    {
-      "id": "xrank:TGAV2:status:1869749761181687942:52026880/pu/img/FmSMXYlH4VoE0pl7.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1868869481852026880/pu/img/FmSMXYlH4VoE0pl7.jpg",
+      "id": "xrank:TGAV2:status:1898147017291186553:80883713/pu/img/9bfqb45MiFFQkuaI.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1897506372880883713/pu/img/9bfqb45MiFFQkuaI.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -7039,8 +6886,8 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/sljafdosuahb01/status/1869749761181687942",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ero_oni072/status/1898147017291186553",
+      "handle": "ero_oni072",
       "rank": 6,
       "rights_status": "external-public-source",
       "active": true,
@@ -7082,8 +6929,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1766631382015725568",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1766631382015725568/img/h7JgdRb9XGYMWm2b.jpg",
+      "id": "xrank:TGAma:1729796508177092608",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1729796508177092608/pu/img/fQHKN6UBly6-XhN3.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -7138,8 +6985,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:1842011849837236271:86675712/pu/img/pUfTKgm86FwpIExP.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1841484167986675712/pu/img/pUfTKgm86FwpIExP.jpg",
+      "id": "xrank:TGAV2:status:2035751024544375259:58428417/pu/img/ysb2n2pmAXNJ3fcx.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1995840630858428417/pu/img/ysb2n2pmAXNJ3fcx.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -7151,7 +6998,7 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/1842011849837236271",
+      "page_url": "https://x.com/r18movies2021/status/2035751024544375259",
       "handle": "r18movies2021",
       "rank": 7,
       "rights_status": "external-public-source",
@@ -7194,64 +7041,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1640714784915230721",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1640714784915230721/pu/img/4Igd6RGky6VnOWPh.jpg",
-      "thumb_url": null,
-      "title": "",
-      "source": "TGAma",
-      "source_label": "TG素人",
-      "source_class": "personal",
-      "tags": [
-        "personal",
-        "tgama",
-        "mid"
-      ],
-      "intensity": 3.4,
-      "page_url": "https://x.com/sljafdosuahb01",
-      "handle": "sljafdosuahb01",
-      "rank": 49,
-      "rights_status": "external-public-source",
-      "active": true,
-      "baseline": {
-        "canonical": "Velvet v0.9.6 + Exposure Compatibility 2026-09-19",
-        "profiles": {
-          "personal": {
-            "eligible": true,
-            "score": 1.9368,
-            "run_cap": 4,
-            "target_share": 0,
-            "max_rank": 100,
-            "exposure_tier": "unknown",
-            "exposure_estimate_tier": "low",
-            "exposure_basis": "source-prior",
-            "exposure_confidence": 0.35,
-            "intensity": 2.4,
-            "post_jp": false,
-            "post_female": false,
-            "age_target": false
-          },
-          "max": {
-            "eligible": true,
-            "score": 2.1168,
-            "run_cap": 2,
-            "target_share": 0,
-            "max_rank": 100,
-            "exposure_tier": "unknown",
-            "exposure_estimate_tier": "medium",
-            "exposure_basis": "source-prior",
-            "exposure_confidence": 0.35,
-            "intensity": 3.4,
-            "post_jp": false,
-            "post_female": false,
-            "age_target": false
-          }
-        }
-      },
-      "source_snapshot_recovered": false
-    },
-    {
-      "id": "xrank:TGAV2:status:1819737662150115436:90520322048/img/-DE_pPyLqjDhLQ4A.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1817130890520322048/img/-DE_pPyLqjDhLQ4A.jpg",
+      "id": "xrank:TGAV2:status:1611344261039161351:31070978/pu/img/3hvOWd-iuyD__gWM.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1606590528531070978/pu/img/3hvOWd-iuyD__gWM.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -7263,8 +7054,8 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/sljafdosuahb01/status/1819737662150115436",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ero_oni072/status/1611344261039161351",
+      "handle": "ero_oni072",
       "rank": 8,
       "rights_status": "external-public-source",
       "active": true,
@@ -7306,8 +7097,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1636699504371204097",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1636699504371204097/pu/img/i3LUI-CmN6oCQ1cL.jpg",
+      "id": "xrank:TGAma:1799547860280918016",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1799547860280918016/img/SJcyFpDL5vruI9P4.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -7362,8 +7153,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:1916912978471096468:69559045/pu/img/f-f0oX0O1-QO8qeq.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1885333391769559045/pu/img/f-f0oX0O1-QO8qeq.jpg",
+      "id": "xrank:TGAV2:status:1888538526347931796:51764993/pu/img/1SjTo253wMXsFhyJ.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1880622020951764993/pu/img/1SjTo253wMXsFhyJ.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -7375,8 +7166,8 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/1916912978471096468",
-      "handle": "r18movies2021",
+      "page_url": "https://x.com/sljafdosuahb01/status/1888538526347931796",
+      "handle": "sljafdosuahb01",
       "rank": 9,
       "rights_status": "external-public-source",
       "active": true,
@@ -7418,8 +7209,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1558451330808950786",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1558451330808950786/pu/img/V4Aq9hkL9dDm3OVt.jpg:small",
+      "id": "xrank:TGAma:1743631029011943424",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1743631029011943424/pu/img/OhZ2EFVRJsOTI1FI.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -7474,8 +7265,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:1834827055927902494:20578125824/img/W2AbyW1fgZx1zcxI.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1733084320578125824/img/W2AbyW1fgZx1zcxI.jpg",
+      "id": "xrank:TGAV2:status:1656680668913364993:35407105/pu/img/XOCaM0F4Y2oS1Ttn.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1656585807535407105/pu/img/XOCaM0F4Y2oS1Ttn.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -7487,7 +7278,7 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/1834827055927902494",
+      "page_url": "https://x.com/r18movies2021/status/1656680668913364993",
       "handle": "r18movies2021",
       "rank": 10,
       "rights_status": "external-public-source",
@@ -7530,8 +7321,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:2008940274983333888",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2008940274983333888/img/AZw0VpjYnAO-w9FU.jpg",
+      "id": "xrank:TGAma:1982737005134954496",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1982737005134954496/img/Nu03eHYYZLXgTKet.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -7586,8 +7377,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:1839885884394758515:31083939840/img/5oOaABTg7xBJklF5.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1762082731083939840/img/5oOaABTg7xBJklF5.jpg",
+      "id": "xrank:TGAV2:status:2029527495591297241:92497664/pu/img/aHuA_oxGcKtS1E9B.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1907787114592497664/pu/img/aHuA_oxGcKtS1E9B.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -7599,7 +7390,7 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/1839885884394758515",
+      "page_url": "https://x.com/r18movies2021/status/2029527495591297241",
       "handle": "r18movies2021",
       "rank": 11,
       "rights_status": "external-public-source",
@@ -7642,8 +7433,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1730739043246460928",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1730739043246460928/img/ja-0mIhA-tNWx2Na.jpg:small",
+      "id": "xrank:TGAma:1671126390362759170",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1671126390362759170/pu/img/xaKxZwogZTS9BPI9.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -7698,8 +7489,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:1848633019466453156:28296448/pu/img/PrO6qBMKrYiHiFc6.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1847924596328296448/pu/img/PrO6qBMKrYiHiFc6.jpg",
+      "id": "xrank:TGAV2:status:1650989976958697473:80974087/pu/img/Bk8J0IwOkABBl4rU.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1609572671980974087/pu/img/Bk8J0IwOkABBl4rU.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -7711,8 +7502,8 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/1848633019466453156",
-      "handle": "r18movies2021",
+      "page_url": "https://x.com/ero_oni072/status/1650989976958697473",
+      "handle": "ero_oni072",
       "rank": 12,
       "rights_status": "external-public-source",
       "active": true,
@@ -7754,8 +7545,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1782028020540411904",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1782028020540411904/pu/img/L5Qu3CpoCgbPCfmM.jpg:small",
+      "id": "xrank:TGAma:1819554425629036545",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1819554425629036545/pu/img/GNge21YYtgwe_ByA.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -7810,8 +7601,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:2040424237031407814:04815360/pu/img/IPEHDreBdcYUrH8x.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/2039714837404815360/pu/img/IPEHDreBdcYUrH8x.jpg",
+      "id": "xrank:TGAV2:status:1851657913577972115:93093376/pu/img/wg764q9rVh7seLMx.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1850746758693093376/pu/img/wg764q9rVh7seLMx.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -7823,7 +7614,7 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/2040424237031407814",
+      "page_url": "https://x.com/r18movies2021/status/1851657913577972115",
       "handle": "r18movies2021",
       "rank": 13,
       "rights_status": "external-public-source",
@@ -7866,8 +7657,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1614268841571540999",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1614268841571540999/pu/img/YCjwPstFqm0ea_c4.jpg:small",
+      "id": "xrank:TGAma:1625083443838353410",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1625083443838353410/pu/img/vq3eC2Su87r3mKLG.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -7922,8 +7713,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:1888832983253340665:66956288/pu/img/Tf4lSI4vnCyqXUh8.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1745370973266956288/pu/img/Tf4lSI4vnCyqXUh8.jpg",
+      "id": "xrank:TGAV2:status:1911625688563757461:.twimg.com/media/GmuWHsHbYAAaAig.jpg",
+      "image_url": "https://pbs.twimg.com/media/GmuWHsHbYAAaAig.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -7935,8 +7726,8 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/ero_oni072/status/1888832983253340665",
-      "handle": "ero_oni072",
+      "page_url": "https://x.com/sljafdosuahb01/status/1911625688563757461",
+      "handle": "sljafdosuahb01",
       "rank": 14,
       "rights_status": "external-public-source",
       "active": true,
@@ -7978,8 +7769,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1748564253668511744",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1748564253668511744/pu/img/aMbcCc5EbSu7OuCE.jpg:small",
+      "id": "xrank:TGAma:1754148269352239104",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1754148269352239104/pu/img/De8HGiZDOk0kJ3yz.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -8034,8 +7825,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:1911452020734890186:32430336/pu/img/qZyJh2aQpxK6tKaO.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1908807387932430336/pu/img/qZyJh2aQpxK6tKaO.jpg",
+      "id": "xrank:TGAV2:status:1975038791065972995:42867380224/img/y4lq2LJS_AtV2TV9.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1967147642867380224/img/y4lq2LJS_AtV2TV9.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -8047,8 +7838,8 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/1911452020734890186",
-      "handle": "r18movies2021",
+      "page_url": "https://x.com/sljafdosuahb01/status/1975038791065972995",
+      "handle": "sljafdosuahb01",
       "rank": 15,
       "rights_status": "external-public-source",
       "active": true,
@@ -8090,8 +7881,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1833434614876278785",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1833434614876278785/pu/img/yXvt1Bv-LFMFwZSe.jpg:small",
+      "id": "xrank:TGAma:1939236974176399360",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1939236974176399360/img/AH9b5atoVTW7O9VY.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -8146,8 +7937,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:2020155999857123361:20189952/pu/img/DL-cyheoJ1VaGdPa.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/2019435439720189952/pu/img/DL-cyheoJ1VaGdPa.jpg",
+      "id": "xrank:TGAV2:status:1916887818879877466:20151504899/img/wg9m0RTROxdTWNSq.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1914609820151504899/img/wg9m0RTROxdTWNSq.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -8159,7 +7950,7 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/2020155999857123361",
+      "page_url": "https://x.com/r18movies2021/status/1916887818879877466",
       "handle": "r18movies2021",
       "rank": 16,
       "rights_status": "external-public-source",
@@ -8202,8 +7993,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1748670813036072960",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1748670813036072960/pu/img/-WmAapFkZX2iWcwj.jpg:small",
+      "id": "xrank:TGAma:1951892969071816705",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1951892969071816705/img/xMYlyibjFHKVb83y.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -8258,8 +8049,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:1968920740818006453:12855435264/img/RWQxrEOer6e3O2Zz.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1968148812855435264/img/RWQxrEOer6e3O2Zz.jpg",
+      "id": "xrank:TGAV2:status:1921410100264333775:04903569408/img/AVTspTGPSRK4Rf_D.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1920488904903569408/img/AVTspTGPSRK4Rf_D.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -8271,8 +8062,8 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/ero_oni072/status/1968920740818006453",
-      "handle": "ero_oni072",
+      "page_url": "https://x.com/sljafdosuahb01/status/1921410100264333775",
+      "handle": "sljafdosuahb01",
       "rank": 17,
       "rights_status": "external-public-source",
       "active": true,
@@ -8314,8 +8105,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:1772204328243322880",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1772204328243322880/img/IPRoD8PCSKrgHvZv.jpg:small",
+      "id": "xrank:TGAma:1722597989972324352",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1722597989972324352/pu/img/9bz77si1C6Ju2Dam.jpg:small",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -8370,8 +8161,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:2011070910665789830:74982131712/img/3zVArITe_TuayEIH.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2004584374982131712/img/3zVArITe_TuayEIH.jpg",
+      "id": "xrank:TGAV2:status:1463835531935055876:52489984/pu/img/HB5E5CVvXaWp64KC.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1463835480152489984/pu/img/HB5E5CVvXaWp64KC.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -8383,8 +8174,8 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/2011070910665789830",
-      "handle": "r18movies2021",
+      "page_url": "https://x.com/kr_9616/status/1463835531935055876",
+      "handle": "kr_9616",
       "rank": 18,
       "rights_status": "external-public-source",
       "active": true,
@@ -8426,8 +8217,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAma:2068149542470717440",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2068149542470717440/img/cOs2uv4H3nZ5b_GF.jpg",
+      "id": "xrank:TGAma:1762082588909502464",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1762082588909502464/img/DG41nEq1seVJ5VOP.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAma",
@@ -8482,8 +8273,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:1938605896311210173:33325056/pu/img/YwLBXggSq53x4wtN.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1937672972833325056/pu/img/YwLBXggSq53x4wtN.jpg",
+      "id": "xrank:TGAV2:status:1623702227125964800:weet_video_thumb/FoiMj5-aIAY2NwE.jpg",
+      "image_url": "https://pbs.twimg.com/tweet_video_thumb/FoiMj5-aIAY2NwE.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -8495,8 +8286,8 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/1938605896311210173",
-      "handle": "r18movies2021",
+      "page_url": "https://x.com/kr_9616/status/1623702227125964800",
+      "handle": "kr_9616",
       "rank": 19,
       "rights_status": "external-public-source",
       "active": true,
@@ -8538,8 +8329,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2072818593545568272:44888532992/img/O5GXJ35k-WLgAkcv.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1944643544888532992/img/O5GXJ35k-WLgAkcv.jpg",
+      "id": "xrank:TG1W:status:2053687748209541280:96825933824/img/gY5irBbvMZiUz-yX.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1900679696825933824/img/gY5irBbvMZiUz-yX.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -8551,7 +8342,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2072818593545568272",
+      "page_url": "https://x.com/100yenAVshop/status/2053687748209541280",
       "handle": "100yenAVshop",
       "rank": 2,
       "rights_status": "external-public-source",
@@ -8579,8 +8370,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:1904866154721796190:46287360/pu/img/CE3NBFZK8bivnRIZ.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1904053277446287360/pu/img/CE3NBFZK8bivnRIZ.jpg",
+      "id": "xrank:TGAV2:status:1912526659569520678:75645440/pu/img/jMGceNE2vrzS8h2z.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1911016547075645440/pu/img/jMGceNE2vrzS8h2z.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -8592,7 +8383,7 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/1904866154721796190",
+      "page_url": "https://x.com/r18movies2021/status/1912526659569520678",
       "handle": "r18movies2021",
       "rank": 20,
       "rights_status": "external-public-source",
@@ -8635,8 +8426,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2044025969045070097:94430017536/img/XfrjOA3_shs8uIn9.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1922764194430017536/img/XfrjOA3_shs8uIn9.jpg",
+      "id": "xrank:TG1W:status:2046969898707059047:74908936192/img/_70KNrBLepDu9L-R.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1934414374908936192/img/_70KNrBLepDu9L-R.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -8648,7 +8439,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2044025969045070097",
+      "page_url": "https://x.com/100yenAVshop/status/2046969898707059047",
       "handle": "100yenAVshop",
       "rank": 3,
       "rights_status": "external-public-source",
@@ -8676,8 +8467,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:1838587474794418594:01920256/pu/img/_srQDpXDtRGIXXLu.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1724797725101920256/pu/img/_srQDpXDtRGIXXLu.jpg",
+      "id": "xrank:TGAV2:status:1302254957853208579:31317504/pu/img/E7_oWl6Pv2-s1zjm.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1302254933031317504/pu/img/E7_oWl6Pv2-s1zjm.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -8689,8 +8480,8 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/1838587474794418594",
-      "handle": "r18movies2021",
+      "page_url": "https://x.com/kr_9616/status/1302254957853208579",
+      "handle": "kr_9616",
       "rank": 21,
       "rights_status": "external-public-source",
       "active": true,
@@ -8732,8 +8523,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2086321644969357449:21879836672/img/rtFBAtlzZ-03Nkr4.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1926249021879836672/img/rtFBAtlzZ-03Nkr4.jpg",
+      "id": "xrank:TG1W:status:1630555416706052097:53376256/pu/img/1m3Y1r0D8ZAV8F6z.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1630526489153376256/pu/img/1m3Y1r0D8ZAV8F6z.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -8745,8 +8536,8 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2086321644969357449",
-      "handle": "100yenAVshop",
+      "page_url": "https://x.com/noeronolife69/status/1630555416706052097",
+      "handle": "noeronolife69",
       "rank": 4,
       "rights_status": "external-public-source",
       "active": true,
@@ -8773,8 +8564,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:1954175967074959607:82557442/pu/img/C-QDn5662A3IflYf.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1822193882282557442/pu/img/C-QDn5662A3IflYf.jpg",
+      "id": "xrank:TGAV2:status:1929571358624923689:02031104/pu/img/ChLAnkLMxFpyOnTJ.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1929178515402031104/pu/img/ChLAnkLMxFpyOnTJ.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -8786,7 +8577,7 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/1954175967074959607",
+      "page_url": "https://x.com/r18movies2021/status/1929571358624923689",
       "handle": "r18movies2021",
       "rank": 22,
       "rights_status": "external-public-source",
@@ -8829,8 +8620,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:1461667740796653568:12535044/pu/img/P2iGGUQQFDTtoH18.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1391017055512535044/pu/img/P2iGGUQQFDTtoH18.jpg",
+      "id": "xrank:TG1W:status:2089091791077495174:16688517120/img/cmqEzltHoz4gjE_r.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1923144816688517120/img/cmqEzltHoz4gjE_r.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -8842,8 +8633,8 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/god_god_Movie/status/1461667740796653568",
-      "handle": "god_god_Movie",
+      "page_url": "https://x.com/100yenAVshop/status/2089091791077495174",
+      "handle": "100yenAVshop",
       "rank": 5,
       "rights_status": "external-public-source",
       "active": true,
@@ -8870,8 +8661,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:2020918413439402135:19395104770/img/uBuS3CWmpjAYYz-k.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1987153819395104770/img/uBuS3CWmpjAYYz-k.jpg",
+      "id": "xrank:TGAV2:status:1854111627010076808:44492545/pu/img/wfnFDrobo5jyIOej.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1853294487344492545/pu/img/wfnFDrobo5jyIOej.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -8883,8 +8674,8 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/2020918413439402135",
-      "handle": "r18movies2021",
+      "page_url": "https://x.com/sljafdosuahb01/status/1854111627010076808",
+      "handle": "sljafdosuahb01",
       "rank": 23,
       "rights_status": "external-public-source",
       "active": true,
@@ -8926,8 +8717,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:1970629731747004584:41820590081/img/YvXH-I82MQ6b6c-h.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1939900441820590081/img/YvXH-I82MQ6b6c-h.jpg",
+      "id": "xrank:TG1W:status:1910891257469292879:26388654080/img/_nzKCo67DLgim_Tt.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1910891126388654080/img/_nzKCo67DLgim_Tt.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -8939,7 +8730,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/1970629731747004584",
+      "page_url": "https://x.com/100yenAVshop/status/1910891257469292879",
       "handle": "100yenAVshop",
       "rank": 6,
       "rights_status": "external-public-source",
@@ -8967,8 +8758,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:2018731444085141764:13148418/pu/img/KvehUWZG-XYJozdv.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1890427639913148418/pu/img/KvehUWZG-XYJozdv.jpg",
+      "id": "xrank:TGAV2:status:1950252649741468033:38020808704/img/FeF3DtcUa-ms9riy.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1948835638020808704/img/FeF3DtcUa-ms9riy.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -8980,7 +8771,7 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/2018731444085141764",
+      "page_url": "https://x.com/r18movies2021/status/1950252649741468033",
       "handle": "r18movies2021",
       "rank": 24,
       "rights_status": "external-public-source",
@@ -9023,8 +8814,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:1431055031625678853:24066307/pu/img/3y5mdZOuiOh42F93.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1430841240724066307/pu/img/3y5mdZOuiOh42F93.jpg",
+      "id": "xrank:TG1W:status:1691266312889372672:31813410816/img/l6G3kqUjOMLmK5Ar.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1691266231813410816/img/l6G3kqUjOMLmK5Ar.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -9036,8 +8827,8 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/god_god_Movie/status/1431055031625678853",
-      "handle": "god_god_Movie",
+      "page_url": "https://x.com/noeronolife69/status/1691266312889372672",
+      "handle": "noeronolife69",
       "rank": 7,
       "rights_status": "external-public-source",
       "active": true,
@@ -9064,8 +8855,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:1975403341539844490:20474959872/img/exC8xh_7Gvoavf5I.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1947205520474959872/img/exC8xh_7Gvoavf5I.jpg",
+      "id": "xrank:TGAV2:status:1842860096004735257:21986304/pu/img/rSxqwPN7K8A4Lw9D.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1842204656421986304/pu/img/rSxqwPN7K8A4Lw9D.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -9077,8 +8868,8 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/ero_oni072/status/1975403341539844490",
-      "handle": "ero_oni072",
+      "page_url": "https://x.com/r18movies2021/status/1842860096004735257",
+      "handle": "r18movies2021",
       "rank": 25,
       "rights_status": "external-public-source",
       "active": true,
@@ -9120,8 +8911,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:1788851427114406091:36939776/pu/img/CbyyLuP-5CkjScLF.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1788851135236939776/pu/img/CbyyLuP-5CkjScLF.jpg",
+      "id": "xrank:TG1W:status:2102180182165696805:65766950913/img/dWfTB66u92bCfVAw.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1904015565766950913/img/dWfTB66u92bCfVAw.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -9133,7 +8924,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/1788851427114406091",
+      "page_url": "https://x.com/100yenAVshop/status/2102180182165696805",
       "handle": "100yenAVshop",
       "rank": 8,
       "rights_status": "external-public-source",
@@ -9161,8 +8952,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:1876687900991246771:52828160/pu/img/eECrfxxa4CayCEzO.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1876283255252828160/pu/img/eECrfxxa4CayCEzO.jpg",
+      "id": "xrank:TGAV2:status:1829577403351667193:19970560/pu/img/1vRkJJ5FVKBn6Rar.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1829114194219970560/pu/img/1vRkJJ5FVKBn6Rar.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -9174,7 +8965,7 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/1876687900991246771",
+      "page_url": "https://x.com/r18movies2021/status/1829577403351667193",
       "handle": "r18movies2021",
       "rank": 26,
       "rights_status": "external-public-source",
@@ -9217,8 +9008,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2039593670291456067:16321175552/img/ffNxhBg1NDwCQ78m.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1931320216321175552/img/ffNxhBg1NDwCQ78m.jpg",
+      "id": "xrank:TG1W:status:2068524528326824153:74245492736/img/u9cdi7k-8Jw8GuGl.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1686759674245492736/img/u9cdi7k-8Jw8GuGl.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -9230,8 +9021,8 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2039593670291456067",
-      "handle": "100yenAVshop",
+      "page_url": "https://x.com/noeronolife69/status/2068524528326824153",
+      "handle": "noeronolife69",
       "rank": 9,
       "rights_status": "external-public-source",
       "active": true,
@@ -9258,8 +9049,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:1846822293718397111:29884930/pu/img/2CQ-F7TDl2R-fzzF.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1570360476629884930/pu/img/2CQ-F7TDl2R-fzzF.jpg",
+      "id": "xrank:TGAV2:status:1702277243660357899:12315904/pu/img/LiAXG1N-8vcj8nzp.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1695420128312315904/pu/img/LiAXG1N-8vcj8nzp.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -9271,8 +9062,8 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/1846822293718397111",
-      "handle": "r18movies2021",
+      "page_url": "https://x.com/sljafdosuahb01/status/1702277243660357899",
+      "handle": "sljafdosuahb01",
       "rank": 27,
       "rights_status": "external-public-source",
       "active": true,
@@ -9314,8 +9105,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2114924887395737945:36268742656/img/xC614WmI7ZUfroV7.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1937101736268742656/img/xC614WmI7ZUfroV7.jpg",
+      "id": "xrank:TG1W:status:2056872154629800227:06425280512/img/s2f7bXezcvbLFqO6.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1911978006425280512/img/s2f7bXezcvbLFqO6.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -9327,7 +9118,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2114924887395737945",
+      "page_url": "https://x.com/100yenAVshop/status/2056872154629800227",
       "handle": "100yenAVshop",
       "rank": 10,
       "rights_status": "external-public-source",
@@ -9355,8 +9146,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:1905100230376480996:41480192/pu/img/KAP92uoCQWlScEQj.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1843278774441480192/pu/img/KAP92uoCQWlScEQj.jpg",
+      "id": "xrank:TGAV2:status:2017933818620248114:46007043/pu/img/TsagFLEnbDhy3Ehu.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1859478774146007043/pu/img/TsagFLEnbDhy3Ehu.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -9368,8 +9159,8 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/sljafdosuahb01/status/1905100230376480996",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/ero_oni072/status/2017933818620248114",
+      "handle": "ero_oni072",
       "rank": 28,
       "rights_status": "external-public-source",
       "active": true,
@@ -9411,8 +9202,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2023533588227256673:44598417409/img/NFmB0tfwrDQk2vuJ.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1941396144598417409/img/NFmB0tfwrDQk2vuJ.jpg",
+      "id": "xrank:TG1W:status:2052538211529019867:05364703232/img/UEvSRuyQvRjJNJ5C.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1914649605364703232/img/UEvSRuyQvRjJNJ5C.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -9424,7 +9215,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2023533588227256673",
+      "page_url": "https://x.com/100yenAVshop/status/2052538211529019867",
       "handle": "100yenAVshop",
       "rank": 11,
       "rights_status": "external-public-source",
@@ -9452,8 +9243,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:1844136013599473906:04572931/pu/img/8ugJUqjbyxKYRRGY.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1843653428104572931/pu/img/8ugJUqjbyxKYRRGY.jpg",
+      "id": "xrank:TGAV2:status:1436170874206314503:92674304/pu/img/GRd4OslQ5G0kQGGu.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1344195163992674304/pu/img/GRd4OslQ5G0kQGGu.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -9465,8 +9256,8 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/r18movies2021/status/1844136013599473906",
-      "handle": "r18movies2021",
+      "page_url": "https://x.com/ero_oni072/status/1436170874206314503",
+      "handle": "ero_oni072",
       "rank": 29,
       "rights_status": "external-public-source",
       "active": true,
@@ -9508,8 +9299,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2078470919962701959:91114215424/img/IJyE8inQeOQex5jg.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1942114191114215424/img/IJyE8inQeOQex5jg.jpg",
+      "id": "xrank:TG1W:status:1782260603169706457:51621376/pu/img/rpyJUnU8B2P657Ni.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1782245499451621376/pu/img/rpyJUnU8B2P657Ni.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -9521,7 +9312,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2078470919962701959",
+      "page_url": "https://x.com/100yenAVshop/status/1782260603169706457",
       "handle": "100yenAVshop",
       "rank": 12,
       "rights_status": "external-public-source",
@@ -9549,8 +9340,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TGAV2:status:1925139770222768610:80968448/pu/img/1BgtCBfzAoPfliNx.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1924409203780968448/pu/img/1BgtCBfzAoPfliNx.jpg",
+      "id": "xrank:TGAV2:status:1883148085083476298:63842820/pu/img/TaEGUCWK11vjOSxZ.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1824445968663842820/pu/img/TaEGUCWK11vjOSxZ.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TGAV2",
@@ -9562,8 +9353,8 @@
         "mid"
       ],
       "intensity": 3.4,
-      "page_url": "https://x.com/sljafdosuahb01/status/1925139770222768610",
-      "handle": "sljafdosuahb01",
+      "page_url": "https://x.com/r18movies2021/status/1883148085083476298",
+      "handle": "r18movies2021",
       "rank": 30,
       "rights_status": "external-public-source",
       "active": true,
@@ -9605,8 +9396,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2021932464651088359:58484494336/img/xr2ZoTpI5GBYSYvV.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1932427658484494336/img/xr2ZoTpI5GBYSYvV.jpg",
+      "id": "xrank:TG1W:status:1613495010116370439:97110175745/img/FgYJFATLnJ8-3ZQr.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1612908097110175745/img/FgYJFATLnJ8-3ZQr.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -9618,7 +9409,48 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2021932464651088359",
+      "page_url": "https://x.com/god_god_Movie/status/1613495010116370439",
+      "handle": "god_god_Movie",
+      "rank": 13,
+      "rights_status": "external-public-source",
+      "active": true,
+      "baseline": {
+        "canonical": "Velvet v0.9.6 + Exposure Compatibility 2026-09-19",
+        "profiles": {
+          "mix": {
+            "eligible": true,
+            "score": 2.0392,
+            "run_cap": 7,
+            "target_share": 0.35,
+            "max_rank": 50,
+            "exposure_tier": "unknown",
+            "exposure_estimate_tier": "low",
+            "exposure_basis": "source-prior",
+            "exposure_confidence": 0.35,
+            "intensity": 2.4,
+            "post_jp": false,
+            "post_female": false,
+            "age_target": false
+          }
+        }
+      },
+      "source_snapshot_recovered": false
+    },
+    {
+      "id": "xrank:TG1W:status:2065197852629082566:22479374336/img/kP18zI6C8nsb8jAG.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1899436322479374336/img/kP18zI6C8nsb8jAG.jpg",
+      "thumb_url": null,
+      "title": "",
+      "source": "TG1W",
+      "source_label": "TG1週間",
+      "source_class": "mixed",
+      "tags": [
+        "mixed",
+        "tg1w",
+        "mid"
+      ],
+      "intensity": 2.4,
+      "page_url": "https://x.com/100yenAVshop/status/2065197852629082566",
       "handle": "100yenAVshop",
       "rank": 14,
       "rights_status": "external-public-source",
@@ -9646,8 +9478,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2051870829294891255:19875784704/img/yWpYjwwEpgUBklnu.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1926837519875784704/img/yWpYjwwEpgUBklnu.jpg",
+      "id": "xrank:TG1W:status:2085601972128981178:72037312513/img/tSpNqYJWKNY9eOcg.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1911218772037312513/img/tSpNqYJWKNY9eOcg.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -9659,7 +9491,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2051870829294891255",
+      "page_url": "https://x.com/100yenAVshop/status/2085601972128981178",
       "handle": "100yenAVshop",
       "rank": 15,
       "rights_status": "external-public-source",
@@ -9687,8 +9519,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2112107286324015413:83679105024/img/J1k3MnhdswMqju4H.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1944581883679105024/img/J1k3MnhdswMqju4H.jpg",
+      "id": "xrank:TG1W:status:2092585328620294349:33620699136/img/qinQAPN_Ii9D5_hc.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1942712733620699136/img/qinQAPN_Ii9D5_hc.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -9700,7 +9532,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2112107286324015413",
+      "page_url": "https://x.com/100yenAVshop/status/2092585328620294349",
       "handle": "100yenAVshop",
       "rank": 16,
       "rights_status": "external-public-source",
@@ -9728,8 +9560,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2077208206326251794:02592733184/img/lTDo-XuiI3dfI_7F.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2077208102592733184/img/lTDo-XuiI3dfI_7F.jpg",
+      "id": "xrank:TG1W:status:2079859712477249911:32481292292/img/3BpafPU79t2ywiZh.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1951071032481292292/img/3BpafPU79t2ywiZh.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -9741,7 +9573,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2077208206326251794",
+      "page_url": "https://x.com/100yenAVshop/status/2079859712477249911",
       "handle": "100yenAVshop",
       "rank": 17,
       "rights_status": "external-public-source",
@@ -9769,8 +9601,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:1786029475286974636:72484497408/img/sf2h9eJLbOygqcut.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1714425372484497408/img/sf2h9eJLbOygqcut.jpg",
+      "id": "xrank:TG1W:status:2059884268659359892:84941914113/img/swijh_VnOejKoXaP.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1928839084941914113/img/swijh_VnOejKoXaP.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -9782,7 +9614,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/1786029475286974636",
+      "page_url": "https://x.com/100yenAVshop/status/2059884268659359892",
       "handle": "100yenAVshop",
       "rank": 18,
       "rights_status": "external-public-source",
@@ -9810,8 +9642,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:1736575606614327724:07810048/pu/img/MNRky2OP25_RivY4.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1736575507607810048/pu/img/MNRky2OP25_RivY4.jpg",
+      "id": "xrank:TG1W:status:2105553102623674402:05957996545/img/ZT_x816N2Jhf-S6U.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1914925805957996545/img/ZT_x816N2Jhf-S6U.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -9823,7 +9655,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/1736575606614327724",
+      "page_url": "https://x.com/100yenAVshop/status/2105553102623674402",
       "handle": "100yenAVshop",
       "rank": 19,
       "rights_status": "external-public-source",
@@ -9851,8 +9683,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2100556428612448708:75231516674/img/zbo4bcMjCFmpbX_c.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1929735575231516674/img/zbo4bcMjCFmpbX_c.jpg",
+      "id": "xrank:TG1W:status:2083399828638409000:97253793792/img/q8TEwD0rvgtEcY5S.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1905889097253793792/img/q8TEwD0rvgtEcY5S.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -9864,7 +9696,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2100556428612448708",
+      "page_url": "https://x.com/100yenAVshop/status/2083399828638409000",
       "handle": "100yenAVshop",
       "rank": 20,
       "rights_status": "external-public-source",
@@ -9892,8 +9724,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2069783317453717638:78336587776/img/wlpQH8Ka-13FXEfA.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1926577978336587776/img/wlpQH8Ka-13FXEfA.jpg",
+      "id": "xrank:TG1W:status:2056221257675510150:68119154688/img/DjDJfqR3eThUi8LA.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1930944868119154688/img/DjDJfqR3eThUi8LA.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -9905,7 +9737,48 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2069783317453717638",
+      "page_url": "https://x.com/100yenAVshop/status/2056221257675510150",
+      "handle": "100yenAVshop",
+      "rank": 21,
+      "rights_status": "external-public-source",
+      "active": true,
+      "baseline": {
+        "canonical": "Velvet v0.9.6 + Exposure Compatibility 2026-09-19",
+        "profiles": {
+          "mix": {
+            "eligible": true,
+            "score": 2.012,
+            "run_cap": 7,
+            "target_share": 0.35,
+            "max_rank": 50,
+            "exposure_tier": "unknown",
+            "exposure_estimate_tier": "low",
+            "exposure_basis": "source-prior",
+            "exposure_confidence": 0.35,
+            "intensity": 2.4,
+            "post_jp": false,
+            "post_female": false,
+            "age_target": false
+          }
+        }
+      },
+      "source_snapshot_recovered": false
+    },
+    {
+      "id": "xrank:TG1W:status:2044410349198426606:73765216256/img/HROGsl8VSLmFABVE.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1946484473765216256/img/HROGsl8VSLmFABVE.jpg",
+      "thumb_url": null,
+      "title": "",
+      "source": "TG1W",
+      "source_label": "TG1週間",
+      "source_class": "mixed",
+      "tags": [
+        "mixed",
+        "tg1w",
+        "mid"
+      ],
+      "intensity": 2.4,
+      "page_url": "https://x.com/100yenAVshop/status/2044410349198426606",
       "handle": "100yenAVshop",
       "rank": 22,
       "rights_status": "external-public-source",
@@ -9933,8 +9806,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2041477433774530935:39174498304/img/oHHESyq_151E5iQ7.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1942880339174498304/img/oHHESyq_151E5iQ7.jpg",
+      "id": "xrank:TG1W:status:1431811335893884931:73623553/pu/img/PHIIYaa4Sv7izZVp.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1423125495273623553/pu/img/PHIIYaa4Sv7izZVp.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -9946,8 +9819,8 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2041477433774530935",
-      "handle": "100yenAVshop",
+      "page_url": "https://x.com/god_god_Movie/status/1431811335893884931",
+      "handle": "god_god_Movie",
       "rank": 23,
       "rights_status": "external-public-source",
       "active": true,
@@ -9974,8 +9847,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:1886211364198441030:23881216/pu/img/6bcikJF9WdQNess_.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1884617970623881216/pu/img/6bcikJF9WdQNess_.jpg",
+      "id": "xrank:TG1W:status:1933323863989051427:12994160642/img/Qw8J4xfE0qC2I6t6.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1933323712994160642/img/Qw8J4xfE0qC2I6t6.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -9987,8 +9860,8 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/god_god_Movie/status/1886211364198441030",
-      "handle": "god_god_Movie",
+      "page_url": "https://x.com/100yenAVshop/status/1933323863989051427",
+      "handle": "100yenAVshop",
       "rank": 24,
       "rights_status": "external-public-source",
       "active": true,
@@ -10015,8 +9888,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:1578020989660975105:06046465/pu/img/Hd4zt6K2cwY1by7z.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1578020758106046465/pu/img/Hd4zt6K2cwY1by7z.jpg",
+      "id": "xrank:TG1W:status:2015059734437785717:64656721920/img/_f9zwOSwgxJWhlD4.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1986791564656721920/img/_f9zwOSwgxJWhlD4.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10028,8 +9901,8 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/kr_9616/status/1578020989660975105",
-      "handle": "kr_9616",
+      "page_url": "https://x.com/100yenAVshop/status/2015059734437785717",
+      "handle": "100yenAVshop",
       "rank": 25,
       "rights_status": "external-public-source",
       "active": true,
@@ -10056,8 +9929,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:1904349408764043623:17462470656/img/64JU5BjFHqkmJYpZ.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1904349317462470656/img/64JU5BjFHqkmJYpZ.jpg",
+      "id": "xrank:TG1W:status:1889158049291698581:98251525/pu/img/Lh0dvQrnl9dvD6YJ.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1446306508598251525/pu/img/Lh0dvQrnl9dvD6YJ.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10069,7 +9942,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/1904349408764043623",
+      "page_url": "https://x.com/100yenAVshop/status/1889158049291698581",
       "handle": "100yenAVshop",
       "rank": 26,
       "rights_status": "external-public-source",
@@ -10097,8 +9970,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2044387474148032633:65766950913/img/dWfTB66u92bCfVAw.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1904015565766950913/img/dWfTB66u92bCfVAw.jpg",
+      "id": "xrank:TG1W:status:2076474418558320672:02147997696/img/9oB-3q8Rhi3dUWm-.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1918830102147997696/img/9oB-3q8Rhi3dUWm-.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10110,7 +9983,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2044387474148032633",
+      "page_url": "https://x.com/100yenAVshop/status/2076474418558320672",
       "handle": "100yenAVshop",
       "rank": 27,
       "rights_status": "external-public-source",
@@ -10138,8 +10011,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:1685992067938574337:70232287232/img/kHTenL6rg7lzGbqC.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1685991970232287232/img/kHTenL6rg7lzGbqC.jpg",
+      "id": "xrank:TG1W:status:2053223480716632096:18273218560/img/6AmtJCsB6_CSBQfD.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1931082618273218560/img/6AmtJCsB6_CSBQfD.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10151,7 +10024,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/1685992067938574337",
+      "page_url": "https://x.com/100yenAVshop/status/2053223480716632096",
       "handle": "100yenAVshop",
       "rank": 28,
       "rights_status": "external-public-source",
@@ -10179,8 +10052,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2087413515317616775:67627622405/img/K__qUOAW5pLSMUz0.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1924732467627622405/img/K__qUOAW5pLSMUz0.jpg",
+      "id": "xrank:TG1W:status:2014837281186840656:49748330496/img/JL3mJIyrAVdRJJk5.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1925034549748330496/img/JL3mJIyrAVdRJJk5.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10192,7 +10065,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2087413515317616775",
+      "page_url": "https://x.com/100yenAVshop/status/2014837281186840656",
       "handle": "100yenAVshop",
       "rank": 29,
       "rights_status": "external-public-source",
@@ -10220,8 +10093,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2113795395851890692:28710672385/img/30B1QxisBgHvP4Rw.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1996072128710672385/img/30B1QxisBgHvP4Rw.jpg",
+      "id": "xrank:TG1W:status:1584476890588680193:78222336/pu/img/6Qc2upA4rPvX6lBr.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1584476628478222336/pu/img/6Qc2upA4rPvX6lBr.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10233,7 +10106,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2113795395851890692",
+      "page_url": "https://x.com/100yenAVshop/status/1584476890588680193",
       "handle": "100yenAVshop",
       "rank": 30,
       "rights_status": "external-public-source",
@@ -10261,8 +10134,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:1464199043853131776:65211395/pu/img/7ZW9m0-Ils6qjeqe.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1464166125265211395/pu/img/7ZW9m0-Ils6qjeqe.jpg",
+      "id": "xrank:TG1W:status:1900142849519476783:80495618/pu/img/mJZM0CkZZD7Z2XHR.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1898660284480495618/pu/img/mJZM0CkZZD7Z2XHR.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10274,8 +10147,8 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/god_god_Movie/status/1464199043853131776",
-      "handle": "god_god_Movie",
+      "page_url": "https://x.com/100yenAVshop/status/1900142849519476783",
+      "handle": "100yenAVshop",
       "rank": 31,
       "rights_status": "external-public-source",
       "active": true,
@@ -10302,8 +10175,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:1628263307466665984:81206040576/img/eviS4_7XeO1BpHlA.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1605662781206040576/img/eviS4_7XeO1BpHlA.jpg",
+      "id": "xrank:TG1W:status:2027370988737118231:64524191745/img/sklqaOs3Mwx-y6Gp.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1916306164524191745/img/sklqaOs3Mwx-y6Gp.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10315,8 +10188,8 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/god_god_Movie/status/1628263307466665984",
-      "handle": "god_god_Movie",
+      "page_url": "https://x.com/100yenAVshop/status/2027370988737118231",
+      "handle": "100yenAVshop",
       "rank": 32,
       "rights_status": "external-public-source",
       "active": true,
@@ -10343,8 +10216,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2017074617266164006:56513435648/img/NWxZ_-gRvaSFZU__.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1914562956513435648/img/NWxZ_-gRvaSFZU__.jpg",
+      "id": "xrank:TG1W:status:2087687659724632458:26438690816/img/3nl6l6I82gaA6C9a.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1961196526438690816/img/3nl6l6I82gaA6C9a.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10356,7 +10229,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2017074617266164006",
+      "page_url": "https://x.com/100yenAVshop/status/2087687659724632458",
       "handle": "100yenAVshop",
       "rank": 33,
       "rights_status": "external-public-source",
@@ -10384,8 +10257,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:1912767564138311718:92826159107/img/Nl-NEJ_-X50tnr_6.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1912767392826159107/img/Nl-NEJ_-X50tnr_6.jpg",
+      "id": "xrank:TG1W:status:2079503815766901138:81238786048/img/7rM_riNm2wutL9RQ.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2079503681238786048/img/7rM_riNm2wutL9RQ.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10397,7 +10270,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/1912767564138311718",
+      "page_url": "https://x.com/100yenAVshop/status/2079503815766901138",
       "handle": "100yenAVshop",
       "rank": 34,
       "rights_status": "external-public-source",
@@ -10425,8 +10298,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2117409877283004471:53187727360/img/WAWdMVKYHXthDWtv.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1947990453187727360/img/WAWdMVKYHXthDWtv.jpg",
+      "id": "xrank:TG1W:status:2113627815505735695:34883039232/img/ZaqAW4VN1abhUHh3.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1920786434883039232/img/ZaqAW4VN1abhUHh3.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10438,7 +10311,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2117409877283004471",
+      "page_url": "https://x.com/100yenAVshop/status/2113627815505735695",
       "handle": "100yenAVshop",
       "rank": 35,
       "rights_status": "external-public-source",
@@ -10466,8 +10339,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2058311564000911509:29838166018/img/Svt7LQlWK5xXYDED.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1934954329838166018/img/Svt7LQlWK5xXYDED.jpg",
+      "id": "xrank:TG1W:status:2118977275836449080:92628797440/img/w8M1iTZCpwF2UVRr.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1936227192628797440/img/w8M1iTZCpwF2UVRr.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10479,7 +10352,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2058311564000911509",
+      "page_url": "https://x.com/100yenAVshop/status/2118977275836449080",
       "handle": "100yenAVshop",
       "rank": 36,
       "rights_status": "external-public-source",
@@ -10507,8 +10380,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2009859905138950513:50959695872/img/bAMCoDttVc3s3yOl.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1944023850959695872/img/bAMCoDttVc3s3yOl.jpg",
+      "id": "xrank:TG1W:status:2079715032678764846:17342547968/img/UJOR8LV1ZDtjp7ay.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1907609517342547968/img/UJOR8LV1ZDtjp7ay.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10520,7 +10393,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2009859905138950513",
+      "page_url": "https://x.com/100yenAVshop/status/2079715032678764846",
       "handle": "100yenAVshop",
       "rank": 37,
       "rights_status": "external-public-source",
@@ -10548,8 +10421,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2021042744182046949:35562891264/img/9uG2RjaxV3VoLUDE.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1925082335562891264/img/9uG2RjaxV3VoLUDE.jpg",
+      "id": "xrank:TG1W:status:2076601772572045372:30991360002/img/Scl6XmggZ4F0XNoI.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1948999630991360002/img/Scl6XmggZ4F0XNoI.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10561,7 +10434,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2021042744182046949",
+      "page_url": "https://x.com/100yenAVshop/status/2076601772572045372",
       "handle": "100yenAVshop",
       "rank": 38,
       "rights_status": "external-public-source",
@@ -10589,8 +10462,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2101412769103048863:64998508544/img/AbJQmjMEElNSz6ux.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1956677164998508544/img/AbJQmjMEElNSz6ux.jpg",
+      "id": "xrank:TG1W:status:1986950552404607300:98058438656/img/ZAK3zotyoKVeI7N1.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1985076198058438656/img/ZAK3zotyoKVeI7N1.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10602,8 +10475,8 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2101412769103048863",
-      "handle": "100yenAVshop",
+      "page_url": "https://x.com/god_god_Movie/status/1986950552404607300",
+      "handle": "god_god_Movie",
       "rank": 39,
       "rights_status": "external-public-source",
       "active": true,
@@ -10630,8 +10503,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2082228671772025199:86564804608/img/hMFNQ0m5zG10RTcv.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1940349386564804608/img/hMFNQ0m5zG10RTcv.jpg",
+      "id": "xrank:TG1W:status:2061349234922909698:31355889666/img/E0t6AIJxTwSgslwf.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2009946931355889666/img/E0t6AIJxTwSgslwf.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10643,7 +10516,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2082228671772025199",
+      "page_url": "https://x.com/100yenAVshop/status/2061349234922909698",
       "handle": "100yenAVshop",
       "rank": 40,
       "rights_status": "external-public-source",
@@ -10671,8 +10544,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:1436546532757544962:48069888/pu/img/jYdi6KZoHaVFFyKF.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1436413113948069888/pu/img/jYdi6KZoHaVFFyKF.jpg",
+      "id": "xrank:TG1W:status:1441982170038366216:78267904/pu/img/WjsNiMhA-M7naBJC.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1441803586678267904/pu/img/WjsNiMhA-M7naBJC.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10684,7 +10557,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/god_god_Movie/status/1436546532757544962",
+      "page_url": "https://x.com/god_god_Movie/status/1441982170038366216",
       "handle": "god_god_Movie",
       "rank": 41,
       "rights_status": "external-public-source",
@@ -10712,8 +10585,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2035889044899635687:21818685440/img/wZgGCbvhTa9cYo44.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1935893921818685440/img/wZgGCbvhTa9cYo44.jpg",
+      "id": "xrank:TG1W:status:2109497652962607160:22278369280/img/kzQA63PgXSp51MHJ.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1920621622278369280/img/kzQA63PgXSp51MHJ.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10725,7 +10598,48 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2035889044899635687",
+      "page_url": "https://x.com/100yenAVshop/status/2109497652962607160",
+      "handle": "100yenAVshop",
+      "rank": 42,
+      "rights_status": "external-public-source",
+      "active": true,
+      "baseline": {
+        "canonical": "Velvet v0.9.6 + Exposure Compatibility 2026-09-19",
+        "profiles": {
+          "mix": {
+            "eligible": true,
+            "score": 1.9406,
+            "run_cap": 7,
+            "target_share": 0.35,
+            "max_rank": 50,
+            "exposure_tier": "unknown",
+            "exposure_estimate_tier": "low",
+            "exposure_basis": "source-prior",
+            "exposure_confidence": 0.35,
+            "intensity": 2.4,
+            "post_jp": false,
+            "post_female": false,
+            "age_target": false
+          }
+        }
+      },
+      "source_snapshot_recovered": false
+    },
+    {
+      "id": "xrank:TG1W:status:1910564131704627516:40587575296/img/Yb5K3y_l-ol54NhJ.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1910564040587575296/img/Yb5K3y_l-ol54NhJ.jpg",
+      "thumb_url": null,
+      "title": "",
+      "source": "TG1W",
+      "source_label": "TG1週間",
+      "source_class": "mixed",
+      "tags": [
+        "mixed",
+        "tg1w",
+        "mid"
+      ],
+      "intensity": 2.4,
+      "page_url": "https://x.com/100yenAVshop/status/1910564131704627516",
       "handle": "100yenAVshop",
       "rank": 43,
       "rights_status": "external-public-source",
@@ -10753,8 +10667,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2075943355192893529:19463268352/img/zcPFEB05oH79lhWN.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1948498919463268352/img/zcPFEB05oH79lhWN.jpg",
+      "id": "xrank:TG1W:status:1789941553051345019:89532928/pu/img/28IqEHSqsnpvdTAr.jpg",
+      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1788400303089532928/pu/img/28IqEHSqsnpvdTAr.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10766,7 +10680,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2075943355192893529",
+      "page_url": "https://x.com/100yenAVshop/status/1789941553051345019",
       "handle": "100yenAVshop",
       "rank": 44,
       "rights_status": "external-public-source",
@@ -10794,8 +10708,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:1835843439713526196:62240014338/img/AVZdUdfMTFcxECMC.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1831409462240014338/img/AVZdUdfMTFcxECMC.jpg",
+      "id": "xrank:TG1W:status:1925160604756815990:15925630977/img/NQYH8-NNuJb5hNtq.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1925160515925630977/img/NQYH8-NNuJb5hNtq.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10807,8 +10721,8 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/god_god_Movie/status/1835843439713526196",
-      "handle": "god_god_Movie",
+      "page_url": "https://x.com/100yenAVshop/status/1925160604756815990",
+      "handle": "100yenAVshop",
       "rank": 45,
       "rights_status": "external-public-source",
       "active": true,
@@ -10835,8 +10749,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:1944968665360949738:75212773376/img/p91sMZFs3VWD5K_n.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1944968575212773376/img/p91sMZFs3VWD5K_n.jpg",
+      "id": "xrank:TG1W:status:2050733130383077586:67627622405/img/K__qUOAW5pLSMUz0.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1924732467627622405/img/K__qUOAW5pLSMUz0.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10848,7 +10762,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/1944968665360949738",
+      "page_url": "https://x.com/100yenAVshop/status/2050733130383077586",
       "handle": "100yenAVshop",
       "rank": 46,
       "rights_status": "external-public-source",
@@ -10876,8 +10790,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2080632250476220772:42728521729/img/ppZmMb7orsU0a18G.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1952378042728521729/img/ppZmMb7orsU0a18G.jpg",
+      "id": "xrank:TG1W:status:2061762598711030107:34188492800/img/7JSf5hCliDeZBHVz.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2000947234188492800/img/7JSf5hCliDeZBHVz.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10889,8 +10803,8 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2080632250476220772",
-      "handle": "100yenAVshop",
+      "page_url": "https://x.com/noeronolife69/status/2061762598711030107",
+      "handle": "noeronolife69",
       "rank": 47,
       "rights_status": "external-public-source",
       "active": true,
@@ -10917,8 +10831,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:1375045942324301824:05862912/pu/img/hbWAF0cdiM9g0BRZ.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1375045909805862912/pu/img/hbWAF0cdiM9g0BRZ.jpg",
+      "id": "xrank:TG1W:status:2047101844569444661:40960456704/img/aXxJlirSR4yitMpv.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1999366940960456704/img/aXxJlirSR4yitMpv.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10930,8 +10844,8 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/kr_9616/status/1375045942324301824",
-      "handle": "kr_9616",
+      "page_url": "https://x.com/100yenAVshop/status/2047101844569444661",
+      "handle": "100yenAVshop",
       "rank": 48,
       "rights_status": "external-public-source",
       "active": true,
@@ -10958,8 +10872,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:2065393181366407452:14767132672/img/AysXXFS9mTntLHqw.jpg",
-      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1917013414767132672/img/AysXXFS9mTntLHqw.jpg",
+      "id": "xrank:TG1W:status:2027556108370645378:20843909120/img/l9em5nFpsb6MblQD.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/2027556020843909120/img/l9em5nFpsb6MblQD.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -10971,7 +10885,7 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/100yenAVshop/status/2065393181366407452",
+      "page_url": "https://x.com/100yenAVshop/status/2027556108370645378",
       "handle": "100yenAVshop",
       "rank": 49,
       "rights_status": "external-public-source",
@@ -10999,8 +10913,8 @@
       "source_snapshot_recovered": false
     },
     {
-      "id": "xrank:TG1W:status:1493463331784458243:84395265/pu/img/h9CfPioOh42qEAcl.jpg",
-      "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1321014810784395265/pu/img/h9CfPioOh42qEAcl.jpg",
+      "id": "xrank:TG1W:status:2063784627874234711:56544196608/img/ZVghM9vGA-eQEdKw.jpg",
+      "image_url": "https://pbs.twimg.com/amplify_video_thumb/1924779956544196608/img/ZVghM9vGA-eQEdKw.jpg",
       "thumb_url": null,
       "title": "",
       "source": "TG1W",
@@ -11012,8 +10926,8 @@
         "mid"
       ],
       "intensity": 2.4,
-      "page_url": "https://x.com/god_god_Movie/status/1493463331784458243",
-      "handle": "god_god_Movie",
+      "page_url": "https://x.com/100yenAVshop/status/2063784627874234711",
+      "handle": "100yenAVshop",
       "rank": 50,
       "rights_status": "external-public-source",
       "active": true,
@@ -11041,7 +10955,7 @@
     }
   ],
   "failures": [
-    "TGUra: HTTP 403 for https://twiigle.com/hot.html?_velvet=1794857854414-0.9120944687799082: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta"
+    "TGUra: HTTP 403 for https://twiigle.com/hot.html?_velvet=1794887706563-0.11622668909156308: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><met"
   ],
   "diagnostics": {
     "quarantine": {
